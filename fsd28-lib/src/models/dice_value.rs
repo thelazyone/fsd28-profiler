@@ -42,5 +42,11 @@ impl DiceValue {
         Ok(DiceValue{shape: self.shape, number: self.number, armor: temp as u32})
     }
 
+    pub fn display(&self) -> String {
+        match self.armor {
+            0 => format!("{}d{}", self.number, self.shape),
+            _ => format!("d{}({})", self.shape, self.armor),
+        }
+    }
 }
 
