@@ -2,8 +2,9 @@ mod app_state;
 use app_state::AppState;
 use app_state::MenuStates;
 
-use fsd28_lib::models::profile::Profile;
+use fsd28_lib::models::class::ClassesConfig;
 use fsd28_lib::create_profile;
+use fsd28_lib::get_classes;
 
 use dialoguer::{theme::ColorfulTheme, Select, Input};
 
@@ -49,16 +50,36 @@ fn main_menu_dialog(app_state: &mut AppState) -> MenuStates{
 }
 
 fn create_profile_dialog(app_state: &mut AppState) -> MenuStates {
-    let name: String = Input::with_theme(&ColorfulTheme::default())
+
+    // Asking for the name
+    let selected_name: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("Enter a name for the new profile")
         .interact_text()
         .unwrap();
 
-    app_state.add_profile(create_profile(name));
+    // Now asking for the class
+    let all_classes = get_classes("");
+    let mut options: Vec<String> = all_classes
+    .classes.iter()
+    .map(|class| class.name.clone())
+    .collect::<Vec<String>>();
+    
+    let selection = Select::with_theme(&ColorfulTheme::default())
+    .with_prompt("Select a class:")
+    .default(0)
+    .items(&options[..])
+    .interact()
+    .unwrap();
+
+    //Selection is the index. 
+    let selected_class = all_classes.classes[selection].clone();
+
+    app_state.add_profile(create_profile(
+        selected_name, 
+        selected_class));
 
     MenuStates::EditProfile
 }
-
 
 fn select_profile_dialog(app_state: &mut AppState) -> MenuStates {
 
@@ -88,7 +109,6 @@ fn select_profile_dialog(app_state: &mut AppState) -> MenuStates {
     }
 }
 
-
 fn edit_profile_dialog(app_state: &mut AppState) -> MenuStates {
 
     println!("Here is the selected profile:");
@@ -112,7 +132,6 @@ fn edit_profile_dialog(app_state: &mut AppState) -> MenuStates {
     }
 }
 
-
 fn edit_name_dialog(app_state: &mut AppState) -> MenuStates {
     let name: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("Enter a new name for the new profile")
@@ -123,9 +142,6 @@ fn edit_name_dialog(app_state: &mut AppState) -> MenuStates {
 
     MenuStates::EditProfile
 }
-
-
-
 
 fn load_profile_dialog(app_state: &mut AppState) {
     let path: String = Input::with_theme(&ColorfulTheme::default())

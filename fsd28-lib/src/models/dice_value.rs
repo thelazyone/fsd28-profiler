@@ -1,4 +1,7 @@
-#[derive(Clone)]
+use serde::{Deserialize, Serialize};
+
+
+#[derive(Clone, Deserialize, Serialize)]
 pub struct DiceValue {
     shape : u32,
     number : u32,

@@ -1,13 +1,16 @@
 
 use colored::Colorize;
-#[derive(Clone)]
+use serde::{Deserialize, Serialize};
+
+
+#[derive(Clone, Serialize, Deserialize)]
 enum Color {
     Red,
     Yellow,
     Green
 }
 
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct DamageChart {
     intervals: Vec<(u32, Color, String)>
 }

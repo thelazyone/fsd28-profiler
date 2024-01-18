@@ -1,0 +1,59 @@
+{
+    "classes": [
+        {
+            "name": "Bandit",
+            "special": "none",
+            "type": "Goon",
+            "characteristics": {
+                "cmd": "0",
+                "def": "4",
+                "save": "d6(2)",
+                "move": "3",
+                "shoot": "-",
+                "melee": "1d6"
+            },
+            "damageProfile": {
+                "intervals": [
+                    {
+                        "interval": 3,
+                        "color": "Red",
+                        "effect": "DEAD"
+                    },
+                    {
+                        "interval": 3,
+                        "color": "Yellow",
+                        "effect": "MOV"
+                    }
+                ]
+            }
+        },
+
+        {
+            "name": "Fanatic",
+            "special": "Fast",
+            "type": "Goon",
+            "characteristics": {
+                "cmd": "0",
+                "def": "3",
+                "save": "d6(2)",
+                "move": "4",
+                "shoot": "-",
+                "melee": "2d6"
+            },
+            "damageProfile": {
+                "intervals": [
+                    {
+                        "interval": 4,
+                        "color": "Red",
+                        "effect": "DEAD"
+                    },
+                    {
+                        "interval": 2,
+                        "color": "Yellow",
+                        "effect": "MOV"
+                    }
+                ]
+            }
+        }
+    ]
+}

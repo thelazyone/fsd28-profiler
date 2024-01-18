@@ -1,8 +1,12 @@
 use crate::models::dice_value::DiceValue;
 use crate::models::damage_chart::DamageChart;
 use crate::models::action::Action;
+use crate::models::characteristics::Characteristics;
+use crate::models::class::Class;
 
 use colored::Colorize;
+
+use super::class;
 
 #[derive(Clone)]
 pub struct Profile {
@@ -17,13 +21,13 @@ pub struct Profile {
 
 impl Profile {
 
-    pub fn new(i_name : String) -> Profile {
+    pub fn new(i_name : String, i_class : Class) -> Profile {
         Profile {
             name : i_name,
             description : "temp description".to_string(),
-            characteristics : Characteristics::new_default(),
+            characteristics : i_class.characteristics,
             special_abilities: "none".to_string(),
-            damage_chart: DamageChart::new_default(),
+            damage_chart: i_class.damage_profile,
             actions: Vec::<Action>::new(),
             cost: 42,
         }
@@ -58,25 +62,3 @@ impl Profile {
 }
 
 
-#[derive(Clone)]
-struct Characteristics {
-    pub stat_cmd: u32,
-    pub stat_def: u32,
-    pub stat_save: DiceValue,
-    pub stat_move: u32,
-    pub stat_shoot: DiceValue,
-    pub stat_melee: DiceValue,
-}
-
-impl Characteristics {
-    fn new_default() -> Characteristics{
-        Characteristics {
-            stat_cmd: 0,
-            stat_def: 4,
-            stat_save: DiceValue::new_armor(8, 2).unwrap(),
-            stat_move: 3,
-            stat_shoot: DiceValue::new(6, 2).unwrap(),
-            stat_melee: DiceValue::new(6, 2).unwrap(),
-        }
-    }
-}
