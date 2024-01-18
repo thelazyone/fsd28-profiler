@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct Action {
     name: String,
     // TODO do the rest!    

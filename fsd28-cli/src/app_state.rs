@@ -1,5 +1,19 @@
 use fsd28_lib::models::profile::Profile;
 
+#[derive(PartialEq)]
+pub enum MenuStates {
+    MainMenu,
+    CreateProfile,
+    LoadProfiles,
+    SelectProfile,
+    EditProfile, // Choices to edit specific stuff appear from here
+    EditName,
+    EditType,
+    EditClass,
+    // More to add TODO
+    Exit,
+}
+
 pub struct AppState {
     profiles: Vec<Profile>,
     selected: Option<usize>,
@@ -25,7 +39,7 @@ impl AppState {
         if let Some(index) = self.selected {
 
             if index >= self.profiles.len() {
-                println!("Error: profile index out of bounds.")
+                println!("Error: profile index out of bounds.");
             }
 
             return self.profiles.get_mut(index);
@@ -34,5 +48,18 @@ impl AppState {
             println!("Error: no state selected."); 
             return None;
         }
+    }
+
+    pub fn set_selected(&mut self, i_index : usize) {
+        if i_index >= self.profiles.len() {
+            println!("Error: profile index out of bounds.");
+            self.selected = None;
+        }
+
+        self.selected = Some(i_index);
+    }
+
+    pub fn get_all_profiles(&self) -> Vec<Profile> {
+        self.profiles.clone()
     }
 }

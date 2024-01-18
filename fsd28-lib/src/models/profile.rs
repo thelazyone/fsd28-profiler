@@ -4,8 +4,9 @@ use crate::models::action::Action;
 
 use colored::Colorize;
 
+#[derive(Clone)]
 pub struct Profile {
-    name: String,
+    pub name: String,
     description: String,
     characteristics: Characteristics,
     special_abilities: String,
@@ -57,13 +58,14 @@ impl Profile {
 }
 
 
+#[derive(Clone)]
 struct Characteristics {
-    stat_cmd: u32,
-    stat_def: u32,
-    stat_save: DiceValue,
-    stat_move: u32,
-    stat_shoot: DiceValue,
-    stat_melee: DiceValue,
+    pub stat_cmd: u32,
+    pub stat_def: u32,
+    pub stat_save: DiceValue,
+    pub stat_move: u32,
+    pub stat_shoot: DiceValue,
+    pub stat_melee: DiceValue,
 }
 
 impl Characteristics {

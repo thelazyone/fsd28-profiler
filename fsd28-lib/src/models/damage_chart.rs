@@ -1,11 +1,13 @@
 
 use colored::Colorize;
+#[derive(Clone)]
 enum Color {
     Red,
     Yellow,
     Green
 }
 
+#[derive(Clone)]
 pub struct DamageChart {
     intervals: Vec<(u32, Color, String)>
 }

@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct DiceValue {
     shape : u32,
     number : u32,
