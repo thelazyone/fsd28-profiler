@@ -41,12 +41,11 @@ impl DamageChart {
         out_string += &*" |\n| ".blue().bold().to_string();
         for element in &self.intervals {
             out_string += "|  ";
-            
-            // TODO - Add spaces after "MOV" to fill 4 characters
+
             match element.1 {
-                Color::Red => out_string += &*element.2.red().bold().to_string(),
-                Color::Yellow => out_string += &*element.2.yellow().bold().to_string(),
-                Color::Green => out_string +=&*element.2.green().bold().to_string(),
+                Color::Red => out_string += &*format!("{:<4}", element.2).red().bold().to_string(),
+                Color::Yellow => out_string += &*format!("{:<4}", element.2).yellow().bold().to_string(),
+                Color::Green => out_string +=&*format!("{:<4}", element.2).green().bold().to_string(),
             };
             for _ in 1..element.0 {
                 out_string += "         ";
