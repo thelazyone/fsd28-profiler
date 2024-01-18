@@ -10,7 +10,11 @@ pub use models::class::ClassesConfig;
 pub use models::class::Class;
 
 pub fn get_classes(i_path : &str) -> ClassesConfig {
-    let file_content = fs::read_to_string(i_path).expect("Failed to read file");
+    let mut path = i_path;
+    if i_path == "" {
+        path = "./fsd28-lib/data/classes.json";
+    }
+    let file_content = fs::read_to_string(path).expect("Failed to read file");
     serde_json::from_str(&file_content).unwrap()
 }
 

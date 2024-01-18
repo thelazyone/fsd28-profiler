@@ -32,10 +32,10 @@ fn main() {
 
 
 fn main_menu_dialog(app_state: &mut AppState) -> MenuStates{
-    let selections = &["Load", "Select", "Create", "Exit"];
+    let selections = &["Create", "Select", "Exit"];
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("This is the FSD28 profile creator. What would you like to do?")
-        .default(1)
+        .default(0)
         .items(&selections[..])
         .interact()
         .unwrap();
@@ -43,7 +43,6 @@ fn main_menu_dialog(app_state: &mut AppState) -> MenuStates{
     match selections[selection] {
         "Create" => MenuStates::CreateProfile,
         "Select" => MenuStates::SelectProfile,
-        "Load Profiles" => MenuStates::LoadProfiles,
         "Exit" => MenuStates::Exit,
         _ => unreachable!(),
     }

@@ -1,59 +1,42 @@
 {
     "classes": [
-        {
-            "name": "Bandit",
-            "special": "none",
-            "type": "Goon",
-            "characteristics": {
-                "cmd": "0",
-                "def": "4",
-                "save": "d6(2)",
-                "move": "3",
-                "shoot": "-",
-                "melee": "1d6"
-            },
-            "damageProfile": {
-                "intervals": [
-                    {
-                        "interval": 3,
-                        "color": "Red",
-                        "effect": "DEAD"
-                    },
-                    {
-                        "interval": 3,
-                        "color": "Yellow",
-                        "effect": "MOV"
-                    }
-                ]
-            }
+      {
+        "name": "Bandit",
+        "special_rules": "none",
+        "type": "Goon",
+        "characteristics": {
+          "stat_cmd": 0,
+          "stat_def": 4,
+          "stat_save": {"shape": 6, "number": 1, "armor": 2},
+          "stat_move": 3,
+          "stat_shoot": {"shape": 6, "number": 0, "armor": 0},
+          "stat_melee": {"shape": 6, "number": 1, "armor": 0}
         },
-
-        {
-            "name": "Fanatic",
-            "special": "Fast",
-            "type": "Goon",
-            "characteristics": {
-                "cmd": "0",
-                "def": "3",
-                "save": "d6(2)",
-                "move": "4",
-                "shoot": "-",
-                "melee": "2d6"
-            },
-            "damageProfile": {
-                "intervals": [
-                    {
-                        "interval": 4,
-                        "color": "Red",
-                        "effect": "DEAD"
-                    },
-                    {
-                        "interval": 2,
-                        "color": "Yellow",
-                        "effect": "MOV"
-                    }
-                ]
-            }
+        "damage_profile": {
+            "intervals": [
+                [3, "Red", "DEAD"],
+                [3, "Yellow", "MOV"]
+            ]
         }
+      },
+      {
+        "name": "Fanatic",
+        "special_rules": "Fast",
+        "type": "Goon",
+        "characteristics": {
+          "stat_cmd": 0,
+          "stat_def": 3,
+          "stat_save": {"shape": 6, "number": 1, "armor": 2},
+          "stat_move": 4,
+          "stat_shoot": {"shape": 6, "number": 0, "armor": 0},
+          "stat_melee": {"shape": 6, "number": 2, "armor": 0}
+        },
+        "damage_profile": {
+            "intervals": [
+                [4, "Red", "DEAD"],
+                [2, "Yellow", "MOV"]
+            ]
+        }
+      }
     ]
-}
+  }

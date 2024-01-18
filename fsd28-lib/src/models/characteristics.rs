@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use colored::Colorize;
 
 use crate::models::dice_value::DiceValue;
 
@@ -23,5 +24,22 @@ impl Characteristics {
             stat_shoot: DiceValue::new(6, 2).unwrap(),
             stat_melee: DiceValue::new(6, 2).unwrap(),
         }
+    }
+
+    pub fn display_ascii(&self) -> String {
+        let mut out_string = String::new();
+        out_string += "\nCmd   = ";
+        out_string += &*self.stat_cmd.to_string().bold().blue().to_string();
+        out_string += "\tDef   = ";
+        out_string += &*format!("{}+", self.stat_def).bold().blue().to_string();
+        out_string += "\tSave  = ";
+        out_string += &*self.stat_save.display().bold().blue().to_string();
+        out_string += "\nMove  = ";
+        out_string += &*self.stat_move.to_string().bold().blue().to_string();
+        out_string += "\tShoot = ";
+        out_string += &*self.stat_shoot.display().bold().blue().to_string();
+        out_string += "\tMelee = ";
+        out_string += &*self.stat_melee.display().bold().blue().to_string();
+        out_string
     }
 }
