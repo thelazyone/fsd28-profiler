@@ -7,6 +7,8 @@ pub enum MenuStates {
     LoadProfiles,
     SelectProfile,
     EditProfile, // Choices to edit specific stuff appear from here
+    AddAction,
+    AddEquip,
     EditName,
     EditType,
     EditClass,

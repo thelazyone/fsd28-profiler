@@ -15,7 +15,7 @@ pub struct Profile {
     characteristics: Characteristics,
     special_abilities: String,
     damage_chart: DamageChart, // Temporary
-    actions: Vec<Action>,
+    pub actions: Vec<Action>,
     cost: u32,
 }
 
@@ -40,6 +40,11 @@ impl Profile {
         out_string += "\nDescription:        ";
         out_string += &*self.description.bold().blue().to_string();
         out_string += &*self.characteristics.display_ascii();
+        out_string += "\nActions:            ";
+        for action in &self.actions {
+            out_string += "\n";
+            out_string += &*action.display_ascii();
+        }
         out_string += "\n\nSpecial Abilities:  ";
         out_string += &*self.special_abilities.bold().blue().to_string();
         out_string += "\n\n";

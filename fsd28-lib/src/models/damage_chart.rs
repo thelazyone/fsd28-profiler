@@ -18,7 +18,11 @@ pub struct DamageChart {
 impl DamageChart {
 
     pub fn new_default() -> DamageChart {
-        DamageChart {intervals: vec![(1, Color::Red, "DEAD".to_string()), (2, Color::Yellow, "MOV ".to_string()), (2, Color::Yellow, "ARM ".to_string()), (1, Color::Green, "PIN ".to_string()),]}
+        DamageChart {intervals: vec![
+            (1, Color::Red, "DEAD".to_string()),
+            (2, Color::Yellow, "MOV ".to_string()),
+            (2, Color::Yellow, "ARM ".to_string()),
+            (1, Color::Green, "PIN ".to_string()),]}
     }
 
     // TODO implement proper new
@@ -37,6 +41,8 @@ impl DamageChart {
         out_string += &*" |\n| ".blue().bold().to_string();
         for element in &self.intervals {
             out_string += "|  ";
+            
+            // TODO - Add spaces after "MOV" to fill 4 characters
             match element.1 {
                 Color::Red => out_string += &*element.2.red().bold().to_string(),
                 Color::Yellow => out_string += &*element.2.yellow().bold().to_string(),

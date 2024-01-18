@@ -8,6 +8,7 @@ use std::fs;
 pub use models::profile::Profile;
 pub use models::class::ClassesConfig;
 pub use models::class::Class;
+pub use models::action::ActionsConfig;
 
 pub fn get_classes(i_path : &str) -> ClassesConfig {
     let mut path = i_path;
@@ -17,6 +18,16 @@ pub fn get_classes(i_path : &str) -> ClassesConfig {
     let file_content = fs::read_to_string(path).expect("Failed to read file");
     serde_json::from_str(&file_content).unwrap()
 }
+
+pub fn get_default_actions(i_path: &str) -> ActionsConfig {
+    let mut path = i_path;
+    if i_path == "" {
+        path = "./fsd28-lib/data/default_actions.json";
+    }
+    let file_content = fs::read_to_string(path).expect("Failed to read file");
+    serde_json::from_str(&file_content).unwrap()
+}
+
 
 pub fn create_profile(i_name : String, i_class : Class) -> Profile {
     Profile::new(i_name, i_class)

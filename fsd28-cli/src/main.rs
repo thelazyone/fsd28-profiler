@@ -3,8 +3,10 @@ use app_state::AppState;
 use app_state::MenuStates;
 
 use fsd28_lib::models::class::ClassesConfig;
+use fsd28_lib::models::action::ActionsConfig;
 use fsd28_lib::create_profile;
 use fsd28_lib::get_classes;
+use fsd28_lib::get_default_actions;
 
 use dialoguer::{theme::ColorfulTheme, Select, Input};
 
@@ -21,6 +23,8 @@ fn main() {
             //MenuStates::LoadProfiles => load_profile_dialog(&mut app_state),
             MenuStates::SelectProfile => select_profile_dialog(&mut app_state),
             MenuStates::EditProfile => edit_profile_dialog(&mut app_state),
+            MenuStates::AddAction => add_action_dialog(&mut app_state),
+            //MenuStates::AddEquip => add_equip_action(&mut app_state,)
             MenuStates::EditName => edit_name_dialog(&mut app_state),
             // MenuStates::EditType => edit_profile(),
             // MenuStates::EditClass => edit_profile(),
@@ -32,6 +36,9 @@ fn main() {
 
 
 fn main_menu_dialog(app_state: &mut AppState) -> MenuStates{
+    // Clearing the screen
+    println!("\x1B[2J");
+
     let selections = &["Create", "Select", "Exit"];
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("This is the FSD28 profile creator. What would you like to do?")
@@ -57,20 +64,19 @@ fn create_profile_dialog(app_state: &mut AppState) -> MenuStates {
         .unwrap();
 
     // Now asking for the class
-    let all_classes = get_classes("");
+    let all_classes: ClassesConfig = get_classes("");
     let mut options: Vec<String> = all_classes
     .classes.iter()
     .map(|class| class.name.clone())
     .collect::<Vec<String>>();
     
+    // Selecting the class here
     let selection = Select::with_theme(&ColorfulTheme::default())
     .with_prompt("Select a class:")
     .default(0)
     .items(&options[..])
     .interact()
     .unwrap();
-
-    //Selection is the index. 
     let selected_class = all_classes.classes[selection].clone();
 
     app_state.add_profile(create_profile(
@@ -109,12 +115,13 @@ fn select_profile_dialog(app_state: &mut AppState) -> MenuStates {
 }
 
 fn edit_profile_dialog(app_state: &mut AppState) -> MenuStates {
-
-    println!("Here is the selected profile:");
+    print!("\x1B[2J");
+    println!("Here is the selected profile:\n\n");
     println!("{}", app_state.get_selected().unwrap().display_ascii());
     let selections = &[
         // TODO add more
         "Change Name",
+        "Add Action",
         "Return"]; 
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("What do you want to do?")
@@ -125,10 +132,51 @@ fn edit_profile_dialog(app_state: &mut AppState) -> MenuStates {
 
     match selections[selection] {
         "Change Name" => MenuStates::EditName,
+        "Add Action" => MenuStates::AddAction,
         "Return" => MenuStates::MainMenu,
         "Load Profiles" => MenuStates::LoadProfiles,
         _ => unreachable!(),
     }
+}
+
+fn add_action_dialog(app_state: &mut AppState) -> MenuStates {
+
+    // Now asking for the Action to add.
+    // There are actions depending on the weapon.
+
+    // Default actions are always there.
+    let all_actions = get_default_actions("");
+
+    // Weapon specific actions:
+    // TODO
+
+    // Filling the options
+    let mut options: Vec<String> = all_actions
+    .actions
+    .iter()
+    .map(|action| action.name.clone())
+    .collect::<Vec<String>>();
+
+    // Lastly adding the Cancel option.
+    options.push("Cancel".to_string());
+    
+    // Selecting the class here
+    let selection = Select::with_theme(&ColorfulTheme::default())
+    .with_prompt("Select an action to add:")
+    .default(0)
+    .items(&options[..])
+    .interact()
+    .unwrap();
+
+    if selection == options.len() - 1 {
+        // The last option (Return to Main Menu) was selected
+        return MenuStates::EditProfile;
+    } else {
+        app_state.get_selected().unwrap().actions.push(all_actions.actions[selection].clone())
+    }
+
+    // After adding the class, back to edit class.
+    MenuStates::EditProfile
 }
 
 fn edit_name_dialog(app_state: &mut AppState) -> MenuStates {
