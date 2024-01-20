@@ -3,10 +3,10 @@ use app_state::AppState;
 use app_state::MenuStates;
 
 use fsd28_lib::models::class::ClassesConfig;
-use fsd28_lib::models::action::ActionsConfig;
 use fsd28_lib::create_profile;
 use fsd28_lib::get_classes;
 use fsd28_lib::get_default_actions;
+use fsd28_lib::utils::pdf_ascii_generator::create_pdf_ascii;
 
 use dialoguer::{theme::ColorfulTheme, Select, Input};
 
@@ -23,6 +23,7 @@ fn main() {
             //MenuStates::LoadProfiles => load_profile_dialog(&mut app_state),
             MenuStates::SelectProfile => select_profile_dialog(&mut app_state),
             MenuStates::EditProfile => edit_profile_dialog(&mut app_state),
+            MenuStates::PrintAllProfiles => print_all_profiles_dialog(&mut app_state),
             MenuStates::AddAction => add_action_dialog(&mut app_state),
             //MenuStates::AddEquip => add_equip_action(&mut app_state,)
             MenuStates::EditName => edit_name_dialog(&mut app_state),
@@ -35,11 +36,11 @@ fn main() {
 }
 
 
-fn main_menu_dialog(app_state: &mut AppState) -> MenuStates{
+fn main_menu_dialog(_: &mut AppState) -> MenuStates{
     // Clearing the screen
     println!("\x1B[2J");
 
-    let selections = &["Create", "Select", "Exit"];
+    let selections = &["Create", "Select", "Print", "Exit"];
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("This is the FSD28 profile creator. What would you like to do?")
         .default(0)
@@ -50,6 +51,7 @@ fn main_menu_dialog(app_state: &mut AppState) -> MenuStates{
     match selections[selection] {
         "Create" => MenuStates::CreateProfile,
         "Select" => MenuStates::SelectProfile,
+        "Print" => MenuStates::PrintAllProfiles,
         "Exit" => MenuStates::Exit,
         _ => unreachable!(),
     }
@@ -65,7 +67,7 @@ fn create_profile_dialog(app_state: &mut AppState) -> MenuStates {
 
     // Now asking for the class
     let all_classes: ClassesConfig = get_classes("");
-    let mut options: Vec<String> = all_classes
+    let options: Vec<String> = all_classes
     .classes.iter()
     .map(|class| class.name.clone())
     .collect::<Vec<String>>();
@@ -139,6 +141,26 @@ fn edit_profile_dialog(app_state: &mut AppState) -> MenuStates {
     }
 }
 
+fn print_all_profiles_dialog(app_state: &mut AppState) -> MenuStates { 
+    let selections = &["Yes", "Return"];
+    let selection = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("This will print ALL profiles created. Continue?")
+        .default(0)
+        .items(&selections[..])
+        .interact()
+        .unwrap();
+
+    match selections[selection] {
+        "Yes" => {
+            create_pdf_ascii(app_state.get_all_profiles(), "out.pdf");
+        },
+        "Return" => (),
+        _ => unreachable!(),
+    };
+
+    MenuStates::MainMenu
+}
+
 fn add_action_dialog(app_state: &mut AppState) -> MenuStates {
 
     // Now asking for the Action to add.
@@ -190,7 +212,7 @@ fn edit_name_dialog(app_state: &mut AppState) -> MenuStates {
     MenuStates::EditProfile
 }
 
-fn load_profile_dialog(app_state: &mut AppState) {
+fn load_profile_dialog(_: &mut AppState) {
     let path: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("Enter the path to load the profile from")
         .interact_text()

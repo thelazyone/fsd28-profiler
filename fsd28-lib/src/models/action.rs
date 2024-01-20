@@ -17,7 +17,7 @@ pub struct Action {
 
 impl Action {
 
-    // Static methods to draw the ascii content
+    // Static methods to draw the ascii content of ONE box (either with text or not)
     fn add_ascii_box(lines : &mut Vec<String>, content : Option<(u32, u32)>) {
 
         // Sanity Check:
@@ -27,7 +27,7 @@ impl Action {
 
         // Creating the inside text
         // This could be done with a pattern match but it's tricky for me.
-        let mut text_content = String::new();
+        let text_content: String;
         if let Some(range) = content {
             if range.0 == 0 {
                 text_content = "FREE ".to_string();
@@ -51,6 +51,8 @@ impl Action {
         lines[2] += &*"------- ".purple().bold().to_string();
     }
 
+
+    // Displays the full ascii area for ONE action
     pub fn display_ascii(&self) -> String {
         let mut lines = vec![String::new(); 3];
 

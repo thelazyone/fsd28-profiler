@@ -1,12 +1,9 @@
-use crate::models::dice_value::DiceValue;
 use crate::models::damage_chart::DamageChart;
 use crate::models::action::Action;
 use crate::models::characteristics::Characteristics;
 use crate::models::class::Class;
 
 use colored::Colorize;
-
-use super::class;
 
 #[derive(Clone)]
 pub struct Profile {
@@ -35,16 +32,24 @@ impl Profile {
 
     pub fn display_ascii (&self) -> String {
         let mut out_string = String::new();
+        // Infos
         out_string += "Character Name:     ";
         out_string += &*self.name.bold().blue().to_string();
         out_string += "\nDescription:        ";
         out_string += &*self.description.bold().blue().to_string();
+        out_string += "\nCost:               ";
+        out_string += &*self.cost.to_string().bold().blue().to_string();
+
+        // Characteristics
+        out_string += "\n\n";
         out_string += &*self.characteristics.display_ascii();
-        out_string += "\nActions:            ";
+        out_string += "\n\nActions:            ";
         for action in &self.actions {
             out_string += "\n";
             out_string += &*action.display_ascii();
         }
+
+        // Abilities and damage chart
         out_string += "\n\nSpecial Abilities:  ";
         out_string += &*self.special_abilities.bold().blue().to_string();
         out_string += "\n\n";

@@ -12,7 +12,7 @@ pub use models::action::ActionsConfig;
 
 pub fn get_classes(i_path : &str) -> ClassesConfig {
     let mut path = i_path;
-    if i_path == "" {
+    if i_path.is_empty() {
         path = "./fsd28-lib/data/classes.json";
     }
     let file_content = fs::read_to_string(path).expect("Failed to read file");
@@ -21,7 +21,7 @@ pub fn get_classes(i_path : &str) -> ClassesConfig {
 
 pub fn get_default_actions(i_path: &str) -> ActionsConfig {
     let mut path = i_path;
-    if i_path == "" {
+    if i_path.is_empty() {
         path = "./fsd28-lib/data/default_actions.json";
     }
     let file_content = fs::read_to_string(path).expect("Failed to read file");

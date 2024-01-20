@@ -8,6 +8,7 @@ pub enum MenuStates {
     SelectProfile,
     EditProfile, // Choices to edit specific stuff appear from here
     AddAction,
+    PrintAllProfiles,
     AddEquip,
     EditName,
     EditType,
@@ -44,11 +45,11 @@ impl AppState {
                 println!("Error: profile index out of bounds.");
             }
 
-            return self.profiles.get_mut(index);
+            self.profiles.get_mut(index)
         }
         else {
             println!("Error: no state selected."); 
-            return None;
+            None
         }
     }
 

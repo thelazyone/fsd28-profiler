@@ -34,7 +34,6 @@ impl DamageChart {
     //    1        2        3        4        5        6   
     //| DEAD  || DEAD  || DEAD  || DEAD  || DEAD  || DEAD |
     //
-    //
     pub fn display_ascii(&self) -> String {
         let mut out_string = "----------------------------------------------------------\n| ".blue().bold().to_string();
         out_string += "    1        2        3        4        5        6    ";

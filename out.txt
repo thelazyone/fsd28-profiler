@@ -1,0 +1,13 @@
+Character Name:     a                                                                                                   
+Description:        Bandit                                                                                              
+Cmd   = 0       Def   = 4+      Save  = d6(2)                                                                           
+Move  = 3 DU    Shoot = -       Melee = 1d6                                                                             
+Actions:                                                                                                                
+                                                                                                                        
+Special Abilities:  none                                                                                                
+                                                                                                                        
+----------------------------------------------------------                                                              
+|     1        2        3        4        5        6     |                                                              
+| |  DEAD                   ||  MOV                    | |                                                              
+----------------------------------------------------------                                                              
+

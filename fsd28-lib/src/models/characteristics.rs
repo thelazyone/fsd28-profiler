@@ -29,17 +29,17 @@ impl Characteristics {
     pub fn display_ascii(&self) -> String {
         let mut out_string = String::new();
         out_string += "\nCmd   = ";
-        out_string += &*self.stat_cmd.to_string().bold().blue().to_string();
-        out_string += "\tDef   = ";
-        out_string += &*format!("{}+", self.stat_def).bold().blue().to_string();
-        out_string += "\tSave  = ";
-        out_string += &*self.stat_save.display().bold().blue().to_string();
+        out_string += &*format!("{}       ", self.stat_cmd).bold().blue().to_string();
+        out_string += "Def   = ";
+        out_string += &*format!("{}+      ", self.stat_def).bold().blue().to_string();
+        out_string += "Save  = ";
+        out_string += &*format!("{:<8}", self.stat_save.display()).bold().blue().to_string();
         out_string += "\nMove  = ";
-        out_string += &*self.stat_move.to_string().bold().blue().to_string();
-        out_string += "\tShoot = ";
-        out_string += &*self.stat_shoot.display().bold().blue().to_string();
-        out_string += "\tMelee = ";
-        out_string += &*self.stat_melee.display().bold().blue().to_string();
+        out_string += &*format!("{} DU    ", self.stat_move).bold().blue().to_string();
+        out_string += "Shoot = ";
+        out_string += &*format!("{:<8}", self.stat_shoot.display()).bold().blue().to_string();
+        out_string += "Melee = ";
+        out_string += &*format!("{:<8}", self.stat_melee.display()).bold().blue().to_string();
         out_string
     }
 }
