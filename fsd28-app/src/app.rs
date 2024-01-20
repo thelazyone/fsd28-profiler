@@ -1,6 +1,7 @@
 use yew::prelude::*;
 use crate::components::top_menu::TopMenu;
 // Import other components as needed
+use crate::shared_messages::SharedMessage;
 
 enum AppState {
     Roster,
@@ -8,48 +9,45 @@ enum AppState {
     // Other states as needed
 }
 
-struct Model {
-    link: ComponentLink<Self>,
+pub struct App {
     state: AppState,
 }
 
-enum Msg {
-    SwitchToRoster,
-    SwitchToUnits,
-    // Other messages as needed
-}
 
-impl Component for Model {
-    type Message = Msg;
+impl Component for App {
+    type Message = SharedMessage;
     type Properties = ();
 
-    fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Self { 
-            link,
-            state: AppState::Roster, // Default state
+    fn create(_: &Context<Self>) -> Self {
+        App { 
+            state: AppState::Units, // Default state
         }
     }
 
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, ctx: &Context<Self>, msg : SharedMessage) -> bool {
         match msg {
-            Msg::SwitchToRoster => {
+
+            SharedMessage::ViewRoster => {
                 self.state = AppState::Roster;
                 true
             },
-            Msg::SwitchToUnits => {
+
+            SharedMessage::ViewRoster => {
                 self.state = AppState::Units;
                 true
             },
+
+            _ => false,
             // Handle other messages
         }
     }
 
-    fn view(&self) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <>
                 <TopMenu 
-                    on_switch_to_roster=self.link.callback(|_| Msg::SwitchToRoster)
-                    on_switch_to_units=self.link.callback(|_| Msg::SwitchToUnits)
+                    on_switch_to_roster = {ctx.link().callback(|_| SharedMessage::ViewRoster)} 
+                    on_switch_to_units = {ctx.link().callback(|_| SharedMessage::ViewUnits)} 
                     // Pass other callbacks as needed
                 />
                 {
@@ -62,8 +60,4 @@ impl Component for Model {
             </>
         }
     }
-}
-
-fn main() {
-    yew::start_app::<Model>();
 }

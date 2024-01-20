@@ -1,34 +1,41 @@
 use yew::prelude::*;
 
-#[derive(Properties, Clone)]
+use crate::shared_messages::SharedMessage;
+
+#[derive(PartialEq, Properties, Clone)]
 pub struct Props {
-    pub on_switch_to_roster: Callback<()>,
-    pub on_switch_to_units: Callback<()>,
-    // Other props as needed
+    pub on_switch_to_roster: Callback<SharedMessage>,
+    pub on_switch_to_units: Callback<SharedMessage>,
 }
 
 pub struct TopMenu {
-    props: Props,
 }
 
 impl Component for TopMenu {
-    type Message = ();
+    type Message = SharedMessage;
     type Properties = Props;
 
-    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
-        Self { props }
+    fn create(_ctx: &Context<Self>) -> Self {
+        TopMenu {
+        }    
     }
 
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, _ctx: &Context<Self>, _msg: Self::Message) -> bool {
+
+        // Nothing to do here
         false
     }
 
-    fn view(&self) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <div class="top-menu">
-                <button onclick=self.props.on_switch_to_roster.reform(|_| ())>{ "Roster" }</button>
-                <button onclick=self.props.on_switch_to_units.reform(|_| ())>{ "Units" }</button>
-                // Other buttons
+                <div class="title">
+                    <span class="title">{"FSD28 - EXPERIMENTAL ARMY BUILDER"}</span>
+                </div>
+                <div class="menu">
+                    <button onclick={ctx.props().on_switch_to_roster.reform(|_| SharedMessage::ViewRoster)}>{ "View Roster" }</button>
+                    <button onclick={ctx.props().on_switch_to_units.reform(|_| SharedMessage::ViewUnits)}>{ "View Units" }</button>
+                </div>
             </div>
         }
     }
