@@ -4,3 +4,4 @@ members = [
     "fsd28-cli", 
     "fsd28-app",
 ]
+resolver = "2"

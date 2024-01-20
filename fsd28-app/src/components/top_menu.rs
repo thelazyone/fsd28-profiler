@@ -6,6 +6,8 @@ use crate::shared_messages::SharedMessage;
 pub struct Props {
     pub on_switch_to_roster: Callback<SharedMessage>,
     pub on_switch_to_units: Callback<SharedMessage>,
+    pub on_save: Callback<SharedMessage>,
+    pub on_load: Callback<SharedMessage>,
 }
 
 pub struct TopMenu {
@@ -35,6 +37,8 @@ impl Component for TopMenu {
                 <div class="menu">
                     <button onclick={ctx.props().on_switch_to_roster.reform(|_| SharedMessage::ViewRoster)}>{ "View Roster" }</button>
                     <button onclick={ctx.props().on_switch_to_units.reform(|_| SharedMessage::ViewUnits)}>{ "View Units" }</button>
+                    <button onclick={ctx.props().on_save.reform(|_| SharedMessage::Save)}>{"Save"}</button>
+                    <button onclick={ctx.props().on_load.reform(|_| SharedMessage::Load)}>{"Load"}</button>
                 </div>
             </div>
         }

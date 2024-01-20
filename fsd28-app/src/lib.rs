@@ -3,6 +3,7 @@ mod components {
 }
 mod app;
 mod shared_messages;
+mod model;
 
 
 // Defining the wrap for the WASM app.

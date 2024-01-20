@@ -3,6 +3,8 @@ pub enum SharedMessage {
     
     ViewRoster,
     ViewUnits,
+    Save,
+    Load,
 
     ToggleTheme,
 }

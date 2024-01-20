@@ -381,6 +381,7 @@ name = "fsd28-app"
 version = "0.1.0"
 dependencies = [
  "base64",
+ "fsd28-lib",
  "image",
  "js-sys",
  "log",

@@ -6,8 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# The in-repo lib
+fsd28-lib = { path = "../fsd28-lib" }
+
+# Other crates
 yew = { version = "0.20", features = ["csr"] }
-wasm-bindgen = "0.2.78"
+wasm-bindgen = "0.2.90"
 wasm-logger = "0.1.0"
 log = "0.4.14"
 image = "0.23.14"
