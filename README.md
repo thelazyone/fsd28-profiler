@@ -3,6 +3,8 @@ A custom generator for FSD28 profiles.
 
 FSD28 is an experimental port of [Full Spectrum Dominance](https://fsd-wargame.com/) into a 28mm skirmish game. Compared to the original game the profiles building becomes critical, and a software to do so is really helpful.
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/thelazyone/fsd28-profiler)
+
 ## Current State 
 Currently the only implementation is via CLI, but it's already better than nothing.
 ![step zero](./docs/screen_1.jpg)
@@ -16,10 +18,11 @@ For the future of course a web-based interface is preferable, something in line 
 
 ## TODOs for a MVP
 To get to a minimum viablep product the following are still needed:
-* implementing the actions for units
-* reading and handling of weapon profiles
-* same for standard actions
-* options for classes
-* saving and loading profiles (hardcoded path is ok)
-* generating a printable (even ASCII) card for each profile.
+
+- [x] implementing the default actions for units
+- [ ] reading and handling of weapon profiles
+- [ ] weapon-related actions
+- [ ] options for classes
+- [x] saving and loading profiles
+- [x] generating a printable (even ASCII) card for each profile.
 
