@@ -3,9 +3,13 @@ use crate::models::action::Action;
 use crate::models::characteristics::Characteristics;
 use crate::models::class::Class;
 
+use serde::{Deserialize, Serialize};
+
+// For ascii display
 use colored::Colorize;
 
-#[derive(Clone)]
+
+#[derive(Clone, Deserialize, Serialize)]
 pub struct Profile {
     pub name: String,
     description: String,

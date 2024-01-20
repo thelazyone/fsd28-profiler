@@ -1,4 +1,5 @@
 mod app_state;
+
 use app_state::AppState;
 use app_state::MenuStates;
 
@@ -7,6 +8,8 @@ use fsd28_lib::create_profile;
 use fsd28_lib::get_classes;
 use fsd28_lib::get_default_actions;
 use fsd28_lib::utils::pdf_ascii_generator::create_pdf_ascii;
+use fsd28_lib::load_profiles;
+use fsd28_lib::save_profiles;
 
 use dialoguer::{theme::ColorfulTheme, Select, Input};
 
@@ -20,7 +23,8 @@ fn main() {
         menu_state = match menu_state {
             MenuStates::MainMenu => main_menu_dialog(&mut app_state),
             MenuStates::CreateProfile => create_profile_dialog(&mut app_state),
-            //MenuStates::LoadProfiles => load_profile_dialog(&mut app_state),
+            MenuStates::LoadProfiles => load_profile_dialog(&mut app_state),
+            MenuStates::SaveProfiles => save_profile_dialog(&mut app_state),
             MenuStates::SelectProfile => select_profile_dialog(&mut app_state),
             MenuStates::EditProfile => edit_profile_dialog(&mut app_state),
             MenuStates::PrintAllProfiles => print_all_profiles_dialog(&mut app_state),
@@ -30,7 +34,6 @@ fn main() {
             // MenuStates::EditType => edit_profile(),
             // MenuStates::EditClass => edit_profile(),
             MenuStates::Exit => break,
-            _ => {println!("State not covered yet!"); MenuStates::MainMenu},
         };
     }
 }
@@ -40,7 +43,7 @@ fn main_menu_dialog(_: &mut AppState) -> MenuStates{
     // Clearing the screen
     println!("\x1B[2J");
 
-    let selections = &["Create", "Select", "Print", "Exit"];
+    let selections = &["Create", "Save", "Load", "Select", "Print", "Exit"];
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("This is the FSD28 profile creator. What would you like to do?")
         .default(0)
@@ -50,6 +53,8 @@ fn main_menu_dialog(_: &mut AppState) -> MenuStates{
 
     match selections[selection] {
         "Create" => MenuStates::CreateProfile,
+        "Save" => MenuStates::SaveProfiles,
+        "Load" => MenuStates::LoadProfiles,
         "Select" => MenuStates::SelectProfile,
         "Print" => MenuStates::PrintAllProfiles,
         "Exit" => MenuStates::Exit,
@@ -212,13 +217,36 @@ fn edit_name_dialog(app_state: &mut AppState) -> MenuStates {
     MenuStates::EditProfile
 }
 
-fn load_profile_dialog(_: &mut AppState) {
+fn load_profile_dialog(app_state: &mut AppState) -> MenuStates  {
     let path: String = Input::with_theme(&ColorfulTheme::default())
-        .with_prompt("Enter the path to load the profile from")
+        .with_prompt("Enter the filename to load the profile from")
         .interact_text()
         .unwrap();
+    let path = path + ".sav"; 
 
-    println!("Loading profile from: {}", path);
-    // Implement the logic to load the profile using fsd28-lib
+    println!("Loading profiles from: {}", path);
+    let temp_profiles = load_profiles(&path).unwrap();
+    app_state.clear_profiles();
+    app_state.set_all_profiles(temp_profiles);
+
+    print!("{} profiles loaded.", app_state.get_all_profiles().len());
+
+    MenuStates::MainMenu
+}
+
+fn save_profile_dialog(app_state: &mut AppState) -> MenuStates  {
+    let path: String = Input::with_theme(&ColorfulTheme::default())
+        .with_prompt("Enter the filename to load the profile from")
+        .interact_text()
+        .unwrap();
+    let path = path + ".sav"; 
+
+    println!("Saving {} profiles to: {}", app_state.get_all_profiles().len(), path);
+    match save_profiles(app_state.get_all_profiles().clone(), &path) {
+        Ok(_) => (),
+        Err(err) => println!("Error saving to file: {:?}", err),
+    }
+
+    MenuStates::MainMenu
 }
 

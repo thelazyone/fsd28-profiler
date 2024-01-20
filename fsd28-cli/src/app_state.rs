@@ -5,14 +5,15 @@ pub enum MenuStates {
     MainMenu,
     CreateProfile,
     LoadProfiles,
+    SaveProfiles,
     SelectProfile,
     EditProfile, // Choices to edit specific stuff appear from here
     AddAction,
     PrintAllProfiles,
-    AddEquip,
+    //AddEquip,
     EditName,
-    EditType,
-    EditClass,
+    //EditType,
+    //EditClass,
     // More to add TODO
     Exit,
 }
@@ -64,5 +65,13 @@ impl AppState {
 
     pub fn get_all_profiles(&self) -> Vec<Profile> {
         self.profiles.clone()
+    }
+
+    pub fn clear_profiles(&mut self) {
+        self.profiles.clear();
+    }
+
+    pub fn set_all_profiles(&mut self, i_profiles: Vec<Profile>) {
+        self.profiles = i_profiles; // No cloning, no reference. Hard move.
     }
 }

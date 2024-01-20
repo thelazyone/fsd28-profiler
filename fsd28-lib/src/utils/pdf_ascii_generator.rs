@@ -66,7 +66,7 @@ fn create_pdf_file(ascii_content: &str, file_name: &str) {
     let font = doc.add_external_font(File::open("fsd28-lib/data/font/COUR.TTF").unwrap()).unwrap();
 
     let font_size = 7.0; // Adjust font size as needed
-    let line_height = 2.0; // Adjust line height as needed
+    let line_height = 3.0; // Adjust line height as needed
     let mut y_position = 280.0; // Starting Y position from top of the page
 
     for line in ascii_content.lines() {
