@@ -1,0 +1,3 @@
+[build]
+crate = "fsd28-app"
+manifest = "Cargo.toml"

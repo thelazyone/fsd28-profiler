@@ -1,5 +1,6 @@
 {
     "rust-analyzer.linkedProjects": [
-        ".\\fsd28-lib\\Cargo.toml"
+        ".\\fsd28-lib\\Cargo.toml",
+        ".\\fsd28-app\\Cargo.toml"
     ]
 }
