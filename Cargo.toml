@@ -1,5 +1,6 @@
 [workspace]
 members = [
     "fsd28-lib",
-    "fsd28-cli",
+    "fsd28-cli", 
+    "fsd28-app",
 ]

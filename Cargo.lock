@@ -255,6 +255,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "fsd28-app"
+version = "0.1.0"
+
+[[package]]
 name = "fsd28-cli"
 version = "0.1.0"
 dependencies = [
