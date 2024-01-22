@@ -1,5 +1,4 @@
 use regex::Regex;
-use printpdf::*;
 use std::fs::File;
 use std::io::BufWriter;
 use crate::Profile;
@@ -58,21 +57,40 @@ fn combine_two_profiles(profile1: &str, profile2: &str, pad_length: usize) -> St
 }
 
 // Generates the actual file, provided a well-formatted string.
+use lopdf::{Document, Object, Dictionary, Stream, content::{Content, Operation}, StringFormat};
 fn create_pdf_file(ascii_content: &str, file_name: &str) {
-    let ascii_content = strip_ansi_codes(ascii_content);
-    let (doc, page1, layer1) = PdfDocument::new("Profile Card", Mm(210.0), Mm(297.0), "Layer 1");
-    let current_layer = doc.get_page(page1).get_layer(layer1);
+    let mut doc = Document::with_version("1.5");
+    let pages_id = doc.new_object_id();
+    let mut content = Content { operations: vec![] };
 
-    let font = doc.add_external_font(File::open("fsd28-lib/data/font/COUR.TTF").unwrap()).unwrap();
-
-    let font_size = 7.0; // Adjust font size as needed
-    let line_height = 3.0; // Adjust line height as needed
     let mut y_position = 280.0; // Starting Y position from top of the page
+    let line_height = 3.0; // Adjust line height as needed
 
     for line in ascii_content.lines() {
-        current_layer.use_text(line, font_size, Mm(10.0), Mm(y_position), &font);
-        y_position -= line_height; // Move to the next line
+        content.operations.push(Operation::new("BT", vec![])); // Begin text object
+        content.operations.push(Operation::new("Tf", vec![Object::Name(b"Helvetica".to_vec()), Object::Real(7.0)])); // Set font and size
+        content.operations.push(Operation::new("Td", vec![Object::Real(10.0), Object::Real(y_position)])); // Position text
+        content.operations.push(Operation::new("Tj", vec![Object::String(line.as_bytes().to_vec(), StringFormat::Literal)])); // Show text
+        content.operations.push(Operation::new("ET", vec![])); // End text object
+        y_position -= line_height;
     }
 
-    doc.save(&mut BufWriter::new(File::create(file_name).unwrap())).unwrap();
+    let resources = Dictionary::from_iter(vec![
+        ("Font", Object::Dictionary(Dictionary::from_iter(vec![
+            ("Helvetica", Object::Name(b"Helvetica".to_vec()))
+        ])))
+    ]);
+
+    let page = Dictionary::from_iter(vec![
+        ("Type", Object::Name(b"Page".to_vec())),
+        ("Parent", Object::Reference(pages_id)),
+        ("Resources", Object::Dictionary(resources)),
+        ("MediaBox", Object::Array(vec![0.into(), 0.into(), (210.0).into(), (297.0).into()])),
+        ("Contents", Object::Stream(Stream::new(Dictionary::new(), content.encode().unwrap())))
+    ]);
+
+    let temp_doc = doc.add_object(page);
+    doc.objects.insert(pages_id, Object::Array(vec![Object::Reference(temp_doc)]));
+    let mut buffer = BufWriter::new(File::create(file_name).unwrap());
+    doc.save_to(&mut buffer).unwrap();
 }

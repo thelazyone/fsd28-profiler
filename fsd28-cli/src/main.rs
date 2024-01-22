@@ -40,9 +40,6 @@ fn main() {
 
 
 fn main_menu_dialog(_: &mut AppState) -> MenuStates{
-    // Clearing the screen
-    println!("\x1B[2J");
-
     let selections = &["Create", "Save", "Load", "Select", "Print", "Exit"];
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("This is the FSD28 profile creator. What would you like to do?")
@@ -225,13 +222,17 @@ fn load_profile_dialog(app_state: &mut AppState) -> MenuStates  {
     let path = path + ".sav"; 
 
     println!("Loading profiles from: {}", path);
-    let temp_profiles = load_profiles(&path).unwrap();
-    app_state.clear_profiles();
-    app_state.set_all_profiles(temp_profiles);
+    match load_profiles(&path) {
+        Ok(loaded_profiles)  => {
+            app_state.clear_profiles();
+            app_state.set_all_profiles(loaded_profiles);
+            println!("{} profiles loaded.", app_state.get_all_profiles().len());
+            MenuStates::MainMenu},
+        Err(_) => {
+            println!("Error loading profiles from file {}", path);
+            MenuStates::MainMenu},
+    }
 
-    print!("{} profiles loaded.", app_state.get_all_profiles().len());
-
-    MenuStates::MainMenu
 }
 
 fn save_profile_dialog(app_state: &mut AppState) -> MenuStates  {

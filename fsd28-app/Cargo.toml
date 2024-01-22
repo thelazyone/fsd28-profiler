@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 # The in-repo lib
-fsd28-lib = { path = "../fsd28-lib" }
+#fsd28-lib = { path = "../fsd28-lib" }
 
 # Other crates
 yew = { version = "0.20", features = ["csr"] }
