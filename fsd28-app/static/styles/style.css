@@ -1,0 +1,176 @@
+.app {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 5fr 1fr;
+    height: 100vh;
+}
+
+.top-menu {
+    grid-column: span 3;
+}
+
+.left-bar {
+    grid-column: 1;
+}
+
+.main-canvas{
+    grid-column: 2;
+}
+
+.right-bar {
+    grid-column: 3;
+}
+
+
+/*TOP MENU*/
+.top-menu {
+    display: grid;
+    grid-template-rows: auto 0.3fr;
+    vertical-align: middle;
+}
+
+.title {
+    text-align: center;
+    background-color: transparent;
+    border: none;
+    padding: 12px 0px;
+    vertical-align: middle;
+    text-decoration: none;
+    font-size: 1.6rem;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase;
+}
+
+.menu {
+    text-align: center;
+    background-color: transparent;
+    border: none;
+    padding: 0px 0px;
+    vertical-align: middle;
+    text-decoration: none;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase;
+}
+
+.top-menu button {
+    background-color: transparent;
+    border: none;
+    padding: 8px 48px;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase;
+}
+
+.top-menu button:hover {
+    background-color: rgba(220, 220, 220, 0.5);
+    transition: 0.7s;
+}
+
+
+/* SIDE BARS */
+
+.left-bar, .right-bar {
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: visible;
+    width: auto;
+}
+
+.left-bar button, .right-bar button, .central-area button {
+    display: block; /* This ensures each button is on a new line */
+    background-color: transparent;
+    border: none;
+    padding: 15px 12px;
+    text-decoration: none;
+    font-size: 16px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+}
+
+.left-bar button:hover, .right-bar button:hover, .central-area button:hover {
+    background-color: rgba(220, 220, 220, 0.5);
+    transition: 0.7s;
+}
+
+.button:hover {
+    background-color: rgba(220, 220, 220, 0.5);
+    transition: 0.7s;
+}
+
+.left-bar button {
+    text-align: left;
+}
+
+.right-bar button {
+    text-align: right;
+}
+
+.left-bar {
+    background-color: transparent;
+    text-align: left; /* This ensures content in the left bar is left-aligned */
+    align-items: left;
+}
+
+.right-bar {
+    background-color: transparent;
+    text-align: right; /* This ensures content in the right bar is right-aligned */
+    align-items: right;
+}
+
+
+
+.left-menu {
+    overflow: visible;
+    transition: max-height 0.5s ease;
+    max-height: 500px; /* Adjust based on the height of the menu button */
+}
+
+.left-menu.expanded {
+    max-height: 600px; /* Adjust based on the maximum height you expect the menu to be */
+}
+
+.left-menu-content {
+    overflow: hidden;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+    height: 0;
+}
+
+.left-menu.expanded .left-menu-content {
+    opacity: 1;
+    height: auto;
+}
+
+.left-bar .left-menu > button {
+    font-size: 20px; /* Adjust this value to your preference */
+    text-transform: uppercase;
+}
+
+.profile-button.selected {
+    background-color: grey;
+    /* Other styles for selected profile button */
+}
+
+.units-view {
+    display: flex;
+    width: 100%;
+}
+
+.left-bar, .right-bar {
+    width: 25%;
+    /* Additional styles as needed */
+}
+
+.center-bar {
+    width: 50%;
+    /* Additional styles as needed */
+}
