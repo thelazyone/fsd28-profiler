@@ -71,7 +71,7 @@ impl UnitsView {
 
     fn view_selected_profile(&self) -> Html {
         if let Some(profile) = &self.selected_profile {
-            html! { <div>{ &profile.name }</div> }
+            html! { <div>{ &profile.display_ascii() }</div> }
         } else {
             html! { <div>{ "No profile selected" }</div> }
         }
