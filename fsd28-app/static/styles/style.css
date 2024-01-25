@@ -1,24 +1,47 @@
 .app {
     display: grid;
     grid-template-rows: auto 1fr;
-    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-columns: 1fr;
     height: 100vh;
 }
 
 .top-menu {
-    grid-column: span 3;
+    grid-column: span 1;
+    padding-bottom: 10vh;
+}
+
+
+.units-view {
+    display:grid;
+    grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
 }
 
 .left-bar {
-    grid-column: 1;
-}
-
-.main-canvas{
     grid-column: 2;
 }
 
-.right-bar {
+.center-bar{
     grid-column: 3;
+}
+
+.right-bar {
+    grid-column: 4;
+}
+
+
+.roster-view {
+    display:flex;
+}
+
+
+.label{
+    font-weight: bold;  /* Thick style */
+    padding: 20px;
+    background-color: transparent;  /* Light gray background for visibility */
+    text-align: left;
+    font-size: 24px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
 }
 
 
@@ -76,6 +99,7 @@
 /* SIDE BARS */
 
 .left-bar, .right-bar {
+    background-color: transparent;
     padding: 10px;
     box-sizing: border-box;
     overflow: visible;
@@ -115,13 +139,11 @@
 }
 
 .left-bar {
-    background-color: transparent;
     text-align: left; /* This ensures content in the left bar is left-aligned */
     align-items: left;
 }
 
 .right-bar {
-    background-color: transparent;
     text-align: right; /* This ensures content in the right bar is right-aligned */
     align-items: right;
 }
@@ -155,22 +177,9 @@
     text-transform: uppercase;
 }
 
-.profile-button.selected {
+.button.selected {
     background-color: grey;
     /* Other styles for selected profile button */
 }
 
-.units-view {
-    display: flex;
-    width: 100%;
-}
 
-.left-bar, .right-bar {
-    width: 25%;
-    /* Additional styles as needed */
-}
-
-.center-bar {
-    width: 50%;
-    /* Additional styles as needed */
-}

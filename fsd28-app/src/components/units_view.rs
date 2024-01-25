@@ -37,13 +37,14 @@ impl Component for UnitsView {
         html! {
             <div class="units-view">
                 <div class="left-bar">
+                    <div class="label">{ format!("PROFILES:")}</div>
                     { for ctx.props().profiles.iter().map(|profile| self.view_profile(profile, ctx.link())) }
                 </div>
                 <div class="center-bar">
                     { self.view_selected_profile() }
                 </div>
                 <div class="right-bar">
-                    // Content for the right bar
+                    { self.view_selected_profile() }
                 </div>
             </div>
         }
@@ -54,14 +55,12 @@ impl Component for UnitsView {
 
 
 impl UnitsView {
-    // ... other methods ...
-
     fn view_profile(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
         let is_selected = self.selected_profile.as_ref().map_or(false, |p| p == profile);
         let local_profile = profile.clone(); // There is a _DOUBLE_ clone here - TODO FIX this is horrible (but it works)
         html! {
             <button
-                class={classes!("profile-button", is_selected.then(|| "selected"))}
+                class={classes!("left-bar.button", is_selected.then(|| ".selected"))} // SELECTED IS NOT WORKING!
                 onclick={link.callback(move |_| Msg::ProfileSelected(local_profile.clone()))}
             >
                 { &profile.name }

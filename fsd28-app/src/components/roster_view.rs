@@ -12,7 +12,7 @@ impl Component for RosterView {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
-            <div>{ "TEMP ROSTER VIEW" }</div>
+            <div class="roster-view">{ "TEMP ROSTER VIEW" }</div>
         }
     }
 }
