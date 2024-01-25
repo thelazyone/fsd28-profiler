@@ -1,5 +1,9 @@
 use yew::prelude::*;
-use crate::components::top_menu::TopMenu;
+use crate::components::{
+    top_menu::TopMenu,
+    roster_view::RosterView,
+    units_view::UnitsView,
+};
 use crate::shared_messages::SharedMessage;
 use crate::model::Model;
 
@@ -43,7 +47,7 @@ impl Component for App {
                 true
             },
 
-            SharedMessage::ViewRoster => {
+            SharedMessage::ViewUnits => {
                 self.state = AppStates::Units;
                 true
             },
@@ -102,8 +106,8 @@ impl Component for App {
                 />
                 {
                     match self.state {
-                        AppStates::Roster => html! { /* Roster view component */ },
-                        AppStates::Units => html! { /* Units view component */ },
+                        AppStates::Roster => html! { <RosterView /> },
+                        AppStates::Units => html! { <UnitsView /> },
                     }
                 }
             </>
