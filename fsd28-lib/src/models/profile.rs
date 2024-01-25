@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use colored::Colorize;
 
 
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Clone, PartialEq, Deserialize, Serialize)]
 pub struct Profile {
     pub name: String,
     description: String,

@@ -6,7 +6,7 @@ pub struct ActionsConfig {
     pub actions: Vec<Action>,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct Action {
     pub name: String,
     pub cost: Vec<(u32, u32)>,

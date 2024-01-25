@@ -6,5 +6,8 @@ pub enum SharedMessage {
     Save,
     Load,
 
-    ToggleTheme,
+    ToggleTheme, // Temporarly unused.
+
+    // Loading
+    FileContentReceived(String), // TODO should it be a &str?
 }

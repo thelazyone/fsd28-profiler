@@ -158,3 +158,34 @@
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: bold;
 }
+
+
+
+
+.units-view {
+    display: flex;
+    width: 100%;
+}
+
+.left-bar, .right-bar {
+    width: 25%; /* Each bar takes a fourth of the screen width */
+    /* Add more styles as needed */
+}
+
+.center-bar {
+    width: 50%; /* Center bar takes half of the screen width */
+    /* Add more styles as needed */
+}
+
+.selected-profile-name {
+    /* Style for the selected profile name */
+}
+
+.profile-button {
+    /* Styles for profile buttons */
+}
+
+.profile-button.selected {
+    background-color: grey;
+    /* Other styles for selected profile button */
+}

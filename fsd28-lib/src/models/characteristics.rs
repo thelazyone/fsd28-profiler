@@ -4,7 +4,7 @@ use colored::Colorize;
 use crate::models::dice_value::DiceValue;
 
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct Characteristics {
     pub stat_cmd: u32,
     pub stat_def: u32,
