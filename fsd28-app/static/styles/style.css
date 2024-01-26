@@ -36,7 +36,7 @@
 
 .label{
     font-weight: bold;  /* Thick style */
-    padding: 20px;
+    padding: 16px;
     background-color: transparent;  /* Light gray background for visibility */
     text-align: left;
     font-size: 24px;
@@ -183,3 +183,132 @@
 }
 
 
+/* PROFILE LAYOUT */
+
+.profile-details {
+    display: grid;
+    justify-content: space-evenly;
+    height:auto;
+    padding: 10px;
+    grid-template-rows: auto 60 px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.profile-name {
+    text-align: center;
+    grid-column: span 3;
+    grid-row: 1;
+
+    /* Bottom border */
+    border-bottom: 4px solid #666;
+    border-radius: 2px;
+
+    font-weight: bold;  /* Thick style */
+    text-transform: uppercase;
+    padding: 18px;
+    background-color: transparent;  /* Light gray background for visibility */
+    font-size: 24px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+}
+
+.profile-description {
+    text-align: center;
+    grid-column: span 3;
+    grid-row: 2;
+
+    font-variant: small-caps;
+    font-weight: bold;  /* Thick style */
+    padding: 12px;
+    background-color: transparent;  /* Light gray background for visibility */
+    font-size: 24px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+}
+
+.profile-stats {
+    display: grid;
+    grid-column: span 3;
+    grid-row: 3;
+
+    /* Bottom border */
+    border-bottom: 4px solid #666;
+    border-radius: 2px;
+
+    justify-content: space-around;
+    /* Additional styles for the profile stats */
+
+    font-variant: small-caps;
+    font-weight: bold;  /* Thick style */
+    padding: 12px;
+    background-color: transparent;  /* Light gray background for visibility */
+    font-size: 24px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+}
+
+.profile-stats-cmd { 
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.profile-stats-def { 
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.profile-stats-save { 
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.profile-stats-move { 
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.profile-stats-shoot { 
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.profile-stats-melee { 
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.profile-special-abilities {
+    grid-column: span 3;
+    grid-row: 4;
+
+    font-weight: bold;  /* Thick style */
+    text-align: center;
+    font-variant: small-caps;
+    padding: 12px;
+    background-color: transparent;  /* Light gray background for visibility */
+    font-size: 24px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+}
+
+.damage-chart {
+    grid-column: span 3;
+    grid-row: 5;
+
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto auto; 
+
+    /* Top border */
+    border-top: 4px solid #666;
+    border-radius: 2px;
+    
+    text-transform: uppercase;
+    font-weight: bold;  /* Thick style */
+    text-align: center;
+    padding: 16px;
+    background-color: transparent;  /* Light gray background for visibility */
+    font-size: 24px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+}

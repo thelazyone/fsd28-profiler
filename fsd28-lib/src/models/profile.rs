@@ -12,12 +12,12 @@ use colored::Colorize;
 #[derive(Clone, PartialEq, Deserialize, Serialize)]
 pub struct Profile {
     pub name: String,
-    description: String,
-    characteristics: Characteristics,
-    special_abilities: String,
-    damage_chart: DamageChart, // Temporary
+    pub description: String,
+    pub characteristics: Characteristics,
+    pub special_abilities: String,
+    pub damage_chart: DamageChart, // Temporary
     pub actions: Vec<Action>,
-    cost: u32,
+    pub cost: u32,
 }
 
 impl Profile {

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
-enum Color {
+pub enum Color {
     Red,
     Yellow,
     Green
@@ -12,7 +12,7 @@ enum Color {
 
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct DamageChart {
-    intervals: Vec<(u32, Color, String)>
+    pub intervals: Vec<(u32, Color, String)>
 }
 
 impl DamageChart {
