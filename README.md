@@ -19,6 +19,7 @@ For the future of course a web-based interface is preferable, something in line 
 ## TODOs for a MVP
 To get to a minimum viablep product the following are still needed:
 
+LIB:
 - [x] implementing the default actions for units
 - [ ] reading and handling of weapon profiles
 - [ ] weapon-related actions
@@ -26,3 +27,10 @@ To get to a minimum viablep product the following are still needed:
 - [x] saving and loading profiles
 - [x] generating a printable (even ASCII) card for each profile.
 
+WEB
+- [x] Basic framework in Yew
+- [x] Save-Load with dialog
+- [x] profile Visualization
+- [ ] Add-Remove Profiles
+- [ ] Edit Profiles (with forms)
+- [ ] Anything Roster-Related
