@@ -123,6 +123,11 @@ impl Component for App {
                 true
             },
 
+            SharedMessage::UpdateProfiles(updated_profiles) => {
+                self.model.profiles = updated_profiles;
+                true
+            },
+
             _ => false,
             // Handle other messages
         }
@@ -144,7 +149,10 @@ impl Component for App {
                 {
                     match self.state {
                         AppStates::Roster => html! { <RosterView /> },
-                        AppStates::Units => html! { <UnitsView profiles={profiles} /> },
+                        AppStates::Units => html! { <UnitsView 
+                            profiles={profiles} 
+                            on_profiles_changed={ctx.link().callback(|updated_profiles| SharedMessage::UpdateProfiles(updated_profiles))}
+                            /> },
                     }
                 }
 

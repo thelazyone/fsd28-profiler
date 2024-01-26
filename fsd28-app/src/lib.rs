@@ -2,6 +2,7 @@ mod components {
     pub mod top_menu;
     pub mod roster_view;
     pub mod units_view;
+    pub mod modal;
 }
 mod app;
 mod shared_messages;

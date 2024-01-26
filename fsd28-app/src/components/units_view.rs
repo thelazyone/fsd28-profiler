@@ -1,17 +1,33 @@
 use yew::prelude::*;
 use fsd28_lib::models::{characteristics::{self, Characteristics}, profile::Profile, damage_chart::DamageChart, damage_chart::Color};
+use fsd28_lib::get_classes;
+use fsd28_lib::ClassesConfig;
+
+use crate::shared_messages::SharedMessage;
+use crate::components::modal::Modal;
+
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct UnitsViewProps {
     pub profiles: Vec<Profile>, // Assuming Profile is a struct representing your profiles
+    pub on_profiles_changed: Callback<Vec<Profile>>,
 }
 
 pub struct UnitsView {
     selected_profile: Option<Profile>,
+    show_modal: bool,
 }
 
 pub enum Msg {
     ProfileSelected(Profile),
+    CreateNewProfile,
+    DeleteSelectedProfile,
+    UpdateName(String),
+
+    // Modal popup for new profile
+    ShowModal,
+    ModalConfirm(String),
+    ModalCancel,
 }
 
 impl Component for UnitsView {
@@ -21,6 +37,7 @@ impl Component for UnitsView {
     fn create(ctx: &Context<Self>) -> Self {
         Self {
             selected_profile: None,
+            show_modal: false,
         }
     }
 
@@ -28,24 +45,93 @@ impl Component for UnitsView {
         match msg {
             Msg::ProfileSelected(profile) => {
                 self.selected_profile = Some(profile);
-                true // Rerender the component
+                true 
             }
+
+            Msg::CreateNewProfile => {
+                // Instead of creating a new profile directly, set show_modal to true
+                self.show_modal = true;
+                true
+            },
+
+            Msg::DeleteSelectedProfile => {
+
+                self.update_model_profiles(ctx);
+                true
+            },
+
+            Msg::UpdateName(new_name) => {
+                // Update the name of the selected profile
+                if let Some(profile) = &mut self.selected_profile {
+                    profile.name = new_name;
+                }
+                true
+            },
+
+            // MODAL VIEW MESSAGES
+            Msg::ShowModal => {
+                self.show_modal = true;
+                true
+            },
+
+            Msg::ModalConfirm(class_name) => {
+                let classes: ClassesConfig = get_classes("");
+                let selected_class = classes.classes.iter().find(|c| c.name == class_name);
+            
+                match selected_class {
+                    Some(class) => {
+                        let mut updated_profiles = ctx.props().profiles.clone();
+                        let new_profile = Profile::new("NEW_PROFILE".to_string(), class.clone());
+                        updated_profiles.push(new_profile);
+                        ctx.props().on_profiles_changed.emit(updated_profiles);
+                        true
+                    },
+                    None => {
+                        false
+                    }
+                }
+            },
+
+            Msg::ModalCancel => {
+                self.show_modal = false;
+                true
+            },
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+
+        let all_classes : Vec<String> = get_classes("").classes.iter().map(|class| class.name.clone()).collect();
+
         html! {
             <div class="units-view">
                 <div class="left-bar">
-                    <div class="label">{ format!("PROFILES:")}</div>
-                    { for ctx.props().profiles.iter().map(|profile| self.view_profile(profile, ctx.link())) }
+                    <div class="profiles-list">
+                        { for ctx.props().profiles.iter().map(|profile| self.view_profile(profile, ctx.link())) }
+                    </div>
+                    <div class="profile-actions">
+                        <button onclick={ctx.link().callback(|_| Msg::CreateNewProfile)}>{"Create New"}</button>
+                        <button onclick={ctx.link().callback(|_| Msg::DeleteSelectedProfile)}>{"Delete Selected"}</button>
+                    </div>
+                    <div class="center-bar">
+                            { self.view_selected_profile() }
+                    </div>
+                    <div class="right-bar">
+                        //{ self.view_edit_name_form(ctx) }
+                    </div>
                 </div>
-                <div class="center-bar">
-                    { self.view_selected_profile() }
-                </div>
-                <div class="right-bar">
-                    
-                </div>
+
+                {if self.show_modal {
+                    html! {
+                        <Modal
+                            classes={all_classes} // Implement this method to get class names
+                            on_confirm={ctx.link().callback(Msg::ModalConfirm)}
+                            on_cancel={ctx.link().callback(|_| Msg::ModalCancel)}
+                        />
+                    }
+                } else {
+                    html! {}
+                }}
             </div>
         }
     }
@@ -166,6 +252,10 @@ impl UnitsView {
             Color::Green => "green",
             // Add other colors as needed
         }
+    }
+
+    fn update_model_profiles(&mut self, ctx: &Context<Self>) {
+        ctx.props().on_profiles_changed.emit(ctx.props().profiles.clone());
     }
     
 }

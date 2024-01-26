@@ -1,3 +1,5 @@
+use fsd28_lib::Profile;
+
 pub enum SharedMessage {
     NoOp, // Dummy message for no-operation
     
@@ -10,4 +12,7 @@ pub enum SharedMessage {
 
     // Loading
     FileContentReceived(String), // TODO should it be a &str?
+
+    // Dumping profile updates
+    UpdateProfiles(Vec<Profile>),
 }

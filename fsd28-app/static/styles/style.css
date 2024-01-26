@@ -13,7 +13,8 @@
 
 .units-view {
     display:grid;
-    grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
+    /* A padding column on left and right, keeping the three central ones with a 2:3:2 ratio. */
+    grid-template-columns: 1fr 2fr 3fr 2fr 1fr;
 }
 
 .left-bar {
@@ -302,7 +303,7 @@
     /* Top border */
     border-top: 4px solid #666;
     border-radius: 2px;
-    
+
     text-transform: uppercase;
     font-weight: bold;  /* Thick style */
     text-align: center;
@@ -311,4 +312,33 @@
     font-size: 24px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: bold;
+}
+
+.left-bar .profiles-list {
+    overflow-y: auto; /* Enable scrolling for the profile list */
+}
+
+.left-bar .profile-actions {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    /* Additional styles */
 }
