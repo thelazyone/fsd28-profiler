@@ -3,7 +3,6 @@ use fsd28_lib::models::{characteristics::{self, Characteristics}, profile::Profi
 use fsd28_lib::get_classes;
 use fsd28_lib::ClassesConfig;
 
-use crate::shared_messages::SharedMessage;
 use crate::components::modal::Modal;
 
 
@@ -82,8 +81,10 @@ impl Component for UnitsView {
                     Some(class) => {
                         let mut updated_profiles = ctx.props().profiles.clone();
                         let new_profile = Profile::new("NEW_PROFILE".to_string(), class.clone());
+                        self.selected_profile = Some(new_profile.clone()); // Set the new profile as selected
                         updated_profiles.push(new_profile);
                         ctx.props().on_profiles_changed.emit(updated_profiles);
+                        self.show_modal = false;
                         true
                     },
                     None => {
@@ -113,21 +114,23 @@ impl Component for UnitsView {
                         <button onclick={ctx.link().callback(|_| Msg::CreateNewProfile)}>{"Create New"}</button>
                         <button onclick={ctx.link().callback(|_| Msg::DeleteSelectedProfile)}>{"Delete Selected"}</button>
                     </div>
-                    <div class="center-bar">
-                            { self.view_selected_profile() }
-                    </div>
-                    <div class="right-bar">
-                        //{ self.view_edit_name_form(ctx) }
-                    </div>
+                </div>
+                <div class="center-bar">
+                        { self.view_selected_profile() }
+                </div>
+                <div class="right-bar">
+                    //{ self.view_edit_name_form(ctx) }
                 </div>
 
                 {if self.show_modal {
                     html! {
-                        <Modal
-                            classes={all_classes} // Implement this method to get class names
-                            on_confirm={ctx.link().callback(Msg::ModalConfirm)}
-                            on_cancel={ctx.link().callback(|_| Msg::ModalCancel)}
-                        />
+                        <div class="modal">
+                            <Modal
+                                    classes={all_classes} // Implement this method to get class names
+                                    on_confirm={ctx.link().callback(Msg::ModalConfirm)}
+                                    on_cancel={ctx.link().callback(|_| Msg::ModalCancel)}
+                                />
+                        </div>
                     }
                 } else {
                     html! {}

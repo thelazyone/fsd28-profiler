@@ -33,23 +33,25 @@ impl Component for Modal {
             },
         }
     }
-
+    
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <div class="modal">
                 <div class="modal-content">
-                    <h2>{"Select a class"}</h2>
-                    <ul>
+                    <div class="modal-header">{"Select a class"}</div>
+                    <div>
                         { for ctx.props().classes.iter().map(|class_name| {
                             let class_name_clone = class_name.clone();
                             html! {
-                                <li onclick={ctx.link().callback(move |_| ModalMsg::Confirm(class_name_clone.clone()))}>
+                                <div class="button" onclick={ctx.link().callback(move |_| ModalMsg::Confirm(class_name_clone.clone()))}>
                                     { class_name }
-                                </li>
+                                </div>
                             }
                         })}
-                    </ul>
-                    <button onclick={ctx.link().callback(|_| ModalMsg::Cancel)}>{"Cancel"}</button>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button" onclick={ctx.link().callback(|_| ModalMsg::Cancel)}>{"Cancel"}</div>
+                    </div>
                 </div>
             </div>
         }
