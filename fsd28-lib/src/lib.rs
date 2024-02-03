@@ -35,7 +35,6 @@ pub fn get_classes(i_path : &str) -> ClassesConfig {
         file_content = read_to_string(i_path).expect("Failed to read file");
     }
 
-    console::log_1(&format!("CLASSES ARE {}", file_content).into());
     serde_json::from_str(&file_content).unwrap()
 }
 

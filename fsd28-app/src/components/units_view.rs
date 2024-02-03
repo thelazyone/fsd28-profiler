@@ -1,9 +1,15 @@
 use yew::prelude::*;
-use fsd28_lib::models::{characteristics::{self, Characteristics}, profile::Profile, damage_chart::DamageChart, damage_chart::Color};
+use fsd28_lib::models::{
+    characteristics::Characteristics, 
+    profile::Profile, 
+    damage_chart::DamageChart,
+    damage_chart::Color};
 use fsd28_lib::get_classes;
 use fsd28_lib::ClassesConfig;
-
 use crate::components::modal::Modal;
+
+// For browser debugging
+use web_sys::console;
 
 
 #[derive(Properties, PartialEq, Clone)]
@@ -14,6 +20,9 @@ pub struct UnitsViewProps {
 
 pub struct UnitsView {
     selected_profile: Option<Profile>,
+    editing_profile: Option<Profile>,
+
+    form_name: String,
     show_modal: bool,
 }
 
@@ -21,12 +30,16 @@ pub enum Msg {
     ProfileSelected(Profile),
     CreateNewProfile,
     DeleteSelectedProfile,
-    UpdateName(String),
 
     // Modal popup for new profile
     ShowModal,
     ModalConfirm(String),
     ModalCancel,
+
+    // Profile Manipulation
+    UpdateFormName(String),
+    ProfileEdited,
+    SaveProfileChanges,
 }
 
 impl Component for UnitsView {
@@ -36,6 +49,9 @@ impl Component for UnitsView {
     fn create(ctx: &Context<Self>) -> Self {
         Self {
             selected_profile: None,
+            editing_profile: None,
+
+            form_name: "".to_string(),
             show_modal: false,
         }
     }
@@ -43,6 +59,7 @@ impl Component for UnitsView {
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::ProfileSelected(profile) => {
+                self.editing_profile = Some(profile.clone());
                 self.selected_profile = Some(profile);
                 true 
             }
@@ -59,15 +76,71 @@ impl Component for UnitsView {
                 true
             },
 
-            Msg::UpdateName(new_name) => {
-                // Update the name of the selected profile
-                if let Some(profile) = &mut self.selected_profile {
+            Msg::UpdateFormName(new_name) => {
+                console::log_1(&format!("Name set as {}", new_name.clone()).into());
+
+                if let Some(ref mut profile) = self.editing_profile {
                     profile.name = new_name;
+                    
+                    ctx.link().send_message(Msg::ProfileEdited);
                 }
+
+                console::log_1(&format!("debug1 {:?}", self.editing_profile.as_ref().unwrap().name).into());
+
                 true
             },
 
+            Msg::ProfileEdited => {
+
+                console::log_1(&format!("Profile Changed!").into());
+                console::log_1(&format!("debug2 {:?}", self.editing_profile.as_ref().unwrap().name).into());
+
+                // Assuming you have a method to get current form values
+                //let updated_profile = self.get_current_form_values(ctx, &self.editing_profile);
+
+                if let Some(updated_profile) = self.editing_profile.as_ref(){
+
+                    console::log_1(&format!("Updated name is {}", updated_profile.name).into());
+
+                    // No need for signals, i can just call 
+                    // view_profile(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html
+                    self.selected_profile = Some(updated_profile.clone());
+                }
+
+                true
+            },
+
+            Msg::SaveProfileChanges => {
+
+                console::log_1(&format!("Called SAVE").into());
+
+                // Input check: if there's no editing profile doing nothing.
+                if self.editing_profile.is_none(){
+                    return true
+                }
+                
+                // Signal to update the central view with the edited profile
+                let mut all_profiles = ctx.props().profiles.clone();
+
+                // Find the index of the profile to replace
+                // TODO remove that double clone(), it's ugly.
+                if let Some(index) = all_profiles
+                    .iter()
+                    .position(|p| p.name == self.editing_profile.clone().unwrap().name) {
+
+                    // Replace the old profile with the updated one
+                    all_profiles[index] = self.editing_profile.clone().unwrap().clone();
+                }
+
+                // TODO here replacing the profile that matches the "Selected profile" with the new one.
+                ctx.props().on_profiles_changed.emit(all_profiles);
+
+                true
+            }
+
+            
             // MODAL VIEW MESSAGES
+            // TODO this is not great, a better system is needed since there are several modal menus I want to pop up
             Msg::ShowModal => {
                 self.show_modal = true;
                 true
@@ -108,7 +181,7 @@ impl Component for UnitsView {
             <div class="units-view">
                 <div class="left-bar">
                     <div class="profiles-list">
-                        { for ctx.props().profiles.iter().map(|profile| self.view_profile(profile, ctx.link())) }
+                        { for ctx.props().profiles.iter().map(|profile| self.view_profile_button(profile, ctx.link())) }
                     </div>
                     <div class="profile-actions">
                         <button onclick={ctx.link().callback(|_| Msg::CreateNewProfile)}>{"Create New"}</button>
@@ -116,10 +189,10 @@ impl Component for UnitsView {
                     </div>
                 </div>
                 <div class="center-bar">
-                        { self.view_selected_profile() }
+                    { self.view_selected_profile() }
                 </div>
                 <div class="right-bar">
-                    //{ self.view_edit_name_form(ctx) }
+                    { self.view_edit_form(ctx) }
                 </div>
 
                 {if self.show_modal {
@@ -144,7 +217,7 @@ impl Component for UnitsView {
 
 
 impl UnitsView {
-    fn view_profile(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
+    fn view_profile_button(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
         let is_selected = self.selected_profile.as_ref().map_or(false, |p| p == profile);
         let local_profile = profile.clone(); // There is a _DOUBLE_ clone here - TODO FIX this is horrible (but it works)
         html! {
@@ -157,30 +230,50 @@ impl UnitsView {
         }
     }
 
+    fn view_profile(&self, profile: &Profile) -> Html {
+        console::log_1(&format!("Displaying {}", profile.name).into());
+        html! {
+            <div class="profile-details">
+                <div class="profile-name">{ &profile.name }</div>
+                <div class="profile-description">{ &profile.description }</div>
+                { self.display_characteristics(&profile.characteristics) }
+                <div class="profile-special-abilities">
+                    { "Special Abilities: " }
+                    { &profile.special_abilities }
+                </div>
+                { self.view_damage_chart(&profile.damage_chart) }
+            </div>
+        }
+    }
+    
+
     fn view_selected_profile(&self) -> Html {
         if let Some(profile) = &self.selected_profile {
-            // let ascii_content = profile.display_ascii();
-            // let ascii_html = ascii_content.split('\n').map(|line| html! { <>{line}<br/></> }).collect::<Html>();
-            // html! { <div>{ ascii_html }</div> }
-
-            html! {
-                <div class="profile-details">
-                    <div class="profile-name">{ &profile.name }</div>
-                    <div class="profile-description">{ &profile.description }</div>
-                    { self.display_characteristics(&profile.characteristics) }
-                    <div class="profile-special-abilities">
-                        { "Special Abilities: " }
-                        { &profile.special_abilities }
-                    </div>
-                    { self.view_damage_chart(&profile.damage_chart) }
-                </div>
-            }
-
+            self.view_profile(profile)
         } else {
             html! { <div>{ "No profile selected" }</div> }
         }
     }
 
+
+    fn view_edit_form(&self, ctx: &Context<Self>) -> Html {
+        html! {
+            <div class="edit-form">
+                <div class="form-group">
+                    <label for="name">{"Name:"}</label>
+                    <input type="text" id="name"
+                        value={self.editing_profile.as_ref().map_or(String::new(), |p| p.name.clone())}
+                        oninput={ctx.link().callback(|e: InputEvent| {
+                            let input: web_sys::HtmlInputElement = e.target_unchecked_into();
+                            Msg::UpdateFormName(input.value())
+                        })} />
+                </div>
+                <button class="save-changes-btn" onclick={ctx.link().callback(|_| Msg::SaveProfileChanges)}>
+                    {"Save Changes"}
+                </button>
+            </div>
+        }
+    }
 
     fn display_characteristics (&self, characteristics: &Characteristics) -> Html {
         html! {
@@ -260,5 +353,25 @@ impl UnitsView {
     fn update_model_profiles(&mut self, ctx: &Context<Self>) {
         ctx.props().on_profiles_changed.emit(ctx.props().profiles.clone());
     }
+
+    fn get_current_form_values(&self, ctx: &Context<Self>, profile: &Option<Profile>) -> Option<Profile>{
+
+        if let Some(input_profile) = profile {
+            let mut updated_profile = input_profile.clone();
+
+            updated_profile.name = self.form_name.clone();
+
+            return Some(updated_profile);
+
+            // TODO
+            //updated_profile.name = // HERE I NEED TO READ THE FIELD ON THE FORM!
+
+            // ...TODO read more from the forms if required.
+        }
+
+        // If no profile is provided, returning None
+        None
+    }
+    
     
 }

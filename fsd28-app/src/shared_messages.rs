@@ -15,4 +15,5 @@ pub enum SharedMessage {
 
     // Dumping profile updates
     UpdateProfiles(Vec<Profile>),
+    ProfileEdited
 }
