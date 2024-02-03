@@ -101,7 +101,8 @@ impl Component for UnitsView {
 
                     // No need for signals, i can just call 
                     // view_profile(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html
-                    self.selected_profile = Some(updated_profile.clone());
+                    self.view_profile(updated_profile);
+                    //self.selected_profile = Some(updated_profile.clone());
                 }
 
                 true
@@ -118,12 +119,15 @@ impl Component for UnitsView {
                 
                 // Signal to update the central view with the edited profile
                 let mut all_profiles = ctx.props().profiles.clone();
+                console::log_1(&format!("Loaded {} profiles", all_profiles.len()).into());
+                console::log_1(&format!("Selected is {}", self.selected_profile.clone().unwrap().name).into());
+
 
                 // Find the index of the profile to replace
                 // TODO remove that double clone(), it's ugly.
                 if let Some(index) = all_profiles
                     .iter()
-                    .position(|p| p.name == self.editing_profile.clone().unwrap().name) {
+                    .position(|p| p.name == self.selected_profile.clone().unwrap().name) {
 
                     // Replace the old profile with the updated one
                     all_profiles[index] = self.editing_profile.clone().unwrap().clone();
@@ -179,7 +183,7 @@ impl Component for UnitsView {
                     </div>
                 </div>
                 <div class="center-bar">
-                    { self.view_selected_profile() }
+                    { self.view_edited_profile() }
                 </div>
                 <div class="right-bar">
                     { self.view_edit_form(ctx) }
@@ -239,6 +243,14 @@ impl UnitsView {
 
     fn view_selected_profile(&self) -> Html {
         if let Some(profile) = &self.selected_profile {
+            self.view_profile(profile)
+        } else {
+            html! { <div>{ "No profile selected" }</div> }
+        }
+    }
+
+    fn view_edited_profile(&self) -> Html {
+        if let Some(profile) = &self.editing_profile {
             self.view_profile(profile)
         } else {
             html! { <div>{ "No profile selected" }</div> }
