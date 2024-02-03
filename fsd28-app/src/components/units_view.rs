@@ -22,7 +22,6 @@ pub struct UnitsView {
     selected_profile: Option<Profile>,
     editing_profile: Option<Profile>,
 
-    form_name: String,
     show_modal: bool,
 }
 
@@ -32,7 +31,6 @@ pub enum Msg {
     DeleteSelectedProfile,
 
     // Modal popup for new profile
-    ShowModal,
     ModalConfirm(String),
     ModalCancel,
 
@@ -46,12 +44,11 @@ impl Component for UnitsView {
     type Message = Msg;
     type Properties = UnitsViewProps;
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_: &Context<Self>) -> Self {
         Self {
             selected_profile: None,
             editing_profile: None,
 
-            form_name: "".to_string(),
             show_modal: false,
         }
     }
@@ -138,14 +135,7 @@ impl Component for UnitsView {
                 true
             }
 
-            
             // MODAL VIEW MESSAGES
-            // TODO this is not great, a better system is needed since there are several modal menus I want to pop up
-            Msg::ShowModal => {
-                self.show_modal = true;
-                true
-            },
-
             Msg::ModalConfirm(class_name) => {
                 let classes: ClassesConfig = get_classes("");
                 let selected_class = classes.classes.iter().find(|c| c.name == class_name);
@@ -353,25 +343,4 @@ impl UnitsView {
     fn update_model_profiles(&mut self, ctx: &Context<Self>) {
         ctx.props().on_profiles_changed.emit(ctx.props().profiles.clone());
     }
-
-    fn get_current_form_values(&self, ctx: &Context<Self>, profile: &Option<Profile>) -> Option<Profile>{
-
-        if let Some(input_profile) = profile {
-            let mut updated_profile = input_profile.clone();
-
-            updated_profile.name = self.form_name.clone();
-
-            return Some(updated_profile);
-
-            // TODO
-            //updated_profile.name = // HERE I NEED TO READ THE FIELD ON THE FORM!
-
-            // ...TODO read more from the forms if required.
-        }
-
-        // If no profile is provided, returning None
-        None
-    }
-    
-    
 }

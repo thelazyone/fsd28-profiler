@@ -9,12 +9,11 @@ use crate::shared_messages::SharedMessage;
 use crate::model::Model;
 
 // For browser debugging
-use web_sys::{console, HtmlAnchorElement};
+use web_sys::console;
 
 // Handling the loaded stuff as a pointer
 // TODO is this even necessary? It's *NOT* idiomatic!
 use std::rc::Rc;
-use std::cell::RefCell;
 
 enum AppStates {
     Roster,
@@ -47,7 +46,7 @@ impl Component for App {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg : SharedMessage) -> bool {
+    fn update(&mut self, _: &Context<Self>, msg : SharedMessage) -> bool {
         match msg {
 
             SharedMessage::ViewRoster => {

@@ -1,19 +1,9 @@
 //use fsd28_lib::models::profile::Profile;
-
-
 use serde::{Deserialize, Serialize};
-
-use fsd28_lib::models::class::ClassesConfig;
-use fsd28_lib::create_profile;
-use fsd28_lib::get_classes;
-use fsd28_lib::get_default_actions;
-use fsd28_lib::utils::pdf_ascii_generator::create_pdf_ascii;
-use fsd28_lib::load_profiles;
-use fsd28_lib::save_profiles;
 use fsd28_lib::models::profile::Profile;
 
 // For browser debugging
-use web_sys::{console, HtmlAnchorElement};
+use web_sys::console;
 
 
 // The App Model contains 

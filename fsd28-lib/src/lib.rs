@@ -3,12 +3,7 @@ pub mod utils;
 
 use std::fs::read_to_string;
 use std::fs::File;
-use std::path::Path;
 use std::io::Write;
-
-// TODO TBR 
-use std::path::PathBuf;
-use std::env;
 
 // Hardcoding the classes for web applications or general default info
 const CLASSES_JSON: &str = include_str!("../data/classes.json");
@@ -21,11 +16,7 @@ pub use models::class::ClassesConfig;
 pub use models::class::Class;
 pub use models::action::ActionsConfig;
 
-// For browser debugging // MAYBE TBR?
-use web_sys::{console, HtmlAnchorElement};
-
 // GAME DATA LOADING
-
 pub fn get_classes(i_path : &str) -> ClassesConfig {
     let file_content: String;
     if i_path.is_empty() {

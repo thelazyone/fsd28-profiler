@@ -17,7 +17,7 @@ impl Component for Modal {
     type Message = ModalMsg;
     type Properties = ModalProps;
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_: &Context<Self>) -> Self {
         Modal // Just return Modal here
     }
 
