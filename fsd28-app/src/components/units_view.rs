@@ -63,6 +63,15 @@ impl Component for UnitsView {
 
             Msg::CreateNewProfile => {
                 // Instead of creating a new profile directly, set show_modal to true
+
+                // TODO set the modal to load different content depending on the request.
+                // different lists could be:
+                // Class Choice
+                // SubClass Choice (With checkbox)
+                // Equipment Choice
+                // Actions Choice (it's thee actions, should be movable up and down)
+                // I could do a different object for each OR handle the Modal object 
+                // In a more reusable way. 
                 self.show_modal = true;
                 true
             },
@@ -148,8 +157,9 @@ impl Component for UnitsView {
                     Some(class) => {
                         let mut updated_profiles = ctx.props().profiles.clone();
                         let new_profile = Profile::new("NEW_PROFILE".to_string(), class.clone());
-                        self.selected_profile = Some(new_profile.clone()); // Set the new profile as selected
-                        updated_profiles.push(new_profile);
+                        updated_profiles.push(new_profile.clone());
+                        self.selected_profile = Some(new_profile); // Set the new profile as selected
+                        self.editing_profile = self.selected_profile.clone();
                         ctx.props().on_profiles_changed.emit(updated_profiles);
                         self.show_modal = false;
                         true
@@ -183,7 +193,7 @@ impl Component for UnitsView {
                     </div>
                 </div>
                 <div class="center-bar">
-                    { self.view_edited_profile() }
+                    { self.view_current_profile() }
                 </div>
                 <div class="right-bar">
                     { self.view_edit_form(ctx) }
@@ -239,17 +249,8 @@ impl UnitsView {
             </div>
         }
     }
-    
 
-    fn view_selected_profile(&self) -> Html {
-        if let Some(profile) = &self.selected_profile {
-            self.view_profile(profile)
-        } else {
-            html! { <div>{ "No profile selected" }</div> }
-        }
-    }
-
-    fn view_edited_profile(&self) -> Html {
+    fn view_current_profile(&self) -> Html {
         if let Some(profile) = &self.editing_profile {
             self.view_profile(profile)
         } else {
@@ -262,7 +263,8 @@ impl UnitsView {
         html! {
             <div class="edit-form">
                 <div class="form-group">
-                    <label for="name">{"Name:"}</label>
+                    // TODO make label and edit on the same line?
+                    <label class="label" for="name">{"NAME:"}</label>
                     <input type="text" id="name"
                         value={self.editing_profile.as_ref().map_or(String::new(), |p| p.name.clone())}
                         oninput={ctx.link().callback(|e: InputEvent| {
