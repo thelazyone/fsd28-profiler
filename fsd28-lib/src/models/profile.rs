@@ -2,6 +2,7 @@ use crate::models::damage_chart::DamageChart;
 use crate::models::action::Action;
 use crate::models::characteristics::Characteristics;
 use crate::models::class::Class;
+use crate::models::class::Tier;
 
 use serde::{Deserialize, Serialize};
 
@@ -13,6 +14,7 @@ use colored::Colorize;
 pub struct Profile {
     pub name: String,
     pub description: String,
+    pub tier: Tier,
     pub characteristics: Characteristics,
     pub special_abilities: String,
     pub damage_chart: DamageChart, // Temporary
@@ -26,6 +28,7 @@ impl Profile {
         Profile {
             name : i_name,
             description : i_class.name,
+            tier: i_class.tier,
             characteristics : i_class.characteristics,
             special_abilities: "none".to_string(),
             damage_chart: i_class.damage_profile,
@@ -50,7 +53,7 @@ impl Profile {
         out_string += "\n\nActions:            ";
         for action in &self.actions {
             out_string += "\n";
-            out_string += &*action.display_ascii();
+            out_string += &*action.display_ascii(&self.tier);
         }
 
         // Abilities and damage chart

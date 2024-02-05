@@ -1,21 +1,42 @@
 use serde::{Serialize, Deserialize};
 use colored::Colorize;
 
+use super::class::Tier;
+
 #[derive(Clone, Serialize, Deserialize)]
 pub struct ActionsConfig {
     pub actions: Vec<Action>,
 }
 
+// TODO make Vec<(u32, u32)> into a type
+
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
+pub struct ActionCost {
+    pub goon: Vec<(u32, u32)>,
+    pub char: Vec<(u32, u32)>,
+    pub hero: Vec<(u32, u32)>,
+}
+
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct Action {
     pub name: String,
-    pub cost: Vec<(u32, u32)>,
+    pub cost: ActionCost,
     pub text: String,
     pub slot: bool,
     // TODO do the rest!    
 }
 
 impl Action {
+
+    fn get_action_cost(&self, tier : &Tier) -> Vec<(u32, u32)> {
+        match tier {
+            Tier::Goon => self.cost.goon.clone(),
+            Tier::Char => self.cost.char.clone(),
+            Tier::Hero => self.cost.hero.clone(),
+        }
+    }
+
+    // ASCII ART
 
     // Static methods to draw the ascii content of ONE box (either with text or not)
     fn add_ascii_box(lines : &mut Vec<String>, content : Option<(u32, u32)>) {
@@ -53,10 +74,10 @@ impl Action {
 
 
     // Displays the full ascii area for ONE action
-    pub fn display_ascii(&self) -> String {
+    pub fn display_ascii(&self, profile_tier: &Tier) -> String {
         let mut lines = vec![String::new(); 3];
 
-        for elem in &self.cost {
+        for elem in &self.get_action_cost(profile_tier) {
             Action::add_ascii_box(&mut lines, Some(*elem));
         }
 

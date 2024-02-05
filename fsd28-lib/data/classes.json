@@ -3,7 +3,7 @@
       {
         "name": "Bandit",
         "special_rules": "none",
-        "type": "Goon",
+        "tier": "Goon",
         "characteristics": {
           "stat_cmd": 0,
           "stat_def": 4,
@@ -22,7 +22,7 @@
       {
         "name": "Fanatic",
         "special_rules": "Fast",
-        "type": "Goon",
+        "tier": "Goon",
         "characteristics": {
           "stat_cmd": 0,
           "stat_def": 3,
