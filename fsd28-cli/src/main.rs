@@ -6,7 +6,7 @@ use app_state::MenuStates;
 use fsd28_lib::models::class::ClassesConfig;
 use fsd28_lib::create_profile;
 use fsd28_lib::get_classes;
-use fsd28_lib::get_default_actions;
+use fsd28_lib::get_weapons;
 use fsd28_lib::utils::pdf_ascii_generator::create_pdf_ascii;
 use fsd28_lib::load_profiles;
 use fsd28_lib::save_profiles;
@@ -168,36 +168,39 @@ fn add_action_dialog(app_state: &mut AppState) -> MenuStates {
     // Now asking for the Action to add.
     // There are actions depending on the weapon.
 
-    // Default actions are always there.
-    let all_actions = get_default_actions("");
 
-    // Weapon specific actions:
-    // TODO
+// // BROKEN BY THE UPDATES - TODO TO FIX
 
-    // Filling the options
-    let mut options: Vec<String> = all_actions
-    .actions
-    .iter()
-    .map(|action| action.name.clone())
-    .collect::<Vec<String>>();
+//     // Default actions are always there.
+//     let all_actions = get_weapons("");
 
-    // Lastly adding the Cancel option.
-    options.push("Cancel".to_string());
+//     // Weapon specific actions:
+//     // TODO
+
+//     // Filling the options
+//     let mut options: Vec<String> = all_actions
+//     .actions
+//     .iter()
+//     .map(|action| action.name.clone())
+//     .collect::<Vec<String>>();
+
+//     // Lastly adding the Cancel option.
+//     options.push("Cancel".to_string());
     
-    // Selecting the class here
-    let selection = Select::with_theme(&ColorfulTheme::default())
-    .with_prompt("Select an action to add:")
-    .default(0)
-    .items(&options[..])
-    .interact()
-    .unwrap();
+//     // Selecting the class here
+//     let selection = Select::with_theme(&ColorfulTheme::default())
+//     .with_prompt("Select an action to add:")
+//     .default(0)
+//     .items(&options[..])
+//     .interact()
+//     .unwrap();
 
-    if selection == options.len() - 1 {
-        // The last option (Return to Main Menu) was selected
-        return MenuStates::EditProfile;
-    } else {
-        app_state.get_selected().unwrap().actions.push(all_actions.actions[selection].clone())
-    }
+//     if selection == options.len() - 1 {
+//         // The last option (Return to Main Menu) was selected
+//         return MenuStates::EditProfile;
+//     } else {
+//         app_state.get_selected().unwrap().actions.push(all_actions.actions[selection].clone())
+//     }
 
     // After adding the class, back to edit class.
     MenuStates::EditProfile

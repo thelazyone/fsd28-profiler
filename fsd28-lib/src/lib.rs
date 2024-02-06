@@ -7,14 +7,14 @@ use std::io::Write;
 
 // Hardcoding the classes for web applications or general default info
 const CLASSES_JSON: &str = include_str!("../data/classes.json");
-const DEFAULT_ACTIONS_JSON: &str = include_str!("../data/default_actions.json");
+const WEAPONS_JSON: &str = include_str!("../data/weapons.json");
 
 
 // Expose key functions or structs if needed
 pub use models::profile::Profile;
 pub use models::class::ClassesConfig;
 pub use models::class::Class;
-pub use models::action::ActionsConfig;
+pub use models::weapon::WeaponsConfig;
 
 // GAME DATA LOADING
 pub fn get_classes(i_path : &str) -> ClassesConfig {
@@ -29,10 +29,10 @@ pub fn get_classes(i_path : &str) -> ClassesConfig {
     serde_json::from_str(&file_content).unwrap()
 }
 
-pub fn get_default_actions(i_path: &str) -> ActionsConfig {
+pub fn get_weapons(i_path: &str) -> WeaponsConfig {
     let file_content: String;
     if i_path.is_empty() {
-        file_content = DEFAULT_ACTIONS_JSON.to_string();
+        file_content = WEAPONS_JSON.to_string();
     }
     else {
         file_content = read_to_string(i_path).expect("Failed to read file");

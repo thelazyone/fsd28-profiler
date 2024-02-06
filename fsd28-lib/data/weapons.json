@@ -1,0 +1,52 @@
+{
+    "weapons": [
+      {
+        "name": "default",
+        "options": [
+          {
+            "action": {
+              "name": "Move",
+              "cost": {
+                "goon": [[1, 1], [2, 2]],
+                "char": [[1, 2], [2, 3]],
+                "hero": [[1, 3], [2, 4]]
+              },
+              "text": "Move up to your character's movement speed.",
+              "slot": false
+            },
+            "points": 0,
+            "is_base": true
+          },
+          {
+            "action": {
+              "name": "Attack",
+              "cost": {
+                "goon": [[1, 1], [2, 2]],
+                "char": [[1, 2], [2, 3]],
+                "hero": [[1, 3], [2, 4]]
+              },
+              "text": "Perform a basic attack.",
+              "slot": true
+            },
+            "points": 1,
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "Defend",
+              "cost": {
+                "goon": [[1, 1], [2, 2]],
+                "char": [[1, 2], [2, 3]],
+                "hero": [[1, 3], [2, 4]]
+              },
+              "text": "Increase your defense until your next turn.",
+              "slot": true
+            },
+            "points": 1,
+            "is_base": false
+          }
+        ]
+      }
+    ]
+  }
+  

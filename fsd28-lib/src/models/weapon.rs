@@ -24,6 +24,7 @@ impl Weapon {
     // Method to display the weapon and its actions, if needed
 }
 
-impl ActionCategory {
+impl WeaponOption {
+    
     // Method to display the category and its actions, if needed
 }
