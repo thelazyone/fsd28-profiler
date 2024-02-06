@@ -1,5 +1,5 @@
 use yew::prelude::*;
-use crate::models::{Weapon, Action}; // Adjust paths as necessary
+use fsd28_lib::{Weapon, WeaponOption, Action}; 
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct ActionTreeViewProps {
@@ -43,7 +43,7 @@ impl Component for ActionTreeView {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <div class="action-tree-view">
+            <div class="atw-action-tree-view">
                 { for ctx.props().weapons.iter().map(|weapon| self.view_weapon(weapon, ctx)) }
             </div>
         }
@@ -53,9 +53,9 @@ impl Component for ActionTreeView {
 impl ActionTreeView {
     fn view_weapon(&self, weapon: &Weapon, ctx: &Context<Self>) -> Html {
         html! {
-            <div class="weapon">
-                <div class="weapon-name">{ &weapon.name }</div>
-                <div class="weapon-options">
+            <div class="atw-weapon">
+                <div class="atw-weapon-name">{ &weapon.name }</div>
+                <div class="atw-weapon-options">
                     { for weapon.options.iter().map(|option| self.view_option(option, ctx)) }
                 </div>
             </div>
@@ -67,15 +67,17 @@ impl ActionTreeView {
         // Placeholder: Determine if the action is available based on your game's logic
         let is_available = true; // This should be dynamically calculated
         let class = match (is_selected, is_available) {
-            (true, _) => "action selected",
-            (_, false) => "action unavailable",
-            _ => "action",
+            (true, _) => "atw-action selected",
+            (_, false) => "atw-action unavailable",
+            _ => "atw-action",
         };
 
+        // TODO double cloning here again.
+        let action_name = option.action.name.clone();
         html! {
             <div
                 class={class}
-                onclick={ctx.link().callback(move |_| Msg::ToggleAction(option.action.name.clone()))}
+                onclick={ctx.link().callback(move |_| Msg::ToggleAction(action_name.to_owned()))}
             >
                 { &option.action.name }
             </div>

@@ -118,10 +118,6 @@ impl Component for App {
                 false
             },
 
-            SharedMessage::Load => {
-                true
-            },
-
             SharedMessage::UpdateProfiles(updated_profiles) => {
                 self.model.profiles = updated_profiles;
                 true

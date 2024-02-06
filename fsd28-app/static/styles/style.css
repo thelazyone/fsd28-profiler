@@ -375,3 +375,44 @@
     border-top: 4px solid #666;
     border-radius: 2px;
 }
+
+
+.action-tree-view {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    overflow-y: auto; /* If your list is long */
+}
+
+.atw-weapon {
+    margin-bottom: 15px;
+}
+
+.atw-weapon-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.atw-weapon-options {
+    padding-left: 20px;
+}
+
+.atw-action {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.atw-action:hover {
+    background-color: #f0f0f0;
+}
+
+.atw-selected {
+    background-color: #add8e6; /* Light blue to indicate selection */
+}
+
+.atw-unavailable {
+    color: #ecc;
+    cursor: not-allowed;
+}

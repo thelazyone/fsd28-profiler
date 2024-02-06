@@ -1,12 +1,17 @@
+use fsd28_lib::models::action::Action;
+use fsd28_lib::models::class::Tier;
 use yew::prelude::*;
 use fsd28_lib::models::{
     characteristics::Characteristics, 
     profile::Profile, 
     damage_chart::DamageChart,
-    damage_chart::Color};
+    damage_chart::Color,};
 use fsd28_lib::get_classes;
+use fsd28_lib::get_weapons;
 use fsd28_lib::ClassesConfig;
+use fsd28_lib::WeaponsConfig;
 use crate::components::modal::Modal;
+use crate::components::action_tree_view::ActionTreeView;
 
 // For browser debugging
 use web_sys::console;
@@ -21,7 +26,6 @@ pub struct UnitsViewProps {
 pub struct UnitsView {
     selected_profile: Option<Profile>,
     editing_profile: Option<Profile>,
-
     show_modal: bool,
 }
 
@@ -38,6 +42,9 @@ pub enum Msg {
     UpdateFormName(String),
     ProfileEdited,
     SaveProfileChanges,
+
+    // Actions selection
+    ActionSelected(Action),
 }
 
 impl Component for UnitsView {
@@ -98,22 +105,10 @@ impl Component for UnitsView {
 
             Msg::ProfileEdited => {
 
-                console::log_1(&format!("Profile Changed!").into());
-                console::log_1(&format!("debug2 {:?}", self.editing_profile.as_ref().unwrap().name).into());
-
-                // Assuming you have a method to get current form values
-                //let updated_profile = self.get_current_form_values(ctx, &self.editing_profile);
-
                 if let Some(updated_profile) = self.editing_profile.as_ref(){
 
-                    console::log_1(&format!("Updated name is {}", updated_profile.name).into());
-
-                    // No need for signals, i can just call 
-                    // view_profile(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html
                     self.view_profile(updated_profile);
-                    //self.selected_profile = Some(updated_profile.clone());
                 }
-
                 true
             },
 
@@ -142,16 +137,36 @@ impl Component for UnitsView {
                     all_profiles[index] = self.editing_profile.clone().unwrap().clone();
                 }
 
-                // TODO here replacing the profile that matches the "Selected profile" with the new one.
                 ctx.props().on_profiles_changed.emit(all_profiles);
+                true
+            }
 
+            Msg::ActionSelected(action) => {
+
+                // TODO implement properly
+                console::log_1(&format!("selected action is {}", action.name.clone()).into());
+                if let Some(ref mut profile) = self.editing_profile {
+
+                    // Check if the action can be added
+                    // TODO other checks that must be done are
+                    // - if the action is taken already
+                    // - if at least one of the "main" actions is selected (if at least one exists)
+                    // - if the AD range makes it impossible to use that action.
+                    if profile.actions.len() >= 3 {
+                        console::log_1(&format!("The profile cannot have more than 3 actions.").into());
+                        return true;
+                    }
+
+                    profile.actions.push(action);
+                    ctx.link().send_message(Msg::ProfileEdited);
+                }
                 true
             }
 
             // MODAL VIEW MESSAGES
             Msg::ModalConfirm(class_name) => {
                 let classes: ClassesConfig = get_classes("");
-                let selected_class = classes.classes.iter().find(|c| c.name == class_name);
+                let selected_class: Option<&fsd28_lib::Class> = classes.classes.iter().find(|c| c.name == class_name);
             
                 match selected_class {
                     Some(class) => {
@@ -241,6 +256,7 @@ impl UnitsView {
                 <div class="profile-name">{ &profile.name }</div>
                 <div class="profile-description">{ &profile.description }</div>
                 { self.display_characteristics(&profile.characteristics) }
+                { self.display_actions(&profile.actions, &profile.tier) }
                 <div class="profile-special-abilities">
                     { "Special Abilities: " }
                     { &profile.special_abilities }
@@ -260,10 +276,11 @@ impl UnitsView {
 
 
     fn view_edit_form(&self, ctx: &Context<Self>) -> Html {
+        let weapons_config: WeaponsConfig = get_weapons(""); // Load your weapons configuration
+    
         html! {
             <div class="edit-form">
                 <div class="form-group">
-                    // TODO make label and edit on the same line?
                     <label class="label" for="name">{"NAME:"}</label>
                     <input type="text" id="name"
                         value={self.editing_profile.as_ref().map_or(String::new(), |p| p.name.clone())}
@@ -271,8 +288,13 @@ impl UnitsView {
                             let input: web_sys::HtmlInputElement = e.target_unchecked_into();
                             Msg::UpdateFormName(input.value())
                         })} />
+                    <ActionTreeView 
+                        weapons={weapons_config.weapons} 
+                        selected_actions={vec![]} 
+                        on_action_select={ctx.link().callback(move |action: Action| Msg::ActionSelected(action))}
+                    />
                 </div>
-                <button class="save-changes-btn" onclick={ctx.link().callback(|_| Msg::SaveProfileChanges)}>
+                <button onclick={ctx.link().callback(|_| Msg::SaveProfileChanges)}>
                     {"Save Changes"}
                 </button>
             </div>
@@ -289,6 +311,14 @@ impl UnitsView {
                 <div class="profile-stats-shoot">{ format!("Shoot: {}", characteristics.stat_shoot.display()) }</div>
                 <div class="profile-stats-melee">{ format!("Melee: {}", characteristics.stat_melee.display()) }</div>
             </div>
+        }
+    }
+
+    fn display_actions (&self, actions: &Vec<Action>, tier: &Tier) -> Html {
+        html! {
+            {for actions.iter().enumerate().map(|(index, action)| {
+                html! { <div class="action-text">{format!("S{}\n {}", index + 1, action.display_ascii(tier))}</div> }
+            })}
         }
     }
 

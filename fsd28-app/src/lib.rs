@@ -3,6 +3,7 @@ mod components {
     pub mod roster_view;
     pub mod units_view;
     pub mod modal;
+    pub mod action_tree_view;
 }
 mod app;
 mod shared_messages;

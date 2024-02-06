@@ -15,6 +15,9 @@ pub use models::profile::Profile;
 pub use models::class::ClassesConfig;
 pub use models::class::Class;
 pub use models::weapon::WeaponsConfig;
+pub use models::weapon::Weapon; // TODO this might be better incapsulated?
+pub use models::weapon::WeaponOption; // TODO this might be better incapsulated?
+pub use models::action::Action; // TODO this might be better incapsulated?
 
 // GAME DATA LOADING
 pub fn get_classes(i_path : &str) -> ClassesConfig {
