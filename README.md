@@ -21,8 +21,8 @@ To get to a minimum viablep product the following are still needed:
 
 LIB:
 - [x] implementing the default actions for units
-- [ ] reading and handling of weapon profiles
-- [ ] weapon-related actions
+- [x] reading and handling of weapon profiles
+- [x] weapon-related actions
 - [ ] options for classes
 - [x] saving and loading profiles
 - [x] generating a printable (even ASCII) card for each profile.
@@ -31,6 +31,8 @@ WEB
 - [x] Basic framework in Yew
 - [x] Save-Load with dialog
 - [x] profile Visualization
-- [ ] Add-Remove Profiles
-- [ ] Edit Profiles (with forms)
+- [x] Add-Remove Profiles
+- [x] Edit Profiles (with forms)
+- [ ] Show Mandatory actions for weapons
+- [ ] Grey down actions that cannot be taken (because you didn't take a mandatory one or because you are not high tier)
 - [ ] Anything Roster-Related
