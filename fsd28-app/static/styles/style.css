@@ -378,10 +378,18 @@
 
 
 .action-tree-view {
-    border: 1px solid #ccc;
+     /* Bounding Box*/
+    background-color: #f0f0f0; /* Light grey background */
     padding: 10px;
-    margin: 10px 0;
+    margin: 20px 0;
     overflow-y: auto; /* If your list is long */
+
+    /* Inside Fonts: */
+
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; /* Consistent font */
+    font-weight: bold;
+    font-size: 18px;
+    border: none; /* No borders */
 }
 
 .atw-weapon {
@@ -394,6 +402,8 @@
 }
 
 .atw-weapon-options {
+    font-size: 16px;
+    font-variant: small-caps;
     padding-left: 20px;
 }
 
@@ -415,4 +425,21 @@
 .atw-unavailable {
     color: #ecc;
     cursor: not-allowed;
+}
+
+/* Style for the textbox */
+.edit-form label {
+    border: none; /* No borders */
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; /* Consistent font */
+    font-size: 16px;
+    color: #333; /* Darker text for better readability */
+    padding: 8px; /* Some padding inside the textbox */
+}
+.edit-form input[type="text"] {
+    background-color: #f0f0f0; /* Light grey background */
+    border: none; /* No borders */
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; /* Consistent font */
+    color: #333; /* Darker text for better readability */
+    padding: 8px; /* Some padding inside the textbox */
+    margin-bottom: 10px; /* Space below the textbox */
 }

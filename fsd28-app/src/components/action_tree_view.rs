@@ -32,7 +32,7 @@ impl Component for ActionTreeView {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            
+
             Msg::ToggleWeapon(weapon_name) => {
                 if Some(&weapon_name) == self.expanded_weapon.as_ref() {
                     self.expanded_weapon = None; // Collapse if it's already expanded
@@ -59,6 +59,8 @@ impl Component for ActionTreeView {
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <div class="action-tree-view">
+                { html!{"ACTIONS SELECTION"} }
+                <hr/>
                 { for ctx.props().weapons.iter().map(|weapon| self.view_weapon(weapon, ctx)) }
             </div>
         }
@@ -72,12 +74,13 @@ impl ActionTreeView {
         let toggle_msg = Msg::ToggleWeapon(weapon_name.clone());
 
         html! {
-            <div class="weapon">
-                <div class="weapon-name" onclick={ctx.link().callback(move |_| toggle_msg.clone())}>
+
+            <div class="atw-weapon">
+                <div class="atw-weapon-name" onclick={ctx.link().callback(move |_| toggle_msg.clone())}>
                     { &weapon_name }
                 </div>
                 if is_expanded {
-                    <div class="weapon-options">
+                    <div class="atw-weapon-options">
                         { for weapon.options.iter().map(|option| self.view_option(option, ctx)) }
                     </div>
                 }
@@ -92,9 +95,9 @@ impl ActionTreeView {
         let is_available = true; // This should be dynamically calculated based on your logic
 
         let class = match (is_selected, is_available) {
-            (true, _) => "action selected",
-            (_, false) => "action unavailable",
-            _ => "action",
+            (true, _) => "atw-action selected",
+            (_, false) => "atw-action unavailable",
+            _ => "atw-action",
         };
 
         html! {
