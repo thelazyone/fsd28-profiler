@@ -41,6 +41,7 @@ pub enum Msg {
     // Profile Manipulation
     UpdateFormName(String),
     ProfileEdited,
+    ResetActions,
     SaveProfileChanges,
 
     // Actions selection
@@ -113,9 +114,6 @@ impl Component for UnitsView {
             },
 
             Msg::SaveProfileChanges => {
-
-                console::log_1(&format!("Called SAVE").into());
-
                 // Input check: if there's no editing profile doing nothing.
                 if self.editing_profile.is_none(){
                     return true
@@ -138,6 +136,16 @@ impl Component for UnitsView {
                 }
 
                 ctx.props().on_profiles_changed.emit(all_profiles);
+                true
+            }
+
+            Msg::ResetActions => {
+                
+                // Input check: if there's no editing profile doing nothing.
+                if let Some(ref mut profile) = self.editing_profile{
+                    profile.actions.clear();
+                }
+
                 true
             }
 
@@ -294,6 +302,9 @@ impl UnitsView {
                         on_action_select={ctx.link().callback(move |action: Action| Msg::ActionSelected(action))}
                     />
                 </div>
+                <button onclick={ctx.link().callback(|_| Msg::ResetActions)}>
+                    {"Reset Actions"}
+                </button>
                 <button onclick={ctx.link().callback(|_| Msg::SaveProfileChanges)}>
                     {"Save Changes"}
                 </button>

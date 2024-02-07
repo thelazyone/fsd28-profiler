@@ -132,10 +132,12 @@
 }
 
 .left-bar button {
+    font-variant: small-caps;
     text-align: left;
 }
 
 .right-bar button {
+    font-variant: small-caps;
     text-align: right;
 }
 
