@@ -6,10 +6,11 @@ FSD28 is an experimental port of [Full Spectrum Dominance](https://fsd-wargame.c
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/thelazyone/fsd28-profiler)
 
 ## Current State 
-Currently the only implementation is via CLI, but it's already better than nothing.
-![step zero](./docs/screen_1.jpg)
+Currently there is a (possibly broken) implementation is via CLI and a functioning web application deployable with trunk.
 
-The tool is not functional yet, but the objective is a text-driven wizard to create profiles, and to edit them afterwards.
+<img width="670" alt="image" src="https://github.com/thelazyone/fsd28-profiler/assets/10134358/22afbf7b-e565-4b11-9663-69111cfc9d7a">
+
+Once completed it will be a useful tool to test FSD28. The CLI needs a bit more love to become functioning again, but currently the data structure is changing to quickly to maintain two different applications.
 
 ## Architecture
 The project is divided between a proper library and a CLI software which uses the library and provides all the fancy ASCII art. 
