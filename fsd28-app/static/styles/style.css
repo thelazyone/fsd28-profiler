@@ -256,6 +256,28 @@
     font-weight: bold;
 }
 
+.profile-actions {
+    display: grid;
+    grid-column: span 3;
+    grid-row: 4;
+
+    /* Bottom border */
+    border-bottom: 4px solid #666;
+    border-radius: 2px;
+
+    justify-content: space-around;
+    /* Additional styles for the profile stats */
+
+    font-variant: small-caps;
+    font-weight: bold;  /* Thick style */
+    padding: 12px;
+    background-color: transparent;  /* Light gray background for visibility */
+    font-size: 18px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+}
+
+
 .profile-stats-cmd { 
     grid-column: 1;
     grid-row: 1;
@@ -288,7 +310,7 @@
 
 .profile-special-abilities {
     grid-column: span 3;
-    grid-row: 4;
+    grid-row: 5;
 
     font-weight: bold;  /* Thick style */
     text-align: center;
@@ -302,7 +324,7 @@
 
 .damage-chart {
     grid-column: span 3;
-    grid-row: 5;
+    grid-row: 6;
 
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -322,11 +344,12 @@
     font-weight: bold;
 }
 
-.left-bar .profile-actions {
+.left-bar .profile-list-buttons {
     position: fixed;
     bottom: 0;
-    width: 100%;
+    width: auto;
 }
+
 
 /* MODAL STYLE */
 
@@ -450,4 +473,10 @@
     color: #333; /* Darker text for better readability */
     padding: 8px; /* Some padding inside the textbox */
     margin-bottom: 10px; /* Space below the textbox */
+}
+
+.right-bar .right-baarbutton {
+    position: fixed;
+    bottom: 0;
+    width: auto;
 }

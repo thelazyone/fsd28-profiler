@@ -196,7 +196,7 @@ impl Component for UnitsView {
                     <div class="profiles-list">
                         { for ctx.props().profiles.iter().map(|profile| self.view_profile_button(profile, ctx.link())) }
                     </div>
-                    <div class="profile-actions">
+                    <div class="profile-list-buttons">
                         <button onclick={ctx.link().callback(|_| Msg::CreateNewProfile)}>{"Create New"}</button>
                         <button onclick={ctx.link().callback(|_| Msg::DeleteSelectedProfile)}>{"Delete Selected"}</button>
                     </div>
@@ -255,8 +255,8 @@ impl UnitsView {
             <div class="profile-details">
                 <div class="profile-name">{ &profile.name }</div>
                 <div class="profile-description">{ &profile.description }</div>
-                { self.display_characteristics(&profile.characteristics) }
-                { self.display_actions(&profile.actions, &profile.tier) }
+                <div class="profile-stats">{ self.display_characteristics(&profile.characteristics) }</div>
+                <div class="profile-actions">{ self.display_actions(&profile.actions, &profile.tier) }</div>
                 <div class="profile-special-abilities">
                     { "Special Abilities: " }
                     { &profile.special_abilities }
@@ -270,7 +270,7 @@ impl UnitsView {
         if let Some(profile) = &self.editing_profile {
             self.view_profile(profile)
         } else {
-            html! { <div class="label center">{ "~ no profile selected ~" }</div> }
+            html! { <div class="label center" style="font-variant: small-caps;">{ "~ no profile selected ~" }</div> }
         }
     }
 
