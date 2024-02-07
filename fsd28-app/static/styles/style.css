@@ -45,6 +45,10 @@
     font-weight: bold;
 }
 
+.label.center{
+    text-align: center;
+}
+
 
 /*TOP MENU*/
 .top-menu {

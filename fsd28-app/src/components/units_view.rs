@@ -81,15 +81,11 @@ impl Component for UnitsView {
             },
 
             Msg::UpdateFormName(new_name) => {
-                console::log_1(&format!("Name set as {}", new_name.clone()).into());
-
                 if let Some(ref mut profile) = self.editing_profile {
                     profile.name = new_name;
                     
                     ctx.link().send_message(Msg::ProfileEdited);
                 }
-
-                console::log_1(&format!("debug1 {:?}", self.editing_profile.as_ref().unwrap().name).into());
 
                 true
             },
@@ -274,37 +270,43 @@ impl UnitsView {
         if let Some(profile) = &self.editing_profile {
             self.view_profile(profile)
         } else {
-            html! { <div>{ "No profile selected" }</div> }
+            html! { <div class="label center">{ "~ no profile selected ~" }</div> }
         }
     }
 
 
     fn view_edit_form(&self, ctx: &Context<Self>) -> Html {
-        let weapons_config: WeaponsConfig = get_weapons(""); // Load your weapons configuration
-    
-        html! {
-            <div class="edit-form">
-                <div class="form-group">
-                    <label class="label" for="name">{"NAME:"}</label>
-                    <input type="text" id="name"
-                        value={self.editing_profile.as_ref().map_or(String::new(), |p| p.name.clone())}
-                        oninput={ctx.link().callback(|e: InputEvent| {
-                            let input: web_sys::HtmlInputElement = e.target_unchecked_into();
-                            Msg::UpdateFormName(input.value())
-                        })} />
-                    <ActionTreeView 
-                        weapons={weapons_config.weapons} 
-                        selected_actions={vec![]} 
-                        on_action_select={ctx.link().callback(move |action: Action| Msg::ActionSelected(action))}
-                    />
+
+        if let Some(profile) = &self.editing_profile {
+                let weapons_config: WeaponsConfig = get_weapons(""); // Load your weapons configuration
+        
+            html! {
+                <div class="edit-form">
+                    <div class="form-group">
+                        <label class="label" for="name">{"NAME:"}</label>
+                        <input type="text" id="name"
+                            value={self.editing_profile.as_ref().map_or(String::new(), |p| p.name.clone())}
+                            oninput={ctx.link().callback(|e: InputEvent| {
+                                let input: web_sys::HtmlInputElement = e.target_unchecked_into();
+                                Msg::UpdateFormName(input.value())
+                            })} />
+                        <ActionTreeView 
+                            weapons={weapons_config.weapons} 
+                            selected_actions={vec![]} 
+                            on_action_select={ctx.link().callback(move |action: Action| Msg::ActionSelected(action))}
+                        />
+                    </div>
+                    <button onclick={ctx.link().callback(|_| Msg::ResetActions)}>
+                        {"Reset Actions"}
+                    </button>
+                    <button onclick={ctx.link().callback(|_| Msg::SaveProfileChanges)}>
+                        {"Save Changes"}
+                    </button>
                 </div>
-                <button onclick={ctx.link().callback(|_| Msg::ResetActions)}>
-                    {"Reset Actions"}
-                </button>
-                <button onclick={ctx.link().callback(|_| Msg::SaveProfileChanges)}>
-                    {"Save Changes"}
-                </button>
-            </div>
+            }
+        }
+        else {
+            html! { <div class="label center">{ "" }</div> }
         }
     }
 
