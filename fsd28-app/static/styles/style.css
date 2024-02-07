@@ -240,10 +240,6 @@
     grid-column: span 3;
     grid-row: 3;
 
-    /* Bottom border */
-    border-bottom: 4px solid #666;
-    border-radius: 2px;
-
     justify-content: space-around;
     /* Additional styles for the profile stats */
 
@@ -263,6 +259,7 @@
 
     /* Bottom border */
     border-bottom: 4px solid #666;
+    border-top: 4px solid #666;
     border-radius: 2px;
 
     justify-content: space-around;
@@ -466,6 +463,7 @@
     color: #333; /* Darker text for better readability */
     padding: 8px; /* Some padding inside the textbox */
 }
+
 .edit-form input[type="text"] {
     background-color: #f0f0f0; /* Light grey background */
     border: none; /* No borders */
@@ -497,7 +495,8 @@
 .single-action-cost-box, .single-action-slot-box {
     width: 40px; /* Fixed size for square shape */
     height: 40px; /* Fixed size for square shape */
-    border: 1px solid #000;
+    border: 4px solid #666;
+    border-radius: 2px;
     margin-right: 5px;
     display: flex;
     justify-content: center;

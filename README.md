@@ -17,7 +17,7 @@ Another module (yet to be implemented) should create fancy-looking cards for pri
 For the future of course a web-based interface is preferable, something in line with the [FSD Builder](https://github.com/thelazyone/fsd_builder) which is written with [Yew](https://github.com/yewstack/yew)
 
 ## TODOs for a MVP
-To get to a minimum viablep product the following are still needed:
+To get to a minimum viable product the following are still needed:
 
 LIB:
 - [x] implementing the default actions for units
