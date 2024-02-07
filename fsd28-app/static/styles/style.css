@@ -480,3 +480,48 @@
     bottom: 0;
     width: auto;
 }
+
+/* Single action displaying */
+.single-action-container {
+    display: flex;
+    align-items: center;
+    justify-content: start; /* Changed to 'start' to align items to the left */
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.single-action-cost-boxes {
+    display: flex;
+}
+
+.single-action-cost-box, .single-action-slot-box {
+    width: 40px; /* Fixed size for square shape */
+    height: 40px; /* Fixed size for square shape */
+    border: 1px solid #000;
+    margin-right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75em; /* Adjust font size as needed */
+}
+
+.single-action-details {
+    flex-grow: 1;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers the text vertically */
+}
+
+.single-action-name {
+    font-weight: bold;
+    margin-bottom: 5px; /* Adds a little space between the name and the text */
+}
+
+.single-action-text {
+    font-size: 0.9em;
+}
+
+.single-action-slot-box {
+    /* The styles are now identical to .single-action-cost-box, so no need for duplicate properties */
+}

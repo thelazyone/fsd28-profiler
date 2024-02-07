@@ -324,9 +324,36 @@ impl UnitsView {
     }
 
     fn display_actions (&self, actions: &Vec<Action>, tier: &Tier) -> Html {
+        // OLD ASCII solution:
+        // html! {
+        //     {for actions.iter().enumerate().map(|(index, action)| {
+        //         html! { <div class="action-text">{format!("S{}\n {}", index + 1, action.display_ascii(tier))}</div> }
+        //     })}
+        // }
+
         html! {
-            {for actions.iter().enumerate().map(|(index, action)| {
-                html! { <div class="action-text">{format!("S{}\n {}", index + 1, action.display_ascii(tier))}</div> }
+            {for actions.iter().map(|action| {
+                let costs = action.get_action_cost_str(tier);
+                html! {
+                    <div class="single-action-container">
+                        <div class="single-action-cost-boxes">
+                            {for costs.iter().map(|cost| {
+                                html! { <div class="single-action-cost-box">{cost}</div> }
+                            })}
+                        </div>
+                        <div class="single-action-details">
+                            <div class="single-action-name">{ &action.name }</div>
+                            <div class="single-action-text">{ &action.text }</div>
+                        </div>
+                        <div>
+                            {if action.slot == true {
+                                html! { <div class="single-action-slot-box"></div> }
+                            } else {
+                                html! {""}
+                            }}
+                        </div>
+                    </div>
+                }
             })}
         }
     }

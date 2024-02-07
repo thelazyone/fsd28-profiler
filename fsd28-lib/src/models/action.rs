@@ -28,11 +28,27 @@ pub struct Action {
 
 impl Action {
 
-    fn get_action_cost(&self, tier : &Tier) -> Vec<(u32, u32)> {
+    pub fn get_action_cost(&self, tier : &Tier) -> Vec<(u32, u32)> {
         match tier {
             Tier::Goon => self.cost.goon.clone(),
             Tier::Char => self.cost.char.clone(),
             Tier::Hero => self.cost.hero.clone(),
+        }
+    }
+
+    pub fn get_action_cost_str(&self, tier : &Tier) -> Vec<String> {
+        self.get_action_cost(tier).iter().map(|range| {self.range_to_str(range)}).collect()
+    }
+
+    fn range_to_str(&self, range: &(u32, u32)) -> String {
+        if range.0 == 0 {
+            "FREE".to_string()
+        }
+        else if range.0 == range.1 {
+            format!("{}", range.0)
+        }
+        else {
+            format!("{}-{}", range.0, range.1)
         }
     }
 

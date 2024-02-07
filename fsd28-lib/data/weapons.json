@@ -5,10 +5,10 @@
         "options": [
           {
             "action": {
-              "name": "Move",
+              "name": "AC1",
               "cost": {
-                "goon": [[1, 1], [2, 2]],
-                "char": [[1, 2], [2, 3]],
+                "goon": [[1, 1], [6, 6]],
+                "char": [[0, 0]],
                 "hero": [[1, 3], [2, 4]]
               },
               "text": "Move up to your character's movement speed.",
@@ -21,7 +21,7 @@
             "action": {
               "name": "Attack",
               "cost": {
-                "goon": [[1, 1], [2, 2]],
+                "goon": [[0,0]],
                 "char": [[1, 2], [2, 3]],
                 "hero": [[1, 3], [2, 4]]
               },
@@ -35,7 +35,7 @@
             "action": {
               "name": "Defend",
               "cost": {
-                "goon": [[1, 1], [2, 2]],
+                "goon": [],
                 "char": [[1, 2], [2, 3]],
                 "hero": [[1, 3], [2, 4]]
               },
