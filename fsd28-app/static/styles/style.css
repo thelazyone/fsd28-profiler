@@ -146,12 +146,14 @@
     align-items: left;
 }
 
+.left-bar button.selected, .right-bar button.selected {
+    background-color: rgba(220, 220, 220, 0.5);
+}
+
 .right-bar {
     text-align: right; /* This ensures content in the right bar is right-aligned */
     align-items: right;
 }
-
-
 
 .left-menu {
     overflow: visible;

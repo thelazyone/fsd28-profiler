@@ -70,16 +70,6 @@ impl Component for UnitsView {
             }
 
             Msg::CreateNewProfile => {
-                // Instead of creating a new profile directly, set show_modal to true
-
-                // TODO set the modal to load different content depending on the request.
-                // different lists could be:
-                // Class Choice
-                // SubClass Choice (With checkbox)
-                // Equipment Choice
-                // Actions Choice (it's thee actions, should be movable up and down)
-                // I could do a different object for each OR handle the Modal object 
-                // In a more reusable way. 
                 self.show_modal = true;
                 true
             },
@@ -246,10 +236,16 @@ impl Component for UnitsView {
 impl UnitsView {
     fn view_profile_button(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
         let is_selected = self.selected_profile.as_ref().map_or(false, |p| p == profile);
+        if is_selected {
+            console::log_1(&format!("Item {} is selected", profile.name).into());
+        }
+        else {
+            console::log_1(&format!("Item {} is NOT selected", profile.name).into());
+        }
         let local_profile = profile.clone(); // There is a _DOUBLE_ clone here - TODO FIX this is horrible (but it works)
         html! {
             <button
-                class={classes!("left-bar.button", is_selected.then(|| ".selected"))} // SELECTED IS NOT WORKING!
+                class={classes!("button", is_selected.then(|| "selected"))}
                 onclick={link.callback(move |_| Msg::ProfileSelected(local_profile.clone()))}
             >
                 { &profile.name }
