@@ -1,5 +1,9 @@
 use yew::prelude::*;
-use fsd28_lib::Modifier; // Adjust the path as necessary
+use fsd28_lib::Modifier; 
+
+// For browser debugging
+use web_sys::console;
+
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct ModifiersViewProps {
@@ -21,7 +25,8 @@ impl Component for ModifiersView {
     type Message = Msg;
     type Properties = ModifiersViewProps;
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_: &Context<Self>) -> Self {
+        console::log_1(&format!("Creating ModifiersView").into());
         Self {
             // Initialize state here if necessary
         }
@@ -30,6 +35,7 @@ impl Component for ModifiersView {
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::ToggleModifier(id) => {
+                console::log_1(&format!("Toggled modifier {}", id).into());
                 ctx.props().on_modifier_toggle.emit(id);
                 true // Re-render as needed
             },
@@ -52,6 +58,7 @@ impl ModifiersView {
     fn view_modifier(&self, modifier: &Modifier, ctx: &Context<Self>) -> Html {
         let is_selected = ctx.props().selected_modifiers.contains(&modifier.id);
         let label = modifier.id.clone();
+        console::log_1(&format!("Showing modifier modifier {}", label).into());
         html! {
             <div class="modifier">
                 <label>

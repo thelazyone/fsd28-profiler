@@ -302,7 +302,7 @@ impl UnitsView {
             let available_modifiers: Vec<Modifier>;
             if let Some(index) = all_classes.classes
                 .iter()
-                .position(|p| p.name == profile.name) {
+                .position(|p| p.name == profile.class_name) {
                 available_modifiers = all_classes.classes[index].modifiers.clone();
             }
             else {
