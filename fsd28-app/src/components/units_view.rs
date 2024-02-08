@@ -1,5 +1,6 @@
 use fsd28_lib::models::action::Action;
 use fsd28_lib::models::class::Tier;
+use fsd28_lib::models::modifier::Modifier;
 use yew::prelude::*;
 use fsd28_lib::models::{
     characteristics::Characteristics, 
@@ -12,6 +13,7 @@ use fsd28_lib::ClassesConfig;
 use fsd28_lib::WeaponsConfig;
 use crate::components::modal::Modal;
 use crate::components::action_tree_view::ActionTreeView;
+use crate::components::modifiers_view::ModifiersView;
 
 // For browser debugging
 use web_sys::console;
@@ -43,6 +45,7 @@ pub enum Msg {
     ProfileEdited,
     ResetActions,
     SaveProfileChanges,
+    ModifierSelected(String),
 
     // Actions selection
     ActionSelected(Action),
@@ -98,6 +101,19 @@ impl Component for UnitsView {
                 }
                 true
             },
+
+            Msg::ModifierSelected(modifier_name) => {
+                // removing or adding the Modifier when clicking this
+                if let Some(ref mut updated_profile) = self.editing_profile.as_mut(){
+                    if updated_profile.selected_modifiers.contains(&modifier_name) {
+                        updated_profile.selected_modifiers.retain(|m| m != &modifier_name);
+                    } else {
+                        updated_profile.selected_modifiers.push(modifier_name);
+                    }
+                }
+
+                true
+            }
 
             Msg::SaveProfileChanges => {
                 // Input check: if there's no editing profile doing nothing.
@@ -278,8 +294,21 @@ impl UnitsView {
     fn view_edit_form(&self, ctx: &Context<Self>) -> Html {
 
         if let Some(profile) = &self.editing_profile {
-                let weapons_config: WeaponsConfig = get_weapons(""); // Load your weapons configuration
-        
+
+            let weapons_config: WeaponsConfig = get_weapons(""); // Load your weapons configuration
+
+            // Retrieving the modifiers to show:
+            let all_classes: ClassesConfig = get_classes("");
+            let available_modifiers: Vec<Modifier>;
+            if let Some(index) = all_classes.classes
+                .iter()
+                .position(|p| p.name == profile.name) {
+                available_modifiers = all_classes.classes[index].modifiers.clone();
+            }
+            else {
+                available_modifiers = Vec::<Modifier>::new();
+            }
+
             html! {
                 <div class="edit-form">
                     <div class="form-group">
@@ -290,6 +319,15 @@ impl UnitsView {
                                 let input: web_sys::HtmlInputElement = e.target_unchecked_into();
                                 Msg::UpdateFormName(input.value())
                             })} />
+
+                        // Setting up the Modifiers view, where the class modifiers are available to toggle.
+                        <ModifiersView 
+                            modifiers={available_modifiers}
+                            selected_modifiers={profile.selected_modifiers.clone()}
+                            on_modifier_toggle={ctx.link().callback(move |modifier: String| Msg::ModifierSelected(modifier))}
+                        />
+
+                        // Setting up all the available actions
                         <ActionTreeView 
                             weapons={weapons_config.weapons} 
                             selected_actions={vec![]} 

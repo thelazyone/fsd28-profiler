@@ -13,6 +13,8 @@ use colored::Colorize;
 #[derive(Clone, PartialEq, Deserialize, Serialize)]
 pub struct Profile {
     pub name: String,
+    pub class_name: String,
+    pub selected_modifiers: Vec<String>,
     pub description: String,
     pub tier: Tier,
     pub characteristics: Characteristics,
@@ -25,9 +27,12 @@ pub struct Profile {
 impl Profile {
 
     pub fn new(i_name : String, i_class : Class) -> Profile {
+        let modifiers_vec = i_class.modifiers.iter().map(|elem| {elem.id.clone()}).collect();
         Profile {
             name : i_name,
-            description : i_class.name,
+            description : i_class.name.clone(),
+            class_name : i_class.name,
+            selected_modifiers : modifiers_vec,
             tier: i_class.tier,
             characteristics : i_class.characteristics,
             special_abilities: "none".to_string(),

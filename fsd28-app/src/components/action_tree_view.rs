@@ -1,5 +1,4 @@
 use yew::prelude::*;
-use std::collections::HashSet;
 use fsd28_lib::{Weapon, WeaponOption, Action}; 
 
 #[derive(Properties, PartialEq, Clone)]
@@ -58,7 +57,7 @@ impl Component for ActionTreeView {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <div class="action-tree-view">
+            <div class="right-bar-section">
                 { html!{"ACTIONS SELECTION"} }
                 <hr/>
                 { for ctx.props().weapons.iter().map(|weapon| self.view_weapon(weapon, ctx)) }
@@ -67,6 +66,7 @@ impl Component for ActionTreeView {
     }
 }
 
+// TODO the already selected actoins should be shown as grey
 impl ActionTreeView {
     fn view_weapon(&self, weapon: &Weapon, ctx: &Context<Self>) -> Html {
         let weapon_name = weapon.name.clone();
@@ -74,7 +74,6 @@ impl ActionTreeView {
         let toggle_msg = Msg::ToggleWeapon(weapon_name.clone());
 
         html! {
-
             <div class="atw-weapon">
                 <div class="atw-weapon-name" onclick={ctx.link().callback(move |_| toggle_msg.clone())}>
                     { &weapon_name }

@@ -1,42 +1,64 @@
 {
-    "classes": [
-      {
-        "name": "Bandit",
-        "special_rules": "none",
-        "tier": "Goon",
-        "characteristics": {
-          "stat_cmd": 0,
-          "stat_def": 4,
-          "stat_save": {"shape": 6, "number": 1, "armor": 2},
-          "stat_move": 3,
-          "stat_shoot": {"shape": 6, "number": 0, "armor": 0},
-          "stat_melee": {"shape": 6, "number": 1, "armor": 0}
-        },
-        "damage_profile": {
-            "intervals": [
-                [3, "Red", "DEAD"],
-                [3, "Yellow", "MOV"]
-            ]
-        }
+  "classes": [
+    {
+      "name": "Bandit",
+      "special_rules": "none",
+      "tier": "Goon",
+      "characteristics": {
+        "stat_cmd": 0,
+        "stat_def": 4,
+        "stat_save": {"shape": 6, "number": 1, "armor": 2},
+        "stat_move": 3,
+        "stat_shoot": {"shape": 6, "number": 0, "armor": 0},
+        "stat_melee": {"shape": 6, "number": 1, "armor": 0}
       },
-      {
-        "name": "Fanatic",
-        "special_rules": "Fast",
-        "tier": "Goon",
-        "characteristics": {
-          "stat_cmd": 0,
-          "stat_def": 3,
-          "stat_save": {"shape": 6, "number": 1, "armor": 2},
-          "stat_move": 4,
-          "stat_shoot": {"shape": 6, "number": 0, "armor": 0},
-          "stat_melee": {"shape": 6, "number": 2, "armor": 0}
+      "damage_profile": {
+          "intervals": [
+              [3, "Red", "DEAD"],
+              [3, "Yellow", "MOV"]
+          ]
+      },
+      "modifiers": [
+        {
+          "id": "defender",
+          "effects": {
+            "stat_def": "+2"
+          }
         },
-        "damage_profile": {
-            "intervals": [
-                [4, "Red", "DEAD"],
-                [2, "Yellow", "MOV"]
-            ]
+        {
+          "id": "berserker",
+          "effects": {
+            "stat_melee": "1d10"
+          }
         }
-      }
-    ]
-  }
+      ]
+    },
+    {
+      "name": "Fanatic",
+      "special_rules": "Fast",
+      "tier": "Goon",
+      "characteristics": {
+        "stat_cmd": 0,
+        "stat_def": 3,
+        "stat_save": {"shape": 6, "number": 1, "armor": 2},
+        "stat_move": 4,
+        "stat_shoot": {"shape": 6, "number": 0, "armor": 0},
+        "stat_melee": {"shape": 6, "number": 2, "armor": 0}
+      },
+      "damage_profile": {
+          "intervals": [
+              [4, "Red", "DEAD"],
+              [2, "Yellow", "MOV"]
+          ]
+      },
+      "modifiers": [
+        {
+          "id": "agile",
+          "effects": {
+            "stat_move": "+1"
+          }
+        }
+      ]
+    }
+  ]
+}
