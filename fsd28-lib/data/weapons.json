@@ -5,44 +5,30 @@
         "options": [
           {
             "action": {
-              "name": "AC1",
+              "name": "Sprint",
               "cost": {
-                "goon": [[1, 1], [6, 6]],
-                "char": [[0, 0]],
-                "hero": [[1, 3], [2, 4]]
+                "goon": [[1, 1]],
+                "char": [[1, 3]],
+                "hero": [[0, 0]]
               },
               "text": "Move up to your character's movement speed.",
-              "slot": false
+              "slot": false,
+              "points": 1
             },
-            "points": 0,
-            "is_base": true
-          },
-          {
-            "action": {
-              "name": "Attack",
-              "cost": {
-                "goon": [[0,0]],
-                "char": [[1, 2], [2, 3]],
-                "hero": [[1, 3], [2, 4]]
-              },
-              "text": "Perform a basic attack.",
-              "slot": true
-            },
-            "points": 1,
             "is_base": false
           },
           {
             "action": {
-              "name": "Defend",
+              "name": "Punch",
               "cost": {
-                "goon": [],
-                "char": [[1, 2], [2, 3]],
-                "hero": [[1, 3], [2, 4]]
+                "goon": [[5, 6]],
+                "char": [[4, 6]],
+                "hero": [[0, 0]]
               },
-              "text": "Increase your defense until your next turn.",
-              "slot": true
+              "text": "1D6 Contact",
+              "slot": false,
+              "points": 1
             },
-            "points": 1,
             "is_base": false
           }
         ]
@@ -55,13 +41,13 @@
               "name": "Hand Gun",
               "cost": {
                 "goon": [[1, 3]],
-                "char": [],
-                "hero": []
+                "char": [[0, 0]],
+                "hero": [[0, 0]]
               },
               "text": "1D6x2 0-2 DU",
-              "slot": false
+              "slot": false,
+              "points": 0
             },
-            "points": 0,
             "is_base": true
           },
           {
@@ -73,9 +59,9 @@
                 "hero": [[1, 3]]
               },
               "text": "1D6x4 0-2 DU, +1 target DEF",
-              "slot": false
+              "slot": false,
+              "points": 1
             },
-            "points": 0,
             "is_base": true
           },
           {
@@ -87,9 +73,9 @@
                 "hero": [[1, 3]]
               },
               "text": "1D6x2 0-2 DU",
-              "slot": false
+              "slot": false,
+              "points": 0
             },
-            "points": 0,
             "is_base": false
           }
         ]

@@ -45,7 +45,7 @@ pub enum Msg {
     ProfileEdited,
     ResetActions,
     SaveProfileChanges,
-    ModifierSelected(String),
+    ModifierSelected(Modifier),
 
     // Actions selection
     ActionSelected(Action),
@@ -102,13 +102,13 @@ impl Component for UnitsView {
                 true
             },
 
-            Msg::ModifierSelected(modifier_name) => {
+            Msg::ModifierSelected(modifier) => {
                 // removing or adding the Modifier when clicking this
-                if let Some(ref mut updated_profile) = self.editing_profile.as_mut(){
-                    if updated_profile.selected_modifiers.contains(&modifier_name) {
-                        updated_profile.selected_modifiers.retain(|m| m != &modifier_name);
+                if let Some(updated_profile) = self.editing_profile.as_mut(){
+                    if updated_profile.selected_modifiers.contains(&modifier) {
+                        updated_profile.selected_modifiers.retain(|m| m != &modifier);
                     } else {
-                        updated_profile.selected_modifiers.push(modifier_name);
+                        updated_profile.selected_modifiers.push(modifier);
                     }
                 }
 
@@ -266,18 +266,23 @@ impl UnitsView {
     }
 
     fn view_profile(&self, profile: &Profile) -> Html {
-        console::log_1(&format!("Displaying {}", profile.name).into());
+
+        // Creating a "modified" version of the profile, where the modifiers are actually applied.
+        let final_profile = profile.get_final_profile();
+
+        console::log_1(&format!("Displaying {}", final_profile.name).into());
         html! {
             <div class="profile-details">
-                <div class="profile-name">{ &profile.name }</div>
-                <div class="profile-description">{ &profile.description }</div>
-                <div class="profile-stats">{ self.display_characteristics(&profile.characteristics) }</div>
-                <div class="profile-actions">{ self.display_actions(&profile.actions, &profile.tier) }</div>
+                <div class="profile-name">{ &final_profile.name }</div>
+                <div class="profile-description">{ &final_profile.description }</div>
+                <div class="profile-cost">{ &final_profile.cost } { " points" }</div>
+                <div class="profile-stats">{ self.display_characteristics(&final_profile.characteristics) }</div>
+                <div class="profile-actions">{ self.display_actions(&final_profile.actions, &final_profile.tier) }</div>
                 <div class="profile-special-abilities">
                     { "Special Abilities: " }
-                    { &profile.special_abilities }
+                    { &final_profile.special_abilities.join(", ") }
                 </div>
-                { self.view_damage_chart(&profile.damage_chart) }
+                { self.view_damage_chart(&final_profile.damage_chart) }
             </div>
         }
     }
@@ -324,7 +329,7 @@ impl UnitsView {
                         <ModifiersView 
                             modifiers={available_modifiers}
                             selected_modifiers={profile.selected_modifiers.clone()}
-                            on_modifier_toggle={ctx.link().callback(move |modifier: String| Msg::ModifierSelected(modifier))}
+                            on_modifier_toggle={ctx.link().callback(move |modifier: Modifier| Msg::ModifierSelected(modifier))}
                         />
 
                         // Setting up all the available actions
@@ -362,37 +367,35 @@ impl UnitsView {
     }
 
     fn display_actions (&self, actions: &Vec<Action>, tier: &Tier) -> Html {
-        // OLD ASCII solution:
-        // html! {
-        //     {for actions.iter().enumerate().map(|(index, action)| {
-        //         html! { <div class="action-text">{format!("S{}\n {}", index + 1, action.display_ascii(tier))}</div> }
-        //     })}
-        // }
-
-        html! {
-            {for actions.iter().map(|action| {
-                let costs = action.get_action_cost_str(tier);
-                html! {
-                    <div class="single-action-container">
-                        <div class="single-action-cost-boxes">
-                            {for costs.iter().map(|cost| {
-                                html! { <div class="single-action-cost-box">{cost}</div> }
-                            })}
+        if actions.is_empty(){
+            html! { <div>{"no actions selected"}</div> }
+        }
+        else {
+            html! {
+                for actions.iter().map(|action| {
+                    let costs = action.get_action_cost_str(tier);
+                    html! {
+                        <div class="single-action-container">
+                            <div class="single-action-cost-boxes">
+                                {for costs.iter().map(|cost| {
+                                    html! { <div class="single-action-cost-box">{cost}</div> }
+                                })}
+                            </div>
+                            <div class="single-action-details">
+                                <div class="single-action-name">{ &action.name }</div>
+                                <div class="single-action-text">{ &action.text }</div>
+                            </div>
+                            <div>
+                                {if action.slot == true {
+                                    html! { <div class="single-action-slot-box"></div> }
+                                } else {
+                                    html! {""}
+                                }}
+                            </div>
                         </div>
-                        <div class="single-action-details">
-                            <div class="single-action-name">{ &action.name }</div>
-                            <div class="single-action-text">{ &action.text }</div>
-                        </div>
-                        <div>
-                            {if action.slot == true {
-                                html! { <div class="single-action-slot-box"></div> }
-                            } else {
-                                html! {""}
-                            }}
-                        </div>
-                    </div>
-                }
-            })}
+                    }
+                })
+            }
         }
     }
 

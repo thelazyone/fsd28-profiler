@@ -2,7 +2,7 @@
   "classes": [
     {
       "name": "Bandit",
-      "special_rules": "none",
+      "special_abilities": [],
       "tier": "Goon",
       "characteristics": {
         "stat_cmd": 0,
@@ -20,22 +20,18 @@
       },
       "modifiers": [
         {
-          "id": "defender",
+          "id": "Raider",
+          "points": 1,
           "effects": {
-            "stat_def": "+2"
-          }
-        },
-        {
-          "id": "berserker",
-          "effects": {
-            "stat_melee": "1d10"
+            "ability": "Terrain Expert"
           }
         }
-      ]
+      ],
+      "cost": 3
     },
     {
       "name": "Fanatic",
-      "special_rules": "Fast",
+      "special_abilities": ["Fast"],
       "tier": "Goon",
       "characteristics": {
         "stat_cmd": 0,
@@ -53,12 +49,14 @@
       },
       "modifiers": [
         {
-          "id": "agile",
+          "id": "Charger",
+          "points": 2,
           "effects": {
-            "stat_move": "+1"
+            "ability": "Charger"
           }
         }
-      ]
+      ],
+      "cost": 3
     }
   ]
 }

@@ -235,10 +235,24 @@
     font-weight: bold;
 }
 
+.profile-cost {
+    text-align: center;
+    grid-column: span 3;
+    grid-row: 3;
+
+    font-variant: small-caps;
+    font-weight: bold;  /* Thick style */
+    padding: 6px;
+    background-color: transparent;  /* Light gray background for visibility */
+    font-size: 16px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+}
+
 .profile-stats {
     display: grid;
     grid-column: span 3;
-    grid-row: 3;
+    grid-row: 4;
 
     justify-content: space-around;
     /* Additional styles for the profile stats */
@@ -255,7 +269,7 @@
 .profile-actions {
     display: grid;
     grid-column: span 3;
-    grid-row: 4;
+    grid-row: 5;
 
     /* Bottom border */
     border-bottom: 4px solid #666;
@@ -307,7 +321,7 @@
 
 .profile-special-abilities {
     grid-column: span 3;
-    grid-row: 5;
+    grid-row: 6;
 
     font-weight: bold;  /* Thick style */
     text-align: center;
@@ -321,7 +335,7 @@
 
 .damage-chart {
     grid-column: span 3;
-    grid-row: 6;
+    grid-row: 7;
 
     display: grid;
     grid-template-columns: repeat(6, 1fr);

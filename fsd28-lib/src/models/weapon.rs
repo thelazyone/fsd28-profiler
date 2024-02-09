@@ -15,7 +15,6 @@ pub struct Weapon {
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct WeaponOption {
     pub action: Action,
-    pub points: u32,
     pub is_base: bool,
 }
 

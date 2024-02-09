@@ -8,13 +8,13 @@ use web_sys::console;
 #[derive(Properties, PartialEq, Clone)]
 pub struct ModifiersViewProps {
     pub modifiers: Vec<Modifier>, // List of all available modifiers for the selected class
-    pub selected_modifiers: Vec<String>, // IDs of currently selected modifiers
-    pub on_modifier_toggle: Callback<String>, // Callback to handle toggling modifiers
+    pub selected_modifiers: Vec<Modifier>, // IDs of currently selected modifiers
+    pub on_modifier_toggle: Callback<Modifier>, // Callback to handle toggling modifiers
 }
 
 #[derive(Clone)]
 pub enum Msg {
-    ToggleModifier(String), // Pass the ID of the modifier to toggle
+    ToggleModifier(Modifier), // Pass the ID of the modifier to toggle
 }
 
 pub struct ModifiersView {
@@ -34,9 +34,9 @@ impl Component for ModifiersView {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Msg::ToggleModifier(id) => {
-                console::log_1(&format!("Toggled modifier {}", id).into());
-                ctx.props().on_modifier_toggle.emit(id);
+            Msg::ToggleModifier(modifier) => {
+                console::log_1(&format!("Toggled modifier {}", modifier.id).into());
+                ctx.props().on_modifier_toggle.emit(modifier);
                 true // Re-render as needed
             },
         }
@@ -56,15 +56,15 @@ impl Component for ModifiersView {
 
 impl ModifiersView {
     fn view_modifier(&self, modifier: &Modifier, ctx: &Context<Self>) -> Html {
-        let is_selected = ctx.props().selected_modifiers.contains(&modifier.id);
-        let label = modifier.id.clone();
-        console::log_1(&format!("Showing modifier modifier {}", label).into());
+        let is_selected = ctx.props().selected_modifiers.contains(&modifier);
+        let local_modifier = modifier.clone();
+        console::log_1(&format!("Showing modifier modifier {}", local_modifier.id).into());
         html! {
             <div class="modifier">
                 <label>
                     <input type="checkbox"
                         checked={is_selected}
-                        onclick={ctx.link().callback(move |_| Msg::ToggleModifier(label.clone()))} />
+                        onclick={ctx.link().callback(move |_| Msg::ToggleModifier(local_modifier.clone()))} />
                     { &modifier.id }
                 </label>
             </div>

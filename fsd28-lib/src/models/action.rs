@@ -20,10 +20,10 @@ pub struct ActionCost {
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct Action {
     pub name: String,
-    pub cost: ActionCost,
+    pub cost: ActionCost, // TODO this is misleading - cost should be Points, not Activation Dice!
     pub text: String,
     pub slot: bool,
-    // TODO do the rest!    
+    pub points: u32,
 }
 
 impl Action {
