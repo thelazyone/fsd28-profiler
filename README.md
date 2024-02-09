@@ -26,7 +26,7 @@ LIB:
 - [x] weapon-related actions
 - [x] options for classes (it's a tricky one!)
 - [x] points calculation (propagating it throughout all the profiles)
-- [ ] Hero System (will require an extra Modal window)
+- [ ] (!) Hero System (will require an extra Modal window)
 - [x] saving and loading profiles
 - [x] generating a printable (even ASCII) card for each profile.
 
@@ -36,6 +36,6 @@ WEB
 - [x] profile Visualization
 - [x] Add-Remove Profiles
 - [x] Edit Profiles (with forms)
-- [ ] Show Mandatory actions for weapons
-- [ ] Grey down actions that cannot be taken (because you didn't take a mandatory one or because you are not high tier)
+- [x] Show Mandatory actions for weapons
+- [x] Grey down actions that cannot be taken (because you didn't take a mandatory one or because you are not high tier)
 - [ ] Anything Roster-Related
