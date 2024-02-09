@@ -7,16 +7,36 @@
       "characteristics": {
         "stat_cmd": 0,
         "stat_def": 4,
-        "stat_save": {"shape": 6, "number": 1, "armor": 2},
+        "stat_save": {
+          "shape": 6,
+          "number": 1,
+          "armor": 2
+        },
         "stat_move": 3,
-        "stat_shoot": {"shape": 6, "number": 0, "armor": 0},
-        "stat_melee": {"shape": 6, "number": 1, "armor": 0}
+        "stat_shoot": {
+          "shape": 6,
+          "number": 0,
+          "armor": 0
+        },
+        "stat_melee": {
+          "shape": 6,
+          "number": 1,
+          "armor": 0
+        }
       },
       "damage_profile": {
-          "intervals": [
-              [3, "Red", "DEAD"],
-              [3, "Yellow", "MOV"]
+        "intervals": [
+          [
+            3,
+            "Red",
+            "DEAD"
+          ],
+          [
+            3,
+            "Yellow",
+            "MOV"
           ]
+        ]
       },
       "modifiers": [
         {
@@ -31,21 +51,43 @@
     },
     {
       "name": "Fanatic",
-      "special_abilities": ["Fast"],
+      "special_abilities": [
+        "Fast"
+      ],
       "tier": "Goon",
       "characteristics": {
         "stat_cmd": 0,
         "stat_def": 3,
-        "stat_save": {"shape": 6, "number": 1, "armor": 2},
+        "stat_save": {
+          "shape": 6,
+          "number": 1,
+          "armor": 2
+        },
         "stat_move": 4,
-        "stat_shoot": {"shape": 6, "number": 0, "armor": 0},
-        "stat_melee": {"shape": 6, "number": 2, "armor": 0}
+        "stat_shoot": {
+          "shape": 6,
+          "number": 0,
+          "armor": 0
+        },
+        "stat_melee": {
+          "shape": 6,
+          "number": 2,
+          "armor": 0
+        }
       },
       "damage_profile": {
-          "intervals": [
-              [4, "Red", "DEAD"],
-              [2, "Yellow", "MOV"]
+        "intervals": [
+          [
+            4,
+            "Red",
+            "DEAD"
+          ],
+          [
+            2,
+            "Yellow",
+            "MOV"
           ]
+        ]
       },
       "modifiers": [
         {
@@ -53,6 +95,154 @@
           "points": 2,
           "effects": {
             "ability": "Charger"
+          }
+        }
+      ],
+      "cost": 3
+    },
+    {
+      "name": "Enforcer",
+      "special_abilities": [],
+      "tier": "Goon",
+      "characteristics": {
+        "stat_cmd": 1,
+        "stat_def": 4,
+        "stat_save": {
+          "shape": 8,
+          "number": 1,
+          "armor": 2
+        },
+        "stat_move": 3,
+        "stat_shoot": {
+          "shape": 6,
+          "number": 1,
+          "armor": 0
+        },
+        "stat_melee": {
+          "shape": 6,
+          "number": 1,
+          "armor": 0
+        }
+      },
+      "damage_profile": {
+        "intervals": [
+          [
+            3,
+            "Red",
+            "DEAD"
+          ],
+          [
+            2,
+            "Yellow",
+            "MOV"
+          ],
+          [
+            1,
+            "Yellow",
+            "S2+S3"
+          ]
+        ]
+      },
+      "modifiers": [],
+      "cost": 3
+    },
+    {
+      "name": "Bodiguard",
+      "special_abilities": [],
+      "tier": "Goon",
+      "characteristics": {
+        "stat_cmd": 1,
+        "stat_def": 4,
+        "stat_save": {
+          "shape": 8,
+          "number": 1,
+          "armor": 2
+        },
+        "stat_move": 3,
+        "stat_shoot": {
+          "shape": 6,
+          "number": 2,
+          "armor": 0
+        },
+        "stat_melee": {
+          "shape": 6,
+          "number": 2,
+          "armor": 0
+        }
+      },
+      "damage_profile": {
+        "intervals": [
+          [
+            2,
+            "Red",
+            "DEAD"
+          ],
+          [
+            2,
+            "Yellow",
+            "MOV"
+          ],
+          [
+            1,
+            "Yellow",
+            "ARM"
+          ],
+          [
+            1,
+            "Yellow",
+            "S2+S3"
+          ]
+        ]
+      },
+      "modifiers": [],
+      "cost": 3
+    },
+    {
+      "name": "Military",
+      "special_abilities": [
+        "Disciplined"
+      ],
+      "tier": "Goon",
+      "characteristics": {
+        "stat_cmd": 1,
+        "stat_def": 4,
+        "stat_save": {
+          "shape": 10,
+          "number": 1,
+          "armor": 2
+        },
+        "stat_move": 3,
+        "stat_shoot": {
+          "shape": 8,
+          "number": 1,
+          "armor": 0
+        },
+        "stat_melee": {
+          "shape": 8,
+          "number": 1,
+          "armor": 0
+        }
+      },
+      "damage_profile": {
+        "intervals": [
+          [
+            4,
+            "Red",
+            "DEAD"
+          ],
+          [
+            2,
+            "Yellow",
+            "MOV"
+          ]
+        ]
+      },
+      "modifiers": [
+        {
+          "id": "Sergeant",
+          "points": 2,
+          "effects": {
+            "cmd_add": 2
           }
         }
       ],
