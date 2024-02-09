@@ -6,6 +6,7 @@ FSD28 is an experimental port of [Full Spectrum Dominance](https://fsd-wargame.c
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/thelazyone/fsd28-profiler)
 
 ## Current State 
+[Check out the LIVE DEMO (still WIP)!](https://test.thelazyforger.com/fsd28/)
 Currently there is a (possibly broken) implementation is via CLI and a functioning web application deployable with trunk.
 
 <img width="670" alt="image" src="https://github.com/thelazyone/fsd28-profiler/assets/10134358/22afbf7b-e565-4b11-9663-69111cfc9d7a">
