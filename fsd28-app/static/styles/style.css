@@ -441,11 +441,12 @@
 .atw-weapon-name {
     font-weight: bold;
     margin-bottom: 5px;
+    font-size: 14px;
 }
 
 .atw-weapon-options {
-    font-size: 16px;
-    font-variant: small-caps;
+    font-size: 12px;
+    text-transform: uppercase;
     padding-left: 20px;
 }
 
