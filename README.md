@@ -7,6 +7,7 @@ FSD28 is an experimental port of [Full Spectrum Dominance](https://fsd-wargame.c
 
 ## Current State 
 [Check out the LIVE DEMO (still WIP)!](https://test.thelazyforger.com/fsd28/)
+
 Currently there is a (possibly broken) implementation is via CLI and a functioning web application deployable with trunk.
 
 <img width="670" alt="image" src="https://github.com/thelazyone/fsd28-profiler/assets/10134358/22afbf7b-e565-4b11-9663-69111cfc9d7a">
@@ -39,4 +40,6 @@ WEB
 - [x] Edit Profiles (with forms)
 - [x] Show Mandatory actions for weapons
 - [x] Grey down actions that cannot be taken (because you didn't take a mandatory one or because you are not high tier)
+- [ ] Better handle selection of profiles (still buggy) when saving or opening saved ones
+- [ ] Implement the "Delete Selected" button
 - [ ] Anything Roster-Related
