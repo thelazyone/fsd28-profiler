@@ -78,6 +78,12 @@ impl Profile {
             modified_profile.cost += action.points;
         }
 
+        // Updating the profile description.
+        if !modified_profile.selected_modifiers.is_empty() {
+            modified_profile.description += " (";
+            modified_profile.description += &(modified_profile.selected_modifiers.iter().map(|modifier| {modifier.id.clone()}).collect::<Vec<String>>().join(", "));
+            modified_profile.description += ")";
+        }
 
         modified_profile
     }
