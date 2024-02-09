@@ -1,6 +1,9 @@
 use yew::prelude::*;
 use fsd28_lib::{Weapon, WeaponOption, Action}; 
 
+// For browser debugging
+use web_sys::console;
+
 #[derive(Properties, PartialEq, Clone)]
 pub struct ActionTreeViewProps {
     pub weapons: Vec<Weapon>,
@@ -47,6 +50,7 @@ impl Component for ActionTreeView {
                     .find(|option| option.action.name == action_name)
                     .map(|option| &option.action);
 
+
                 if let Some(action) = action {
                     ctx.props().on_action_select.emit(action.clone());
                 }
@@ -80,28 +84,49 @@ impl ActionTreeView {
                 </div>
                 if is_expanded {
                     <div class="atw-weapon-options">
-                        { for weapon.options.iter().map(|option| self.view_option(option, ctx)) }
+                        { for weapon.options.iter().map(|option| self.view_option(option, &weapon.options, ctx)) }
                     </div>
                 }
             </div>
         }
     }
 
-    fn view_option(&self, option: &WeaponOption, ctx: &Context<Self>) -> Html {
+    fn view_option(&self, option: &WeaponOption, all_options: &Vec<WeaponOption>, ctx: &Context<Self>) -> Html {
         let action_name = option.action.name.clone();
         let is_selected = ctx.props().selected_actions.contains(&action_name);
-        // Placeholder for determining if the action is available or not
-        let is_available = true; // This should be dynamically calculated based on your logic
 
-        let class = match (is_selected, is_available) {
-            (true, _) => "atw-action selected",
-            (_, false) => "atw-action unavailable",
-            _ => "atw-action",
+        // To check if the action is available the only way is to check one of the following 
+        // - there is no mandatory action
+        // - it is a mandatory action
+        // - At least a mandatory action is selected
+        let is_there_base_option = all_options.iter().any(|opt| {opt.is_base});
+        let is_base_option_selected = all_options.iter().any(|opt| {
+            opt.is_base && ctx.props().selected_actions.contains(&opt.action.name)
+        });
+        console::log_1(&format!("selected are: {:?}", ctx.props().selected_actions).into());
+        let is_too_many_actions = ctx.props().selected_actions.len() >= 3; // TODO This should not be a magic number
+
+        let is_available = !is_too_many_actions && (!is_there_base_option || option.is_base || is_base_option_selected);
+
+        let class_string = match (is_selected, is_available) {
+            (true, _) => "atw-action-selected",
+            (_, false) => "atw-action-unavailable",
+            _ => "",
         };
 
+
         html! {
-            <div class={class} onclick={ctx.link().callback(move |_| Msg::SelectAction(action_name.clone()))}>
-                { &option.action.name }
+            <div class="atw-action">
+                {
+                    if !class_string.is_empty() {
+                    html! { <div class={class_string}> {&option.action.name} </div> }
+                } else {
+                    html! {
+                        <div onclick={ctx.link().callback(move |_| Msg::SelectAction(action_name.clone()))}>
+                            { &option.action.name }
+                        </div>
+                    }
+                }}
             </div>
         }
     }

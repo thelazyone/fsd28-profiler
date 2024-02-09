@@ -313,6 +313,11 @@ impl UnitsView {
             else {
                 available_modifiers = Vec::<Modifier>::new();
             }
+            let selected_actions = if let Some(profile) = &self.editing_profile {
+                profile.actions.iter().map(|action| {action.name.clone()}).collect::<Vec<String>>()
+            } else {
+                Vec::<String>::new()
+            };
 
             html! {
                 <div class="edit-form">
@@ -335,7 +340,7 @@ impl UnitsView {
                         // Setting up all the available actions
                         <ActionTreeView 
                             weapons={weapons_config.weapons} 
-                            selected_actions={vec![]} 
+                            selected_actions={selected_actions} 
                             on_action_select={ctx.link().callback(move |action: Action| Msg::ActionSelected(action))}
                         />
                     </div>
@@ -373,26 +378,42 @@ impl UnitsView {
         else {
             html! {
                 for actions.iter().map(|action| {
+                    
+                    // Checking if the action is available for the given character
                     let costs = action.get_action_cost_str(tier);
-                    html! {
-                        <div class="single-action-container">
-                            <div class="single-action-cost-boxes">
-                                {for costs.iter().map(|cost| {
-                                    html! { <div class="single-action-cost-box">{cost}</div> }
-                                })}
+                    if costs.is_empty() {
+                        html! {
+                            <div class="single-action-container">
+                                <div class="single-action-cost-boxes">
+                                    <div class="single-action-cost-box">{"X"}</div>
+                                </div>
+                                <div class="single-action-details">
+                                    <div class="single-action-name">{ &action.name }</div>
+                                    <div class="single-action-text">{ "Action Unavailable" }</div>
+                                </div>
                             </div>
-                            <div class="single-action-details">
-                                <div class="single-action-name">{ &action.name }</div>
-                                <div class="single-action-text">{ &action.text }</div>
+                        }
+                    } else {
+                        html! {
+                            <div class="single-action-container">
+                                <div class="single-action-cost-boxes">
+                                    {for costs.iter().map(|cost| {
+                                        html! { <div class="single-action-cost-box">{cost}</div> }
+                                    })}
+                                </div>
+                                <div class="single-action-details">
+                                    <div class="single-action-name">{ &action.name }</div>
+                                    <div class="single-action-text">{ &action.text }</div>
+                                </div>
+                                <div>
+                                    {if action.slot == true {
+                                        html! { <div class="single-action-slot-box"></div> }
+                                    } else {
+                                        html! {""}
+                                    }}
+                                </div>
                             </div>
-                            <div>
-                                {if action.slot == true {
-                                    html! { <div class="single-action-slot-box"></div> }
-                                } else {
-                                    html! {""}
-                                }}
-                            </div>
-                        </div>
+                        }
                     }
                 })
             }
@@ -457,7 +478,7 @@ impl UnitsView {
             Color::Red => "red",
             Color::Yellow => "yellow",
             Color::Green => "green",
-            // Add other colors as needed
+            // Add other colors as needed[1, 1]
         }
     }
 

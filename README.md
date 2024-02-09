@@ -24,8 +24,8 @@ LIB:
 - [x] implementing the default actions for units
 - [x] reading and handling of weapon profiles
 - [x] weapon-related actions
-- [ ] options for classes (it's a tricky one!)
-- [ ] points calculation (propagating it throughout all the profiles)
+- [x] options for classes (it's a tricky one!)
+- [x] points calculation (propagating it throughout all the profiles)
 - [ ] Hero System (will require an extra Modal window)
 - [x] saving and loading profiles
 - [x] generating a printable (even ASCII) card for each profile.

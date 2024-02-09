@@ -457,15 +457,16 @@
 }
 
 .atw-action:hover {
-    background-color: #f0f0f0;
+    background-color: #fff;
 }
 
-.atw-selected {
-    background-color: #add8e6; /* Light blue to indicate selection */
+.atw-action-selected {
+    background-color: #aaa; /* Light blue to indicate selection */
+    cursor: not-allowed;
 }
 
-.atw-unavailable {
-    color: #ecc;
+.atw-action-unavailable {
+    color: #f66;
     cursor: not-allowed;
 }
 

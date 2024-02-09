@@ -78,6 +78,12 @@ impl Profile {
             modified_profile.cost += action.points;
         }
 
+        // If there are three actions, adding +2 points.
+        // TODO this SHOULD NOT be a magic number!
+        if self.actions.len() >= 3 {
+            modified_profile.cost += 2;
+        }
+
         // Updating the profile description.
         if !modified_profile.selected_modifiers.is_empty() {
             modified_profile.description += " (";
