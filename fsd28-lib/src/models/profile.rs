@@ -56,11 +56,23 @@ fn apply_modifier_effects(profile: &mut Profile, modifier: &Modifier) {
                         profile.characteristics.stat_cmd -= val as u32;
                     }
                 },
+                "move_set" => {
+                    if let Some(val) = value.as_u64() {
+                        profile.characteristics.stat_move = val as u32;
+                    }
+                },
                 "shoot_set" => {
+                    if let Some(val) = value.as_str() {
+                        profile.characteristics.stat_shoot =
+                            DiceValue::new_from_string(val.to_string())
+                            .unwrap_or(DiceValue::new(6, 1).unwrap());
+                    }
+                },
+                "melee_set" => {
                     if let Some(val) = value.as_str() {
                         profile.characteristics.stat_save =
                             DiceValue::new_from_string(val.to_string())
-                            .unwrap_or(DiceValue::new(1, 6).unwrap());
+                            .unwrap_or(DiceValue::new(6, 1).unwrap());
                     }
                 },
                 _ => {}

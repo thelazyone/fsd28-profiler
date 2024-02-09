@@ -308,14 +308,15 @@
           "id": "Reactive",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "ability": "Reactive"
           }
         },
         {
           "id": "Lone Wolf",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "ability": "Lone Wolf",
+            "cmd_set": 0
           }
         }
       ],
@@ -376,14 +377,14 @@
           "id": "Hardened",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "ability": "Unpinnable"
           }
         },
         {
           "id": "Commander",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "ability": "Commander"
           }
         }
       ],
@@ -442,21 +443,21 @@
           "id": "Camouflage",
           "points": 3,
           "effects": {
-            "cmd_add": 2
+            "ability": "Camouflage"
           }
         },
         {
           "id": "Infiltrator",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "ability": "Infiltrator"
           }
         },
         {
           "id": "Silent",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "ability": "Silent"
           }
         }
       ],
@@ -509,24 +510,24 @@
       },
       "modifiers": [
         {
-          "id": "Fst",
+          "id": "Fast",
           "points": 1,
           "effects": {
-            "cmd_add": 2
+            "ability": "Fast"
           }
         },
         {
           "id": "Infiltrator",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "ability": "Infiltrator"
           }
         },
         {
           "id": "Silent",
           "points": 1,
           "effects": {
-            "cmd_add": 2
+            "ability": "Silent"
           }
         }
       ],
@@ -595,14 +596,14 @@
           "id": "Oversized",
           "points": 0,
           "effects": {
-            "cmd_add": 2
+            "ability": "Large Target, +2 in Contact"
           }
         },
         {
           "id": "Weapon Master",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "melee_set": "2d12"
           }
         }
       ],
@@ -671,13 +672,14 @@
           "id": "Gunslinger",
           "points": 2,
           "effects": {
-            "cmd_add": 2
+            "shoot_set": "2d10",
+            "ability": "Slow"
           }
         },        {
           "id": "Juggernaut",
           "points": 4,
           "effects": {
-            "cmd_add": 2
+            "ability": "Hard Shell"
           }
         },        {
           "id": "Marshal",
