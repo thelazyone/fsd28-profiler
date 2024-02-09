@@ -25,7 +25,77 @@
                 "char": [[4, 6]],
                 "hero": [[0, 0]]
               },
-              "text": "1D6 Contact",
+              "text": "1d6 Contact",
+              "slot": false,
+              "points": 1
+            },
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "Slam",
+              "cost": {
+                "goon": [[1, 1]],
+                "char": [[1, 3]],
+                "hero": [[0, 0]]
+              },
+              "text": "2d8 Contact Stun, Requires Move",
+              "slot": false,
+              "points": 1
+            },
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "Grenade",
+              "cost": {
+                "goon": [[6, 6]],
+                "char": [[5, 6]],
+                "hero": [[4, 6]]
+              },
+              "text": "1d8 Area 2 AP1 (no bonuses)",
+              "slot": false,
+              "points": 1
+            },
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "Flashbang",
+              "cost": {
+                "goon": [[1, 1]],
+                "char": [[1, 2]],
+                "hero": [[1, 3]]
+              },
+              "text": "1d10 Area 3 Stun Nonlethal",
+              "slot": false,
+              "points": 1
+            },
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "MediPack",
+              "cost": {
+                "goon": [[1, 1]],
+                "char": [[1, 2]],
+                "hero": [[0, 0]]
+              },
+              "text": "Heal. Self or Contact",
+              "slot": false,
+              "points": 1
+            },
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "StimPack",
+              "cost": {
+                "goon": [[1, 1]],
+                "char": [[1, 3]],
+                "hero": [[0, 0]]
+              },
+              "text": "Heal. Self or Contact",
               "slot": false,
               "points": 1
             },
