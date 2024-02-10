@@ -4,8 +4,18 @@
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
+image:
+  file: .gitpod.Dockerfile
 tasks:
-  - init: cargo build
-    command: cargo watch -x run
+  - before: |
+      cd fsd28-app
+      wasm-pack build --target web
+  - init: |
+      cd fsd28-app
+      cargo build
+      trunk build --public-url="./"
+  - command: |
+      cd fsd28-app
+      trunk serve --release
 
 
