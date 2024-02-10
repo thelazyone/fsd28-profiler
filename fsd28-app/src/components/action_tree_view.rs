@@ -76,11 +76,12 @@ impl ActionTreeView {
         let weapon_name = weapon.name.clone();
         let is_expanded = self.expanded_weapon.as_ref() == Some(&weapon.name);
         let toggle_msg = Msg::ToggleWeapon(weapon_name.clone());
+        let expansion_symbol = if is_expanded { "▼" } else { "▲" };
 
         html! {
             <div class="atw-weapon">
                 <div class="atw-weapon-name" onclick={ctx.link().callback(move |_| toggle_msg.clone())}>
-                    { &weapon_name }
+                    { format!("{} {}", &weapon_name, expansion_symbol) }
                 </div>
                 if is_expanded {
                     <div class="atw-weapon-options">

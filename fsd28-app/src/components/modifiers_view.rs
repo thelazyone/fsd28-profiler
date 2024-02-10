@@ -61,11 +61,12 @@ impl ModifiersView {
         console::log_1(&format!("Showing modifier modifier {}", local_modifier.id).into());
         html! {
             <div class="modifier">
-                <label>
+                <label class="custom-checkbox">
+                    { &modifier.id }
                     <input type="checkbox"
                         checked={is_selected}
                         onclick={ctx.link().callback(move |_| Msg::ToggleModifier(local_modifier.clone()))} />
-                    { &modifier.id }
+                    <span class="checkmark"></span> // Custom checkmark
                 </label>
             </div>
         }
