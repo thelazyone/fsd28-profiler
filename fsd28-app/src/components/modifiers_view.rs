@@ -62,7 +62,7 @@ impl ModifiersView {
         html! {
             <div class="modifier">
                 <label class="custom-checkbox">
-                    { &modifier.id }
+                    { format!("{} ({})", &local_modifier.id, &local_modifier.points) }
                     <input type="checkbox"
                         checked={is_selected}
                         onclick={ctx.link().callback(move |_| Msg::ToggleModifier(local_modifier.clone()))} />

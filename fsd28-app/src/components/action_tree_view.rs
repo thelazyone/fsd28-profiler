@@ -120,14 +120,18 @@ impl ActionTreeView {
             <div class="atw-action">
                 {
                     if !class_string.is_empty() {
-                    html! { <div class={class_string}> {&option.action.name} </div> }
-                } else {
-                    html! {
-                        <div onclick={ctx.link().callback(move |_| Msg::SelectAction(action_name.clone()))}>
-                            { &option.action.name }
-                        </div>
+                        html! { <div class={class_string}> 
+                            { format!("{} ({})", &option.action.name, &option.action.points) } 
+                        </div> }
                     }
-                }}
+                    else {
+                        html! {
+                            <div onclick={ctx.link().callback(move |_| Msg::SelectAction(action_name.clone()))}>
+                                { format!("{} ({})", &option.action.name, &option.action.points) }
+                            </div>
+                        }
+                    }
+                }
             </div>
         }
     }
