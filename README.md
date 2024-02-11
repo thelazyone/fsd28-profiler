@@ -34,6 +34,8 @@ LIB:
 - [ ] (!) Hero System (will require an extra Modal window)
 - [x] saving and loading profiles
 - [x] generating a printable (even ASCII) card for each profile.
+- [ ] adding a timestamp id to the profiles.
+- [ ] adding a unique id to the weapons, for better backward compability.
 
 WEB
 - [x] Basic framework in Yew
@@ -44,5 +46,5 @@ WEB
 - [x] Show Mandatory actions for weapons
 - [x] Grey down actions that cannot be taken (because you didn't take a mandatory one or because you are not high tier)
 - [ ] Better handle selection of profiles (still buggy) when saving or opening saved ones
-- [ ] Implement the "Delete Selected" button
+- [x] Implement the "Delete Selected" button
 - [ ] Anything Roster-Related

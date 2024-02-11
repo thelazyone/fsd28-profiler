@@ -59,13 +59,13 @@ impl Component for UnitsView {
         Self {
             selected_profile: None,
             editing_profile: None,
-
             show_modal: false,
         }
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
+
             Msg::ProfileSelected(profile) => {
                 self.editing_profile = Some(profile.clone());
                 self.selected_profile = Some(profile);
@@ -79,7 +79,13 @@ impl Component for UnitsView {
 
             Msg::DeleteSelectedProfile => {
 
-                self.update_model_profiles(ctx);
+                if let Some(selected_profile) = &self.selected_profile {
+                    let mut all_profiles = ctx.props().profiles.clone();
+                    all_profiles.retain(|elem| {elem.name != selected_profile.name});
+                    ctx.props().on_profiles_changed.emit(all_profiles);
+                }
+                self.selected_profile = None;
+                self.editing_profile = None;
                 true
             },
 
@@ -123,9 +129,6 @@ impl Component for UnitsView {
                 
                 // Signal to update the central view with the edited profile
                 let mut all_profiles = ctx.props().profiles.clone();
-                console::log_1(&format!("Loaded {} profiles", all_profiles.len()).into());
-                console::log_1(&format!("Selected is {}", self.selected_profile.clone().unwrap().name).into());
-
 
                 // Find the index of the profile to replace
                 // TODO remove that double clone(), it's ugly.
