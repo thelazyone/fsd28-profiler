@@ -1,5 +1,6 @@
 use yew::prelude::*;
 use wasm_bindgen::prelude::*;
+use crate::components::units_view;
 use crate::components::{
     top_menu::TopMenu,
     roster_view::RosterView,
@@ -30,6 +31,9 @@ pub struct App {
 
     // input file
     file_input_ref: NodeRef,
+
+    // Flags
+    reset_selected: bool,
 }
 
 
@@ -43,10 +47,11 @@ impl Component for App {
             state: AppStates::Units, // Default state
             model: Model::new(),
             file_input_ref: NodeRef::default(),
+            reset_selected: false,
         }
     }
 
-    fn update(&mut self, _: &Context<Self>, msg : SharedMessage) -> bool {
+    fn update(&mut self, ctx: &Context<Self>, msg : SharedMessage) -> bool {
         match msg {
 
             SharedMessage::ViewRoster => {
@@ -63,6 +68,7 @@ impl Component for App {
             SharedMessage::FileContentReceived(text) => {
                 match Model::from_json(&text) {
                     Ok(model) => {
+                        self.reset_selected = true;
                         self.model = model;
                     }
 
@@ -120,6 +126,7 @@ impl Component for App {
 
             SharedMessage::UpdateProfiles(updated_profiles) => {
                 self.model.profiles = updated_profiles;
+                self.reset_selected = false;
                 true
             },
 
@@ -147,6 +154,7 @@ impl Component for App {
                         AppStates::Units => html! { <UnitsView 
                             profiles={profiles} 
                             on_profiles_changed={ctx.link().callback(|updated_profiles| SharedMessage::UpdateProfiles(updated_profiles))}
+                            reset_selected={self.reset_selected}
                             /> },
                     }
                 }

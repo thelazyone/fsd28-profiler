@@ -36,6 +36,7 @@ LIB:
 - [x] generating a printable (even ASCII) card for each profile.
 - [ ] adding a timestamp id to the profiles.
 - [ ] adding a unique id to the weapons, for better backward compability.
+- [ ] version for save files
 
 WEB
 - [x] Basic framework in Yew

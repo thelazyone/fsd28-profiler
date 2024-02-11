@@ -23,6 +23,7 @@ use web_sys::console;
 pub struct UnitsViewProps {
     pub profiles: Vec<Profile>, // Assuming Profile is a struct representing your profiles
     pub on_profiles_changed: Callback<Vec<Profile>>,
+    pub reset_selected: bool,
 }
 
 pub struct UnitsView {
@@ -63,7 +64,21 @@ impl Component for UnitsView {
         }
     }
 
+
+    fn changed(&mut self, ctx: &Context<Self>, _: &Self::Properties) -> bool {
+        console::log_1(&format!("Changed called, reset is {}", ctx.props().reset_selected).into());
+
+        if ctx.props().reset_selected {
+            console::log_1(&format!("DEBUG resetting selection").into());
+            self.reset_selection();
+        }
+
+        true
+    }
+    
+
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+
         match msg {
 
             Msg::ProfileSelected(profile) => {
@@ -84,8 +99,7 @@ impl Component for UnitsView {
                     all_profiles.retain(|elem| {elem.name != selected_profile.name});
                     ctx.props().on_profiles_changed.emit(all_profiles);
                 }
-                self.selected_profile = None;
-                self.editing_profile = None;
+                self.reset_selection();
                 true
             },
 
@@ -184,7 +198,7 @@ impl Component for UnitsView {
                 match selected_class {
                     Some(class) => {
                         let mut updated_profiles = ctx.props().profiles.clone();
-                        let new_profile = Profile::new("NEW_PROFILE".to_string(), class.clone());
+                        let new_profile = Profile::new(format!("NEW_PROFILE_{}", ctx.props().profiles.len() + 1), class.clone());
                         updated_profiles.push(new_profile.clone());
                         self.selected_profile = Some(new_profile); // Set the new profile as selected
                         self.editing_profile = self.selected_profile.clone();
@@ -249,6 +263,12 @@ impl Component for UnitsView {
 
 
 impl UnitsView {
+
+    pub fn reset_selection(&mut self) {
+        self.editing_profile = None;
+        self.selected_profile = None;
+    }
+
     fn view_profile_button(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
         let is_selected = self.selected_profile.as_ref().map_or(false, |p| p == profile);
         let local_profile = profile.clone(); // There is a _DOUBLE_ clone here - TODO FIX this is horrible (but it works)
