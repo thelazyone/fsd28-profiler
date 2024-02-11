@@ -248,12 +248,6 @@ impl Component for UnitsView {
 impl UnitsView {
     fn view_profile_button(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
         let is_selected = self.selected_profile.as_ref().map_or(false, |p| p == profile);
-        if is_selected {
-            console::log_1(&format!("Item {} is selected", profile.name).into());
-        }
-        else {
-            console::log_1(&format!("Item {} is NOT selected", profile.name).into());
-        }
         let local_profile = profile.clone(); // There is a _DOUBLE_ clone here - TODO FIX this is horrible (but it works)
         html! {
             <button
@@ -270,7 +264,6 @@ impl UnitsView {
         // Creating a "modified" version of the profile, where the modifiers are actually applied.
         let final_profile = profile.get_final_profile();
 
-        console::log_1(&format!("Displaying {}", final_profile.name).into());
         html! {
             <div class="profile-details">
                 <div class="profile-name">{ &final_profile.name }</div>

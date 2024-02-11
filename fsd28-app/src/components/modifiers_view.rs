@@ -26,7 +26,6 @@ impl Component for ModifiersView {
     type Properties = ModifiersViewProps;
 
     fn create(_: &Context<Self>) -> Self {
-        console::log_1(&format!("Creating ModifiersView").into());
         Self {
             // Initialize state here if necessary
         }
@@ -35,7 +34,6 @@ impl Component for ModifiersView {
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::ToggleModifier(modifier) => {
-                console::log_1(&format!("Toggled modifier {}", modifier.id).into());
                 ctx.props().on_modifier_toggle.emit(modifier);
                 true // Re-render as needed
             },
@@ -58,7 +56,6 @@ impl ModifiersView {
     fn view_modifier(&self, modifier: &Modifier, ctx: &Context<Self>) -> Html {
         let is_selected = ctx.props().selected_modifiers.contains(&modifier);
         let local_modifier = modifier.clone();
-        console::log_1(&format!("Showing modifier modifier {}", local_modifier.id).into());
         html! {
             <div class="modifier">
                 <label class="custom-checkbox">

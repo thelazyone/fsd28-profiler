@@ -67,7 +67,7 @@
                 "char": [[1, 2]],
                 "hero": [[1, 3]]
               },
-              "text": "1d10 Area 3 Stun Nonlethal",
+              "text": "1d10 Area 3 AP3 Stun Nonlethal",
               "slot": false,
               "points": 1
             },
@@ -224,7 +224,7 @@
               },
               "text": "2d8 0-4 DU",
               "slot": false,
-              "points": 2
+              "points": 3
             },
             "is_base": true
           },
@@ -238,7 +238,7 @@
               },
               "text": "2d8 2-4 DU AP1",
               "slot": false,
-              "points": 2
+              "points": 3
             },
             "is_base": true
           },
@@ -258,7 +258,7 @@
           },
           {
             "action": {
-              "name": "Grenade Launcher",
+              "name": "Shoot Grenade",
               "cost": {
                 "goon": [],
                 "char": [[6, 6], [6, 6]],
@@ -305,7 +305,7 @@
         "options": [
           {
             "action": {
-              "name": "Buckshot",
+              "name": "Shotgun Buckshot",
               "cost": {
                 "goon": [[5, 6]],
                 "char": [[4, 6]],
@@ -313,13 +313,13 @@
               },
               "text": "2D8 0-2 DU AP1 Stun",
               "slot": false,
-              "points": 2
+              "points": 3
             },
             "is_base": true
           },
           {
             "action": {
-              "name": "Slugshot",
+              "name": "Shotgun Slugshot",
               "cost": {
                 "goon": [[6, 6]],
                 "char": [[6, 6]],
@@ -327,83 +327,223 @@
               },
               "text": "2D10 0-3 DU AP2",
               "slot": false,
+              "points": 3
+            },
+            "is_base": true
+          },
+          {
+            "action": {
+              "name": "Point Blank Shot",
+              "cost": {
+                "goon": [],
+                "char": [[1, 2]],
+                "hero": [[1, 3]]
+              },
+              "text": "4D8 0-1 DU AP2",
+              "slot": false,
+              "points": 1
+            },
+            "is_base": false
+          }
+        ]
+      },
+      {
+        "name": "Heavy Machinegun",
+        "options": [
+          {
+            "action": {
+              "name": "Heavy Machinegun",
+              "cost": {
+                "goon": [[1, 3]],
+                "char": [[0, 0]],
+                "hero": [[0, 0]]
+              },
+              "text": "3D8 1-4 DU AP1",
+              "slot": false,
+              "points":5
+            },
+            "is_base": true
+          },
+          {
+            "action": {
+              "name": "Suppression Burst",
+              "cost": {
+                "goon": [[6, 6]],
+                "char": [[6, 6]],
+                "hero": [[5, 6]]
+              },
+              "text": "1d8x3 1-3 DU Stun",
+              "slot": false,
+              "points": 0
+            },
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "HMG Sustained Fire",
+              "cost": {
+                "goon": [],
+                "char": [[5, 6]],
+                "hero": [[4, 6]]
+              },
+              "text": "2d8 2-4 DU AP1",
+              "slot": false,
               "points": 2
             },
-            "is_base": true
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "HMG Overwatch",
+              "cost": {
+                "goon": [[1, 1]],
+                "char": [[1, 2]],
+                "hero": [[1, 3]]
+              },
+              "text": "2D8 1-4 DU AP1 lost when pinned or activated",
+              "slot": true,
+              "points": 1
+            },
+            "is_base": false
           }
         ]
       },
       {
-        "name": "TBR",
+        "name": "Sniper Rifle",
         "options": [
           {
             "action": {
-              "name": "Hand Gun",
+              "name": "Sniper Rifle",
               "cost": {
-                "goon": [[1, 3]],
-                "char": [[0, 0]],
+                "goon": [[1, 1]],
+                "char": [[1, 2]],
                 "hero": [[0, 0]]
               },
-              "text": "1D6x2 0-2 DU",
+              "text": "2D12 2-6 DU AP3 Max one Wound",
               "slot": false,
+              "points": 5
+            },
+            "is_base": true
+          },
+          {
+            "action": {
+              "name": "Aiming",
+              "cost": {
+                "goon": [],
+                "char": [[1, 1]],
+                "hero": [[1, 2]]
+              },
+              "text": "Roll twice on the damage chart. Lost when pinned or with any action that is not shooting Sniper Rifle.",
+              "slot": true,
               "points": 0
+            },
+            "is_base": true
+          },
+          {
+            "action": {
+              "name": "Special Bullet",
+              "cost": {
+                "goon": [],
+                "char": [[1, 2]],
+                "hero": [[1, 3]]
+              },
+              "text": "+1D12 to the next shot. Lost when shooting Sniper Rifle.",
+              "slot": true,
+              "points": 1
             },
             "is_base": true
           }
         ]
       },
       {
-        "name": "TBR",
+        "name": "Grenade Launcher",
         "options": [
           {
             "action": {
-              "name": "Hand Gun",
+              "name": "Reload Grenade",
               "cost": {
-                "goon": [[1, 3]],
-                "char": [[0, 0]],
+                "goon": [[1, 2]],
+                "char": [[1, 3]],
                 "hero": [[0, 0]]
               },
-              "text": "1D6x2 0-2 DU",
+              "text": "lost when shooting with Grenade Launcher.",
+              "slot": true,
+              "points": 3
+            },
+            "is_base": true
+          },
+          {
+            "action": {
+              "name": "Shoot Grenade",
+              "cost": {
+                "goon": [[5, 6]],
+                "char": [[4, 6]],
+                "hero": [[0, 0]]
+              },
+              "text": "2d8 1-2 DU AP1 Area 1",
               "slot": false,
               "points": 0
             },
-            "is_base": true
+            "is_base": false
+          },
+          {
+            "action": {
+              "name": "Shoot Flashbang",
+              "cost": {
+                "goon": [[1, 2]],
+                "char": [[1, 3]],
+                "hero": [[0, 0]]
+              },
+              "text": "2d10 Area 2 AP3 Stun Nonlethal",
+              "slot": false,
+              "points": 0
+            },
+            "is_base": false
           }
         ]
       },
       {
-        "name": "TBR",
+        "name": "Knife",
         "options": [
           {
             "action": {
-              "name": "Hand Gun",
+              "name": "Knife Slash",
               "cost": {
                 "goon": [[1, 3]],
                 "char": [[0, 0]],
                 "hero": [[0, 0]]
               },
-              "text": "1D6x2 0-2 DU",
+              "text": "1D6 AP1 Contact",
               "slot": false,
               "points": 0
             },
             "is_base": true
-          }
-        ]
-      },
-      {
-        "name": "TBR",
-        "options": [
+          },
           {
             "action": {
-              "name": "Hand Gun",
+              "name": "Knife Assault",
               "cost": {
-                "goon": [[1, 3]],
-                "char": [[0, 0]],
+                "goon": [],
+                "char": [[1, 3]],
                 "hero": [[0, 0]]
               },
-              "text": "1D6x2 0-2 DU",
+              "text": "Perform one movement, then 1D6 AP1 Contact",
               "slot": false,
               "points": 0
+            },
+            "is_base": true
+          },
+          {
+            "action": {
+              "name": "Throwing Knife",
+              "cost": {
+                "goon": [],
+                "char": [[1, 2]],
+                "hero": [[1, 3]]
+              },
+              "text": "1d6 AP1 2 DU. Use Fight stat.",
+              "slot": false,
+              "points": 1
             },
             "is_base": true
           }

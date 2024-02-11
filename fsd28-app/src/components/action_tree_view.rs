@@ -104,7 +104,6 @@ impl ActionTreeView {
         let is_base_option_selected = all_options.iter().any(|opt| {
             opt.is_base && ctx.props().selected_actions.contains(&opt.action.name)
         });
-        console::log_1(&format!("selected are: {:?}", ctx.props().selected_actions).into());
         let is_too_many_actions = ctx.props().selected_actions.len() >= 3; // TODO This should not be a magic number
 
         let is_available = !is_too_many_actions && (!is_there_base_option || option.is_base || is_base_option_selected);

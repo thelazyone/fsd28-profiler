@@ -19,6 +19,9 @@ The project is divided between a proper library and a CLI software which uses th
 Another module (yet to be implemented) should create fancy-looking cards for printing.
 For the future of course a web-based interface is preferable, something in line with the [FSD Builder](https://github.com/thelazyone/fsd_builder) which is written with [Yew](https://github.com/yewstack/yew)
 
+## Deploy
+To deploy the application run `trunk serve --release --public-url "./"` and then copy on your server the content of the /dist folder. The last part of the command is necessary to set the relative paths in case you want to serve the application from somewhere that is not the root folder of your website.
+
 ## TODOs for a MVP
 To get to a minimum viable product the following are still needed:
 
