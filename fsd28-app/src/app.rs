@@ -193,6 +193,9 @@ impl Component for App {
                                         onload_closure.forget();
                             
                                         file_reader_rc.read_as_text(&file).unwrap();
+
+                                        // Resetting the input file for hte next time
+                                        input.set_value("");
                                     }
                                 }
                             }
