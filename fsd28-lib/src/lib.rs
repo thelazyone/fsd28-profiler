@@ -22,25 +22,25 @@ pub use models::modifier::Modifier; // TODO this might be better incapsulated?
 
 // GAME DATA LOADING
 pub fn get_classes(i_path : &str) -> ClassesConfig {
-    let file_content: String;
-    if i_path.is_empty() {
-        file_content = CLASSES_JSON.to_string();
-    }
-    else {
-        file_content = read_to_string(i_path).expect("Failed to read file");
-    }
+    let file_content: String = 
+        if i_path.is_empty() {
+            CLASSES_JSON.to_string()
+        }
+        else {
+            read_to_string(i_path).expect("Failed to read file")
+        };
 
     serde_json::from_str(&file_content).unwrap()
 }
 
 pub fn get_weapons(i_path: &str) -> WeaponsConfig {
-    let file_content: String;
-    if i_path.is_empty() {
-        file_content = WEAPONS_JSON.to_string();
-    }
-    else {
-        file_content = read_to_string(i_path).expect("Failed to read file");
-    }
+    let file_content: String = 
+        if i_path.is_empty() {
+            WEAPONS_JSON.to_string()
+        }
+        else {
+            read_to_string(i_path).expect("Failed to read file")
+        };
     serde_json::from_str(&file_content).unwrap()
 }
 

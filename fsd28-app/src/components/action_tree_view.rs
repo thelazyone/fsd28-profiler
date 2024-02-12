@@ -1,9 +1,6 @@
 use yew::prelude::*;
 use fsd28_lib::{Weapon, WeaponOption, Action}; 
 
-// For browser debugging
-use web_sys::console;
-
 #[derive(Properties, PartialEq, Clone)]
 pub struct ActionTreeViewProps {
     pub weapons: Vec<Weapon>,
@@ -92,7 +89,7 @@ impl ActionTreeView {
         }
     }
 
-    fn view_option(&self, option: &WeaponOption, all_options: &Vec<WeaponOption>, ctx: &Context<Self>) -> Html {
+    fn view_option(&self, option: &WeaponOption, all_options: &[WeaponOption], ctx: &Context<Self>) -> Html {
         let action_name = option.action.name.clone();
         let is_selected = ctx.props().selected_actions.contains(&action_name);
 

@@ -5,7 +5,6 @@ pub enum SharedMessage {
     
     ViewRoster,
     ViewUnits,
-    DeselectProfiles,
     Save,
     Load,
 

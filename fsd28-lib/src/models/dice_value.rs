@@ -34,10 +34,10 @@ impl DiceValue {
                     return Err(format!("Shape provided does not exist: {}", i_string).to_string());
                 }
                 number = 1;
-                return Ok(DiceValue { shape, number: 0, armor });
+                Ok(DiceValue { shape, number, armor })
             }
             else {
-                return Err(format!("Badly formatted shape: {}", i_string).to_string());
+                Err(format!("Badly formatted shape: {}", i_string).to_string())
             }
         } 
         
@@ -54,7 +54,7 @@ impl DiceValue {
             if ![6,8,10,12].contains(&shape) {
                 return Err(format!("Shape provided does not exist: {}", i_string).to_string());
             }
-            return Ok(DiceValue { shape, number, armor: 0 })
+            Ok(DiceValue { shape, number, armor })
         }
 
     }

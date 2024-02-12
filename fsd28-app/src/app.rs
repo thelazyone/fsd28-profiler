@@ -1,6 +1,5 @@
 use yew::prelude::*;
 use wasm_bindgen::prelude::*;
-use crate::components::units_view;
 use crate::components::{
     top_menu::TopMenu,
     roster_view::RosterView,
@@ -51,7 +50,7 @@ impl Component for App {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg : SharedMessage) -> bool {
+    fn update(&mut self, _: &Context<Self>, msg : SharedMessage) -> bool {
         match msg {
 
             SharedMessage::ViewRoster => {
@@ -153,7 +152,7 @@ impl Component for App {
                         AppStates::Roster => html! { <RosterView /> },
                         AppStates::Units => html! { <UnitsView 
                             profiles={profiles} 
-                            on_profiles_changed={ctx.link().callback(|updated_profiles| SharedMessage::UpdateProfiles(updated_profiles))}
+                            on_profiles_changed={ctx.link().callback(SharedMessage::UpdateProfiles)}
                             reset_selected={self.reset_selected}
                             /> },
                     }

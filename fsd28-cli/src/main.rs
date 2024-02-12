@@ -168,39 +168,35 @@ fn add_action_dialog(app_state: &mut AppState) -> MenuStates {
     // Now asking for the Action to add.
     // There are actions depending on the weapon.
 
+    // BROKEN BY THE UPDATES - TODO TO FIX
+        // Default actions are always there.
+        let all_weapons = get_weapons("");
 
-// // BROKEN BY THE UPDATES - TODO TO FIX
+        // Filling the options
+        let mut options: Vec<String> = all_weapons
+        .weapons
+        .iter()
+        .map(|weapon| weapon.name.clone())
+        .collect::<Vec<String>>();
 
-//     // Default actions are always there.
-//     let all_actions = get_weapons("");
+        // Lastly adding the Cancel option.
+        options.push("Cancel".to_string());
+        
+        // Selecting the class here
+        let selection = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("Select an action to add:")
+        .default(0)
+        .items(&options[..])
+        .interact()
+        .unwrap();
 
-//     // Weapon specific actions:
-//     // TODO
-
-//     // Filling the options
-//     let mut options: Vec<String> = all_actions
-//     .actions
-//     .iter()
-//     .map(|action| action.name.clone())
-//     .collect::<Vec<String>>();
-
-//     // Lastly adding the Cancel option.
-//     options.push("Cancel".to_string());
-    
-//     // Selecting the class here
-//     let selection = Select::with_theme(&ColorfulTheme::default())
-//     .with_prompt("Select an action to add:")
-//     .default(0)
-//     .items(&options[..])
-//     .interact()
-//     .unwrap();
-
-//     if selection == options.len() - 1 {
-//         // The last option (Return to Main Menu) was selected
-//         return MenuStates::EditProfile;
-//     } else {
-//         app_state.get_selected().unwrap().actions.push(all_actions.actions[selection].clone())
-//     }
+        if selection == options.len() - 1 {
+            // The last option (Return to Main Menu) was selected
+            return MenuStates::EditProfile;
+        } else {
+            // TODO temp code to make it compile. 
+            app_state.get_selected().unwrap().actions.push(all_weapons.weapons[selection].options[0].action.clone())
+        }
 
     // After adding the class, back to edit class.
     MenuStates::EditProfile

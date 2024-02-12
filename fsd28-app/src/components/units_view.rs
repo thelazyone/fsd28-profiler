@@ -69,7 +69,7 @@ impl Component for UnitsView {
         console::log_1(&format!("Changed called, reset is {}", ctx.props().reset_selected).into());
 
         if ctx.props().reset_selected {
-            console::log_1(&format!("DEBUG resetting selection").into());
+            console::log_1(&"DEBUG resetting selection".to_string().into());
             self.reset_selection();
         }
 
@@ -180,7 +180,7 @@ impl Component for UnitsView {
                     // - if at least one of the "main" actions is selected (if at least one exists)
                     // - if the AD range makes it impossible to use that action.
                     if profile.actions.len() >= 3 {
-                        console::log_1(&format!("The profile cannot have more than 3 actions.").into());
+                        console::log_1(&"The profile cannot have more than 3 actions.".to_string().into());
                         return true;
                     }
 
@@ -274,7 +274,7 @@ impl UnitsView {
         let local_profile = profile.clone(); // There is a _DOUBLE_ clone here - TODO FIX this is horrible (but it works)
         html! {
             <button
-                class={classes!("button", is_selected.then(|| "selected"))}
+                class={classes!("button", is_selected.then_some("selected"))}
                 onclick={link.callback(move |_| Msg::ProfileSelected(local_profile.clone()))}
             >
                 { &profile.name }
@@ -422,7 +422,7 @@ impl UnitsView {
                                     <div class="single-action-text">{ &action.text }</div>
                                 </div>
                                 <div>
-                                    {if action.slot == true {
+                                    {if action.slot {
                                         html! { <div class="single-action-slot-box"></div> }
                                     } else {
                                         html! {""}
@@ -440,7 +440,7 @@ impl UnitsView {
         html! {
             <div class="damage-chart">
                 { self.view_damage_chart_top_row() }
-                { self.view_damage_chart_bottom_row(&damage_chart) }
+                { self.view_damage_chart_bottom_row(damage_chart) }
             </div>
         }
     }
@@ -496,9 +496,5 @@ impl UnitsView {
             Color::Green => "green",
             // Add other colors as needed[1, 1]
         }
-    }
-
-    fn update_model_profiles(&mut self, ctx: &Context<Self>) {
-        ctx.props().on_profiles_changed.emit(ctx.props().profiles.clone());
     }
 }

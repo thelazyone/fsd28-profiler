@@ -1,10 +1,6 @@
 use yew::prelude::*;
 use fsd28_lib::Modifier; 
 
-// For browser debugging
-use web_sys::console;
-
-
 #[derive(Properties, PartialEq, Clone)]
 pub struct ModifiersViewProps {
     pub modifiers: Vec<Modifier>, // List of all available modifiers for the selected class
@@ -54,7 +50,7 @@ impl Component for ModifiersView {
 
 impl ModifiersView {
     fn view_modifier(&self, modifier: &Modifier, ctx: &Context<Self>) -> Html {
-        let is_selected = ctx.props().selected_modifiers.contains(&modifier);
+        let is_selected = ctx.props().selected_modifiers.contains(modifier);
         let local_modifier = modifier.clone();
         html! {
             <div class="modifier">
