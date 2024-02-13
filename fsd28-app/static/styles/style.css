@@ -586,3 +586,30 @@
     font-size: 16px;
     color: #333;
 }
+
+
+/* HIDING IT FOR MOBILE */
+/* Hide main content and display the mobile warning on small screens */
+@media (max-width: 768px) {
+    .app {
+        display: none;
+    }
+
+    .mobile-warning {
+        display: block;
+        text-align: center;
+        padding: 20px;
+        font-size: 20px;
+    }
+}
+
+/* Hide the mobile warning on larger screens */
+@media (min-width: 769px) {
+    .mobile-warning {
+        display: none;
+    }
+
+    .app {
+        display: grid;
+    }
+}

@@ -140,68 +140,73 @@ impl Component for App {
         let profiles = self.model.profiles.clone();
 
         html! {
-            <div class = "app">
-                <TopMenu 
-                    on_switch_to_roster = {ctx.link().callback(|_| SharedMessage::ViewRoster)} 
-                    on_switch_to_units = {ctx.link().callback(|_| SharedMessage::ViewUnits)} 
-                    on_save = {ctx.link().callback(|_| SharedMessage::Save)} 
-                    on_load = {ctx.link().callback(|_| SharedMessage::Load)} 
-                />
-                {
-                    match self.state {
-                        AppStates::Roster => html! { <RosterView /> },
-                        AppStates::Units => html! { <UnitsView 
-                            profiles={profiles} 
-                            on_profiles_changed={ctx.link().callback(SharedMessage::UpdateProfiles)}
-                            reset_selected={self.reset_selected}
-                            /> },
+            <div>
+                <div class="mobile-warning">
+                    { "This app is not designed for mobile (yet)." }
+                </div>
+                <div class = "app">
+                    <TopMenu 
+                        on_switch_to_roster = {ctx.link().callback(|_| SharedMessage::ViewRoster)} 
+                        on_switch_to_units = {ctx.link().callback(|_| SharedMessage::ViewUnits)} 
+                        on_save = {ctx.link().callback(|_| SharedMessage::Save)} 
+                        on_load = {ctx.link().callback(|_| SharedMessage::Load)} 
+                    />
+                    {
+                        match self.state {
+                            AppStates::Roster => html! { <RosterView /> },
+                            AppStates::Units => html! { <UnitsView 
+                                profiles={profiles} 
+                                on_profiles_changed={ctx.link().callback(SharedMessage::UpdateProfiles)}
+                                reset_selected={self.reset_selected}
+                                /> },
+                        }
                     }
-                }
 
-                // File Selection Popup
-                <input type="file" ref={self.file_input_ref.clone()} style="display: none" onchange={
-                    let link_clone_outer = ctx.link().clone(); // Clone the link outside of the callback
-                    let link_clone_inner = link_clone_outer.clone(); // Clone the link for the inner closure
-                    link_clone_outer.callback(move |event: web_sys::Event| {
-                        if let Some(target) = event.target() {
-                            if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
-                                if let Some(files) = input.files() {
-                                    if let Some(file) = files.get(0) {
-                                        
-                                        // Get the name of the file
-                                        let file_name = file.name();
-                                        console::log_1(&format!("Selected file name: {}", file_name).into());
-                            
-                                        // Read the content of the file
-                                        let file_reader = web_sys::FileReader::new().unwrap();
-                                        let file_reader_rc = Rc::new(file_reader); // Wrap the FileReader in an Rc
-                                        let file_reader_clone = file_reader_rc.clone(); // Clone the Rc for the closure
+                    // File Selection Popup
+                    <input type="file" ref={self.file_input_ref.clone()} style="display: none" onchange={
+                        let link_clone_outer = ctx.link().clone(); // Clone the link outside of the callback
+                        let link_clone_inner = link_clone_outer.clone(); // Clone the link for the inner closure
+                        link_clone_outer.callback(move |event: web_sys::Event| {
+                            if let Some(target) = event.target() {
+                                if let Ok(input) = target.dyn_into::<web_sys::HtmlInputElement>() {
+                                    if let Some(files) = input.files() {
+                                        if let Some(file) = files.get(0) {
+                                            
+                                            // Get the name of the file
+                                            let file_name = file.name();
+                                            console::log_1(&format!("Selected file name: {}", file_name).into());
+                                
+                                            // Read the content of the file
+                                            let file_reader = web_sys::FileReader::new().unwrap();
+                                            let file_reader_rc = Rc::new(file_reader); // Wrap the FileReader in an Rc
+                                            let file_reader_clone = file_reader_rc.clone(); // Clone the Rc for the closure
 
-                                        // Clone the link for the onload closure. Yep, another cloning.
-                                        let link_clone_for_onload = link_clone_inner.clone();
-                                        let onload_closure = Closure::wrap(Box::new(move |_event: web_sys::Event| {
-                                            if let Ok(result) = file_reader_clone.result() {
-                                                if let Some(text) = result.as_string() {
-                                                    
-                                                    link_clone_for_onload.send_message(SharedMessage::FileContentReceived(text));
+                                            // Clone the link for the onload closure. Yep, another cloning.
+                                            let link_clone_for_onload = link_clone_inner.clone();
+                                            let onload_closure = Closure::wrap(Box::new(move |_event: web_sys::Event| {
+                                                if let Ok(result) = file_reader_clone.result() {
+                                                    if let Some(text) = result.as_string() {
+                                                        
+                                                        link_clone_for_onload.send_message(SharedMessage::FileContentReceived(text));
+                                                    }
                                                 }
-                                            }
-                                        }) as Box<dyn FnMut(_)>);
-                            
-                                        file_reader_rc.add_event_listener_with_callback("load", onload_closure.as_ref().unchecked_ref()).unwrap();
-                                        onload_closure.forget();
-                            
-                                        file_reader_rc.read_as_text(&file).unwrap();
+                                            }) as Box<dyn FnMut(_)>);
+                                
+                                            file_reader_rc.add_event_listener_with_callback("load", onload_closure.as_ref().unchecked_ref()).unwrap();
+                                            onload_closure.forget();
+                                
+                                            file_reader_rc.read_as_text(&file).unwrap();
 
-                                        // Resetting the input file for hte next time
-                                        input.set_value("");
+                                            // Resetting the input file for hte next time
+                                            input.set_value("");
+                                        }
                                     }
                                 }
                             }
-                        }
-                        SharedMessage::NoOp // Return a dummy message
-                    })
-                }/>
+                            SharedMessage::NoOp // Return a dummy message
+                        })
+                    }/>
+                </div>
             </div>
         }
     }
