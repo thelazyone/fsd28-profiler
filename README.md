@@ -35,6 +35,7 @@ LIB:
 - [ ] adding a timestamp id to the profiles.
 - [ ] adding a unique id to the weapons, for better backward compability.
 - [ ] version for save files
+- [ ] Give a "group ID" to certain actions of weapons, so they become exclusive (can't do all in one action)
 
 WEB
 - [x] Basic framework in Yew

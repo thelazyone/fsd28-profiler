@@ -420,18 +420,80 @@
 
 
 .right-bar-section {
-     /* Bounding Box*/
+    /* Bounding Box*/
     background-color: #f0f0f0; /* Light grey background */
     padding: 10px;
     margin: 20px 0;
     overflow-y: auto; /* If your list is long */
 
     /* Inside Fonts: */
-
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; /* Consistent font */
     font-weight: bold;
     font-size: 18px;
     border: none; /* No borders */
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    background-color: transparent;
+    border: none;
+    padding: 8px 12px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-symbol {
+    font-size: 12px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f0f0f0;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.dropdown-item:hover {
+    background-color: #e0e0e0;
+}
+
+.dropdown-item.selected {
+    background-color: #ddd;
+    font-weight: bold;
 }
 
 .atw-weapon {
@@ -449,7 +511,7 @@
     text-transform: uppercase;
     margin-bottom: 5px;
     font-size: 14px;
-
+    cursor: pointer;
 }
 
 .atw-weapon-options {

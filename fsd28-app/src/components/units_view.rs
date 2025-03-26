@@ -47,6 +47,7 @@ pub enum Msg {
     ResetActions,
     SaveProfileChanges,
     ModifierSelected(Modifier),
+    ClassChanged(String),
 
     // Actions selection
     ActionSelected(Action),
@@ -216,6 +217,31 @@ impl Component for UnitsView {
                 self.show_modal = false;
                 true
             },
+
+            Msg::ClassChanged(new_class_name) => {
+                let classes: ClassesConfig = get_classes("");
+                if let Some(selected_class) = classes.classes.iter().find(|c| c.name == new_class_name) {
+                    if let Some(ref mut profile) = self.editing_profile {
+                        // Store the current actions
+                        let current_actions = profile.actions.clone();
+                        
+                        // Create a new profile with the selected class
+                        let new_profile = Profile::new(profile.name.clone(), selected_class.clone());
+                        // Keep the name but update everything else
+                        profile.class_name = new_profile.class_name;
+                        profile.description = new_profile.description;
+                        profile.tier = new_profile.tier;
+                        profile.characteristics = new_profile.characteristics;
+                        profile.special_abilities = new_profile.special_abilities;
+                        profile.damage_chart = new_profile.damage_chart;
+                        profile.actions = current_actions; // Restore the actions
+                        profile.cost = new_profile.cost;
+                        // Clear modifiers as they are class-specific
+                        profile.selected_modifiers.clear();
+                    }
+                }
+                true
+            },
         }
     }
 
@@ -329,11 +355,14 @@ impl UnitsView {
             else {
                 available_modifiers = Vec::<Modifier>::new();
             }
+
             let selected_actions = if let Some(profile) = &self.editing_profile {
                 profile.actions.iter().map(|action| {action.name.clone()}).collect::<Vec<String>>()
             } else {
                 Vec::<String>::new()
             };
+
+            let all_classes: Vec<String> = get_classes("").classes.iter().map(|class| class.name.clone()).collect();
 
             html! {
                 <div class="edit-form">
@@ -351,6 +380,9 @@ impl UnitsView {
                             modifiers={available_modifiers}
                             selected_modifiers={profile.selected_modifiers.clone()}
                             on_modifier_toggle={ctx.link().callback(move |modifier: Modifier| Msg::ModifierSelected(modifier))}
+                            available_classes={all_classes}
+                            current_class={profile.class_name.clone()}
+                            on_class_change={ctx.link().callback(move |class_name: String| Msg::ClassChanged(class_name))}
                         />
 
                         // Setting up all the available actions
