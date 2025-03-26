@@ -18,7 +18,8 @@ A web-based interface written with [Yew](https://github.com/yewstack/yew) in lin
 Another module (yet to be implemented) should create fancy-looking cards for printing.
 
 ## Deploy
-To deploy the application run `trunk serve --release --public-url "./"` and then copy on your server the content of the /dist folder. The last part of the command is necessary to set the relative paths in case you want to serve the application from somewhere that is not the root folder of your website.
+To deploy the application run `trunk serve --release --public-url "/"` and then copy on your server the content of the /dist folder. The last part of the command is necessary to set the relative paths in case you want to serve the application from somewhere that is not the root folder of your website. 
+For example, if you are deploying it in a subfolder named "fsd28" the command should be `trunk serve --release --public-url "/fsd28/"`.
 
 ## TODOs for a MVP
 To get to a minimum viable product the following are still needed:
