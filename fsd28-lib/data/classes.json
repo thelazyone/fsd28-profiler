@@ -226,14 +226,24 @@
       "damage_profile": {
         "intervals": [
           [
-            4,
+            2,
             "Red",
             "DEAD"
           ],
           [
-            2,
+            1,
             "Yellow",
             "MOV"
+          ],
+          [
+            2,
+            "Yellow",
+            "ARM"
+          ],
+          [
+            1,
+            "Yellow",
+            "S2+S3"
           ]
         ]
       },
