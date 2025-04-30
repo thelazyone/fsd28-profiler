@@ -11,7 +11,7 @@
                 "char": [[1, 3]],
                 "hero": [[0, 0]]
               },
-              "text": "Move up to your character's movement speed.",
+              "text": "Move with a +1 DU.",
               "slot": false,
               "points": 1
             },
