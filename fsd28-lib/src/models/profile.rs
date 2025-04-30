@@ -114,9 +114,8 @@ impl Profile {
             modified_profile.cost += action.points;
         }
 
-        // If there are three actions, adding +2 points.
-        // TODO this SHOULD NOT be a magic number!
-        if self.actions.len() >= 3 {
+        // If there are three actions, adding +2 points for non-specialists (Goon tier)
+        if self.actions.len() >= 3 && self.tier == Tier::Goon {
             modified_profile.cost += 2;
         }
 
