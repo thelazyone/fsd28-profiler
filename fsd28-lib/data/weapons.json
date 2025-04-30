@@ -53,8 +53,8 @@
                 "char": [[5, 6]],
                 "hero": [[4, 6]]
               },
-              "text": "1d8 Area 2 AP1 (no bonuses)",
-              "slot": false,
+              "text": "1d8 Area 2 AP1 1 DU - Single Use",
+              "slot": true,
               "points": 1
             },
             "is_base": false
@@ -67,8 +67,8 @@
                 "char": [[1, 2]],
                 "hero": [[1, 3]]
               },
-              "text": "1d10 Area 3 AP3 Stun Nonlethal",
-              "slot": false,
+              "text": "1d10 Area 3 AP3 Stun Nonlethal - Single Use",
+              "slot": true,
               "points": 1
             },
             "is_base": false
@@ -81,8 +81,8 @@
                 "char": [[1, 2]],
                 "hero": [[0, 0]]
               },
-              "text": "Heal. Self or Contact",
-              "slot": false,
+              "text": "Heal. Self or Contact - Single Use",
+              "slot": true,
               "points": 1
             },
             "is_base": false
@@ -95,8 +95,8 @@
                 "char": [[1, 3]],
                 "hero": [[0, 0]]
               },
-              "text": "Heal. Self or Contact",
-              "slot": false,
+              "text": "Extra Action next Activation. Self or Contact - Single Use",
+              "slot": true,
               "points": 1
             },
             "is_base": false
