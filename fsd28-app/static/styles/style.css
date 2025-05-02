@@ -35,11 +35,9 @@
 
 
 .roster-view {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 20px;
-    padding: 20px;
-    height: 100%;
+    display:grid;
+    /* A padding column on left and right, keeping the three central ones with a 2:3:2 ratio. */
+    grid-template-columns: 1fr 2fr 3fr 2fr 1fr;
 }
 
 .unit-list {

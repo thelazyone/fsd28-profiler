@@ -1,6 +1,5 @@
 use yew::prelude::*;
 use fsd28_lib::models::profile::Profile;
-use super::card_generator::CardGenerator;
 
 #[derive(Properties, PartialEq)]
 pub struct RosterViewProps {
@@ -14,6 +13,7 @@ pub struct RosterView {
 
 pub enum Msg {
     ToggleProfile(Profile),
+    ExportList,
 }
 
 impl Component for RosterView {
@@ -26,7 +26,7 @@ impl Component for RosterView {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::ToggleProfile(profile) => {
                 if let Some(pos) = self.selected_profiles.iter().position(|p| p.name == profile.name) {
@@ -34,34 +34,36 @@ impl Component for RosterView {
                 } else {
                     self.selected_profiles.push(profile);
                 }
-                ctx.props().on_profiles_changed.emit(self.selected_profiles.clone());
+                true
+            }
+            Msg::ExportList => {
+                // TODO: Implement export functionality
                 true
             }
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let total_points = self.selected_profiles.iter()
-            .fold(0u32, |acc, profile| acc + profile.cost);
-
-        let selected_profile = self.selected_profiles.first().cloned();
+        let total_points: u32 = self.selected_profiles.iter()
+            .map(|p| p.cost)
+            .sum();
 
         html! {
             <div class="roster-view">
-                <div class="unit-list">
-                    { for ctx.props().profiles.iter().map(|profile| self.view_profile_button(ctx, profile)) }
+                <div class="left-bar">
+                    <div class="profiles-list">
+                        { for ctx.props().profiles.iter().map(|profile| self.view_profile_button(profile, ctx.link())) }
+                    </div>
                 </div>
-                <div class="selected-units">
-                    if let Some(profile) = selected_profile {
-                        <CardGenerator profile={profile} />
-                    } else {
-                        <div class="no-selection">
-                            { "Select a unit to view its card" }
-                        </div>
-                    }
+                <div class="center-bar">
                     <div class="total-points">
                         { format!("Total Points: {}", total_points) }
                     </div>
+                </div>
+                <div class="right-bar">
+                    <button onclick={ctx.link().callback(|_| Msg::ExportList)}>
+                        { "Export List" }
+                    </button>
                 </div>
             </div>
         }
@@ -69,17 +71,14 @@ impl Component for RosterView {
 }
 
 impl RosterView {
-    fn view_profile_button(&self, ctx: &Context<Self>, profile: &Profile) -> Html {
+    fn view_profile_button(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
         let is_selected = self.selected_profiles.iter().any(|p| p.name == profile.name);
-        let button_text = format!("{} ({})", profile.name, profile.cost);
-        let onclick_profile = profile.clone();
-        
+        let profile_clone = profile.clone();
         html! {
             <button
-                class={classes!("button", if is_selected { "selected" } else { "" })}
-                onclick={ctx.link().callback(move |_| Msg::ToggleProfile(onclick_profile.clone()))}
-            >
-                { button_text }
+                class={classes!("button", is_selected.then_some("selected"))}
+                onclick={link.callback(move |_| Msg::ToggleProfile(profile_clone.clone()))} >
+                { format!("{} ({} points)", &profile.name, &profile.cost) }
             </button>
         }
     }
