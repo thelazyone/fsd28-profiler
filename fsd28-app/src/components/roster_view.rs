@@ -45,7 +45,7 @@ impl Component for RosterView {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let total_points: u32 = self.selected_profiles.iter()
-            .map(|p| p.cost)
+            .map(|p| p.get_final_profile().cost)
             .sum();
 
         html! {
@@ -74,11 +74,12 @@ impl RosterView {
     fn view_profile_button(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
         let is_selected = self.selected_profiles.iter().any(|p| p.name == profile.name);
         let profile_clone = profile.clone();
+        let final_profile = profile.get_final_profile();
         html! {
             <button
                 class={classes!("button", is_selected.then_some("selected"))}
                 onclick={link.callback(move |_| Msg::ToggleProfile(profile_clone.clone()))} >
-                { format!("{} ({} points)", &profile.name, &profile.cost) }
+                { format!("{} ({} points)", &profile.name, &final_profile.cost) }
             </button>
         }
     }
