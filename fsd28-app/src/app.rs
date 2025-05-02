@@ -153,7 +153,10 @@ impl Component for App {
                     />
                     {
                         match self.state {
-                            AppStates::Roster => html! { <RosterView /> },
+                            AppStates::Roster => html! { <RosterView 
+                                profiles={profiles} 
+                                on_profiles_changed={ctx.link().callback(SharedMessage::UpdateProfiles)}
+                                /> },
                             AppStates::Units => html! { <UnitsView 
                                 profiles={profiles} 
                                 on_profiles_changed={ctx.link().callback(SharedMessage::UpdateProfiles)}
