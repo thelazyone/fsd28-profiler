@@ -14,10 +14,16 @@ use fsd28_lib::WeaponsConfig;
 use crate::components::modal::Modal;
 use crate::components::action_tree_view::ActionTreeView;
 use crate::components::modifiers_view::ModifiersView;
+use crate::components::card_generator::CardGenerator;
 
 // For browser debugging
 use web_sys::console;
 
+#[derive(PartialEq)]
+enum ViewMode {
+    Text,
+    Image,
+}
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct UnitsViewProps {
@@ -30,6 +36,7 @@ pub struct UnitsView {
     selected_profile: Option<Profile>,
     editing_profile: Option<Profile>,
     show_modal: bool,
+    view_mode: ViewMode,
 }
 
 pub enum Msg {
@@ -51,6 +58,9 @@ pub enum Msg {
 
     // Actions selection
     ActionSelected(Action),
+
+    // View mode toggle
+    ToggleViewMode,
 }
 
 impl Component for UnitsView {
@@ -62,6 +72,7 @@ impl Component for UnitsView {
             selected_profile: None,
             editing_profile: None,
             show_modal: false,
+            view_mode: ViewMode::Text,
         }
     }
 
@@ -242,11 +253,18 @@ impl Component for UnitsView {
                 }
                 true
             },
+
+            Msg::ToggleViewMode => {
+                self.view_mode = match self.view_mode {
+                    ViewMode::Text => ViewMode::Image,
+                    ViewMode::Image => ViewMode::Text,
+                };
+                true
+            },
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-
         let all_classes : Vec<String> = get_classes("").classes.iter().map(|class| class.name.clone()).collect();
 
         html! {
@@ -261,7 +279,17 @@ impl Component for UnitsView {
                     </div>
                 </div>
                 <div class="center-bar">
-                    { self.view_current_profile() }
+                    if let Some(profile) = &self.selected_profile {
+                        if self.view_mode == ViewMode::Text {
+                            { self.view_profile(profile) }
+                        } else {
+                            <CardGenerator profile={profile.clone()} />
+                        }
+                    } else {
+                        <div class="no-selection">
+                            { "Select a profile to view details" }
+                        </div>
+                    }
                 </div>
                 <div class="right-bar">
                     { self.view_edit_form(ctx) }
@@ -339,9 +367,7 @@ impl UnitsView {
 
 
     fn view_edit_form(&self, ctx: &Context<Self>) -> Html {
-
         if let Some(profile) = &self.editing_profile {
-
             let weapons_config: WeaponsConfig = get_weapons(""); // Load your weapons configuration
 
             // Retrieving the modifiers to show:
@@ -374,6 +400,13 @@ impl UnitsView {
                                 let input: web_sys::HtmlInputElement = e.target_unchecked_into();
                                 Msg::UpdateFormName(input.value())
                             })} />
+
+                        <button 
+                            class="view-mode-button"
+                            onclick={ctx.link().callback(|_| Msg::ToggleViewMode)}
+                        >
+                            { if self.view_mode == ViewMode::Text { "Switch to Image View" } else { "Switch to Text View" } }
+                        </button>
 
                         // Setting up the Modifiers view, where the class modifiers are available to toggle.
                         <ModifiersView 

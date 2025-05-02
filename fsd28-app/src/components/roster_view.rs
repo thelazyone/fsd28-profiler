@@ -1,7 +1,8 @@
 use yew::prelude::*;
 use fsd28_lib::models::profile::Profile;
+use super::card_generator::CardGenerator;
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq)]
 pub struct RosterViewProps {
     pub profiles: Vec<Profile>,
     pub on_profiles_changed: Callback<Vec<Profile>>,
@@ -12,7 +13,7 @@ pub struct RosterView {
 }
 
 pub enum Msg {
-    ProfileToggled(Profile),
+    ToggleProfile(Profile),
 }
 
 impl Component for RosterView {
@@ -25,45 +26,41 @@ impl Component for RosterView {
         }
     }
 
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Msg::ProfileToggled(profile) => {
+            Msg::ToggleProfile(profile) => {
                 if let Some(pos) = self.selected_profiles.iter().position(|p| p.name == profile.name) {
                     self.selected_profiles.remove(pos);
                 } else {
                     self.selected_profiles.push(profile);
                 }
+                ctx.props().on_profiles_changed.emit(self.selected_profiles.clone());
                 true
             }
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let total_points: u32 = self.selected_profiles.iter()
-            .map(|p| p.get_final_profile().cost)
-            .fold(0u32, |acc, x| acc + x);
+        let total_points = self.selected_profiles.iter()
+            .fold(0u32, |acc, profile| acc + profile.cost);
+
+        let selected_profile = self.selected_profiles.first().cloned();
 
         html! {
             <div class="roster-view">
-                <div class="left-bar">
-                    <div class="profiles-list">
-                        { for ctx.props().profiles.iter().map(|profile| self.view_profile_button(profile, ctx.link())) }
-                    </div>
+                <div class="unit-list">
+                    { for ctx.props().profiles.iter().map(|profile| self.view_profile_button(ctx, profile)) }
                 </div>
-                <div class="center-bar">
-                    <div class="selected-units">
-                        <h3>{ "Selected Units" }</h3>
-                        { for self.selected_profiles.iter().map(|profile| {
-                            let final_profile = profile.get_final_profile();
-                            html! {
-                                <div class="selected-unit">
-                                    { format!("{} ({} points)", final_profile.name, final_profile.cost) }
-                                </div>
-                            }
-                        })}
-                        <div class="total-points">
-                            { format!("Total Points: {}", total_points) }
+                <div class="selected-units">
+                    if let Some(profile) = selected_profile {
+                        <CardGenerator profile={profile} />
+                    } else {
+                        <div class="no-selection">
+                            { "Select a unit to view its card" }
                         </div>
+                    }
+                    <div class="total-points">
+                        { format!("Total Points: {}", total_points) }
                     </div>
                 </div>
             </div>
@@ -72,17 +69,17 @@ impl Component for RosterView {
 }
 
 impl RosterView {
-    fn view_profile_button(&self, profile: &Profile, link: &yew::html::Scope<Self>) -> Html {
+    fn view_profile_button(&self, ctx: &Context<Self>, profile: &Profile) -> Html {
         let is_selected = self.selected_profiles.iter().any(|p| p.name == profile.name);
-        let final_profile = profile.get_final_profile();
-        let local_profile = profile.clone();
+        let button_text = format!("{} ({})", profile.name, profile.cost);
+        let onclick_profile = profile.clone();
         
         html! {
             <button
-                class={classes!("button", is_selected.then_some("selected"))}
-                onclick={link.callback(move |_| Msg::ProfileToggled(local_profile.clone()))}
+                class={classes!("button", if is_selected { "selected" } else { "" })}
+                onclick={ctx.link().callback(move |_| Msg::ToggleProfile(onclick_profile.clone()))}
             >
-                { format!("{} ({} points)", final_profile.name, final_profile.cost) }
+                { button_text }
             </button>
         }
     }

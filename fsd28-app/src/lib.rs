@@ -5,6 +5,7 @@ mod components {
     pub mod modal;
     pub mod action_tree_view;
     pub mod modifiers_view;
+    pub mod card_generator;
 }
 mod app;
 mod shared_messages;
