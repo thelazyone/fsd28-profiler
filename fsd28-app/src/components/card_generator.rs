@@ -172,38 +172,125 @@ impl CardGenerator {
     fn draw_actions(&self, ctx: &CanvasRenderingContext2d, actions: &Vec<Action>) {
         let actions_start_y = MARGIN + TITLE_SIZE * LINE_HEIGHT + SUBTITLE_SIZE * LINE_HEIGHT + 20.0 + 
                               STAT_GRID_ROWS as f64 * 80.0 + MARGIN;
-        let action_height = 120.0; // Increased to accommodate larger fonts
+        let mut current_y = actions_start_y;
 
         for (i, action) in actions.iter().enumerate() {
-            let y = actions_start_y + i as f64 * action_height;
+            // Calculate the height needed for this action
+            let action_height = self.calculate_action_height(ctx, action);
             
-            // Draw the S1, S2, S3 label for this action
-            ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_COUNTER_SIZE));
-            ctx.set_text_align("left");
+            // Draw the S1, S2, S3 label centered vertically and rotated
+            ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", TEXT_SIZE));
+            ctx.set_text_align("center");
+            ctx.set_text_baseline("middle");
             let label = format!("S{}", i + 1);
-            ctx.fill_text(&label, MARGIN, y + 20.0).unwrap();
             
-            self.draw_action(ctx, action, y);
+            // Save context, rotate, draw text, restore
+            ctx.save();
+            ctx.translate(MARGIN + 15.0, current_y + action_height/2.0).unwrap();
+            ctx.rotate(-std::f64::consts::PI / 2.0).unwrap();
+            ctx.fill_text(&label, 0.0, 0.0).unwrap();
+            ctx.restore();
+            
+            // Draw the action at the calculated position
+            self.draw_action(ctx, action, current_y);
+            
+            // Move to the next action position
+            current_y += action_height + MARGIN;
         }
     }
 
+    fn calculate_action_height(&self, ctx: &CanvasRenderingContext2d, action: &Action) -> f64 {
+        // Calculate text height
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_TITLE_SIZE));
+        let title_height = ACTION_TITLE_SIZE * LINE_HEIGHT;
+        
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
+        let description_height = self.calculate_wrapped_text_height(ctx, &action.text, 
+            CARD_WIDTH - (MARGIN + 60.0 + action.cost.goon.len() as f64 * (DICE_BOX_SIZE + 10.0) + 20.0 + MARGIN), 
+            ACTION_DESCRIPTION_SIZE);
+
+        // Return the maximum of box height and text height, plus some padding
+        f64::max(DICE_BOX_SIZE, title_height + description_height) + 20.0
+    }
+
+    fn calculate_wrapped_text_height(&self, ctx: &CanvasRenderingContext2d, text: &str, max_width: f64, font_size: f64) -> f64 {
+        let chars_per_line = (max_width / (font_size * 0.6)) as usize;
+        let words: Vec<&str> = text.split_whitespace().collect();
+        let mut current_line = String::new();
+        let mut line_count = 1;
+        
+        for word in words {
+            if current_line.is_empty() {
+                current_line = word.to_string();
+            } else {
+                let test_line = format!("{} {}", current_line, word);
+                if test_line.len() <= chars_per_line {
+                    current_line = test_line;
+                } else {
+                    line_count += 1;
+                    current_line = word.to_string();
+                }
+            }
+        }
+        
+        line_count as f64 * font_size * LINE_HEIGHT
+    }
+
     fn draw_action(&self, ctx: &CanvasRenderingContext2d, action: &Action, y: f64) {
-        // Draw dice boxes and costs
-        let mut x = MARGIN + 60.0;
-        for cost in &action.cost.goon {
-            self.draw_dice_box(ctx, x, y, cost);
+        let action_height = self.calculate_action_height(ctx, action);
+        let vertical_center = y + action_height/2.0;
+        
+        // Draw cost boxes or FREE
+        let mut x = MARGIN + 30.0;
+        if action.cost.goon.is_empty() {
+            // Draw FREE in a box
+            self.draw_dice_box(ctx, x, vertical_center - DICE_BOX_SIZE/2.0, &(0, 0));
             x += DICE_BOX_SIZE + 10.0;
+        } else {
+            for cost in &action.cost.goon {
+                self.draw_dice_box(ctx, x, vertical_center - DICE_BOX_SIZE/2.0, cost);
+                x += DICE_BOX_SIZE + 10.0;
+            }
         }
 
-        // Draw action name
+        // Calculate total text height for proper vertical centering
+        let text_x = x + 10.0;
+        let text_width = if action.slot {
+            // If there's a prepared box, leave space for it
+            let prepared_box_x = CARD_WIDTH - MARGIN - DICE_BOX_SIZE;
+            prepared_box_x - text_x - 20.0
+        } else {
+            // If no prepared box, use full width
+            CARD_WIDTH - text_x - MARGIN
+        };
+        
+        // Calculate text block height
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_TITLE_SIZE));
+        let title_height = ACTION_TITLE_SIZE * LINE_HEIGHT;
+        
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
+        let description_height = self.calculate_wrapped_text_height(ctx, &action.text, text_width, ACTION_DESCRIPTION_SIZE);
+        
+        let total_text_height = title_height + description_height;
+        let text_start_y = vertical_center - total_text_height/2.0;
+
+        // Draw title
         ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_TITLE_SIZE));
         ctx.set_text_align("left");
-        let text_x = x + 20.0;
-        ctx.fill_text(&action.name, text_x, y + 20.0).unwrap();
+        ctx.set_text_baseline("top");
+        ctx.fill_text(&action.name, text_x, text_start_y).unwrap();
 
-        // Draw action description
+        // Draw description
         ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
-        self.draw_wrapped_text(ctx, &action.text, text_x, y + 60.0, CARD_WIDTH - text_x - MARGIN, ACTION_DESCRIPTION_SIZE);
+        self.draw_wrapped_text(ctx, &action.text, text_x, 
+            text_start_y + title_height, 
+            text_width, 
+            ACTION_DESCRIPTION_SIZE);
+
+        // Draw prepared box if needed
+        if action.slot {
+            self.draw_prepared_box(ctx, CARD_WIDTH - MARGIN - DICE_BOX_SIZE, vertical_center - DICE_BOX_SIZE/2.0);
+        }
     }
 
     fn draw_dice_box(&self, ctx: &CanvasRenderingContext2d, x: f64, y: f64, range: &(u32, u32)) {
@@ -224,7 +311,9 @@ impl CardGenerator {
         ctx.close_path();
         ctx.stroke();
 
-        let text = if range.0 == range.1 {
+        let text = if range.0 == 0 && range.1 == 0 {
+            "FREE".to_string()
+        } else if range.0 == range.1 {
             range.0.to_string()
         } else {
             format!("{}-{}", range.0, range.1)
@@ -234,20 +323,56 @@ impl CardGenerator {
         ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_COST_SIZE));
         ctx.set_text_align("center");
         ctx.set_text_baseline("middle");
-        ctx.fill_text(&text, x + DICE_BOX_SIZE/2.0, y + DICE_BOX_SIZE/2.0).unwrap();
+        
+        if range.0 == 0 && range.1 == 0 {
+            // Save the current context state
+            ctx.save();
+            // Move to the center of the box
+            ctx.translate(x + DICE_BOX_SIZE/2.0, y + DICE_BOX_SIZE/2.0).unwrap();
+            // Rotate 45 degrees counter-clockwise
+            ctx.rotate(-std::f64::consts::PI / 4.0).unwrap();
+            // Draw the text at the new origin
+            ctx.fill_text(&text, 0.0, 0.0).unwrap();
+            // Restore the context state
+            ctx.restore();
+        } else {
+            ctx.fill_text(&text, x + DICE_BOX_SIZE/2.0, y + DICE_BOX_SIZE/2.0).unwrap();
+        }
+    }
+
+    fn draw_prepared_box(&self, ctx: &CanvasRenderingContext2d, x: f64, y: f64) {
+        ctx.set_stroke_style(&"black".into());
+        ctx.set_line_width(DICE_BOX_BORDER_WIDTH);
+
+        // Draw rounded rectangle
+        ctx.begin_path();
+        ctx.move_to(x + DICE_BOX_CORNER_RADIUS, y);
+        ctx.line_to(x + DICE_BOX_SIZE - DICE_BOX_CORNER_RADIUS, y);
+        ctx.quadratic_curve_to(x + DICE_BOX_SIZE, y, x + DICE_BOX_SIZE, y + DICE_BOX_CORNER_RADIUS);
+        ctx.line_to(x + DICE_BOX_SIZE, y + DICE_BOX_SIZE - DICE_BOX_CORNER_RADIUS);
+        ctx.quadratic_curve_to(x + DICE_BOX_SIZE, y + DICE_BOX_SIZE, x + DICE_BOX_SIZE - DICE_BOX_CORNER_RADIUS, y + DICE_BOX_SIZE);
+        ctx.line_to(x + DICE_BOX_CORNER_RADIUS, y + DICE_BOX_SIZE);
+        ctx.quadratic_curve_to(x, y + DICE_BOX_SIZE, x, y + DICE_BOX_SIZE - DICE_BOX_CORNER_RADIUS);
+        ctx.line_to(x, y + DICE_BOX_CORNER_RADIUS);
+        ctx.quadratic_curve_to(x, y, x + DICE_BOX_CORNER_RADIUS, y);
+        ctx.close_path();
+        ctx.stroke();
     }
 
     fn draw_special_abilities(&self, ctx: &CanvasRenderingContext2d, abilities: &Vec<String>) {
+        if abilities.is_empty() {
+            return;
+        }
+
         let abilities_start_y = MARGIN + TITLE_SIZE * LINE_HEIGHT + SUBTITLE_SIZE * LINE_HEIGHT + 20.0 + 
-                              STAT_GRID_ROWS as f64 * 80.0 + MARGIN + 3.0 * 100.0 + MARGIN;
+                              STAT_GRID_ROWS as f64 * 80.0 + MARGIN;
         
-        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", TEXT_SIZE));
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
         ctx.set_text_align("left");
-        ctx.fill_text("Special Abilities:", MARGIN, abilities_start_y).unwrap();
         
         let abilities_text = abilities.join(", ");
-        self.draw_wrapped_text(ctx, &abilities_text, MARGIN, abilities_start_y + 30.0, 
-                             CARD_WIDTH - 2.0 * MARGIN, TEXT_SIZE);
+        self.draw_wrapped_text(ctx, &abilities_text, MARGIN, abilities_start_y, 
+                             CARD_WIDTH - 2.0 * MARGIN, ACTION_DESCRIPTION_SIZE);
     }
 
     fn draw_damage_chart(&self, ctx: &CanvasRenderingContext2d, chart: &DamageChart) {
