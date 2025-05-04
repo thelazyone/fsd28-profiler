@@ -20,15 +20,23 @@ pub struct CardGenerator {
 }
 
 // Constants for card dimensions and layout
-const CARD_WIDTH: f64 = 240.0; // Reduced from 2.5 inches
-const CARD_HEIGHT: f64 = 336.0; // Reduced from 3.5 inches
-const MARGIN: f64 = 10.0;
-const TITLE_SIZE: f64 = 20.0; // Slightly reduced
-const SUBTITLE_SIZE: f64 = 16.0; // Slightly reduced
-const TEXT_SIZE: f64 = 12.0; // Slightly reduced
+const CARD_WIDTH: f64 = 750.0; // 2.5 inches at 300 DPI
+const CARD_HEIGHT: f64 = 1050.0; // 3.5 inches at 300 DPI
+const MARGIN: f64 = 30.0;
+const TITLE_SIZE: f64 = 60.0;
+const SUBTITLE_SIZE: f64 = 28.0;
+const TEXT_SIZE: f64 = 24.0;
+const ACTION_TITLE_SIZE: f64 = 36.0;
+const ACTION_DESCRIPTION_SIZE: f64 = 30.0;
+const ACTION_COUNTER_SIZE: f64 = 36.0;
+const ACTION_COST_SIZE: f64 = 50.0;
 const STAT_GRID_ROWS: usize = 2;
 const STAT_GRID_COLS: usize = 3;
-const DICE_SIZE: f64 = 24.0; // Reduced from 8mm
+const DICE_BOX_SIZE_MM: f64 = 10.0; // 10mm
+const DICE_BOX_SIZE: f64 = DICE_BOX_SIZE_MM * 11.81; // Convert mm to pixels at 300 DPI
+const DICE_BOX_BORDER_WIDTH: f64 = 8.0;
+const DICE_BOX_CORNER_RADIUS: f64 = 10.0;
+const LINE_HEIGHT: f64 = 1.2; // Line height multiplier
 
 impl CardGenerator {
     pub fn new() -> Self {
@@ -73,25 +81,69 @@ impl CardGenerator {
     }
 
     fn draw_title(&self, ctx: &CanvasRenderingContext2d, title: &str, subtitle: &str) {
-        ctx.set_font(&format!("{}px Arial", TITLE_SIZE));
+        // Set up the font
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", TITLE_SIZE));
         ctx.set_fill_style(&"black".into());
-        ctx.fill_text(title, MARGIN, MARGIN + TITLE_SIZE).unwrap();
+        ctx.set_text_align("center");
+        ctx.set_text_baseline("top");
 
-        ctx.set_font(&format!("{}px Arial", SUBTITLE_SIZE));
-        ctx.fill_text(subtitle, MARGIN, MARGIN + TITLE_SIZE + SUBTITLE_SIZE).unwrap();
+        // Calculate title position - moved down a bit
+        let title_x = CARD_WIDTH / 2.0;
+        let title_y = MARGIN + 20.0; // Added 20px padding from top
+
+        // Draw title with word wrapping and all caps
+        let uppercase_title = title.to_uppercase();
+        self.draw_wrapped_text(ctx, &uppercase_title, title_x, title_y, CARD_WIDTH - 2.0 * MARGIN, TITLE_SIZE);
+
+        // Draw subtitle - moved up and added small caps
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", SUBTITLE_SIZE));
+        ctx.set_text_align("center");
+        let subtitle_y = title_y + TITLE_SIZE * LINE_HEIGHT - 10.0; // Moved up by 10px
+        let small_caps_subtitle = subtitle.to_uppercase();
+        self.draw_wrapped_text(ctx, &small_caps_subtitle, title_x, subtitle_y, CARD_WIDTH - 2.0 * MARGIN, SUBTITLE_SIZE);
+    }
+
+    fn draw_wrapped_text(&self, ctx: &CanvasRenderingContext2d, text: &str, x: f64, y: f64, max_width: f64, font_size: f64) {
+        // Fixed-width wrapping based on character count
+        let chars_per_line = (max_width / (font_size * 0.6)) as usize; // Approximate characters per line
+        let mut current_y = y;
+        
+        // Split text into words
+        let words: Vec<&str> = text.split_whitespace().collect();
+        let mut current_line = String::new();
+        
+        for word in words {
+            if current_line.is_empty() {
+                current_line = word.to_string();
+            } else {
+                let test_line = format!("{} {}", current_line, word);
+                if test_line.len() <= chars_per_line {
+                    current_line = test_line;
+                } else {
+                    // Draw current line and start new one
+                    ctx.fill_text(&current_line, x, current_y).unwrap();
+                    current_y += font_size * LINE_HEIGHT;
+                    current_line = word.to_string();
+                }
+            }
+        }
+        
+        // Draw the last line if there is one
+        if !current_line.is_empty() {
+            ctx.fill_text(&current_line, x, current_y).unwrap();
+        }
     }
 
     fn draw_stats_grid(&self, ctx: &CanvasRenderingContext2d, stats: &Characteristics) {
-        let grid_start_y = MARGIN + TITLE_SIZE + SUBTITLE_SIZE + MARGIN;
+        let grid_start_y = MARGIN + TITLE_SIZE * LINE_HEIGHT + SUBTITLE_SIZE * LINE_HEIGHT + 20.0;
         let cell_width = (CARD_WIDTH - 2.0 * MARGIN) / STAT_GRID_COLS as f64;
-        let cell_height = 40.0;
+        let cell_height = 80.0;
 
         // Draw grid lines
         ctx.set_stroke_style(&"black".into());
         ctx.set_line_width(1.0);
 
         // Draw stats
-        ctx.set_font(&format!("{}px Arial", TEXT_SIZE));
         let stats_text = [
             ["Cmd", &stats.stat_cmd.to_string()],
             ["Def", &stats.stat_def.to_string()],
@@ -103,67 +155,99 @@ impl CardGenerator {
 
         for (i, row) in stats_text.chunks(STAT_GRID_COLS).enumerate() {
             for (j, stat) in row.iter().enumerate() {
-                let x = MARGIN + j as f64 * cell_width;
+                let x = MARGIN + j as f64 * cell_width + cell_width / 2.0;
                 let y = grid_start_y + i as f64 * cell_height;
                 
                 // Draw stat name
-                ctx.fill_text(stat[0], x + 5.0, y + 20.0).unwrap();
-                // Draw stat value
-                ctx.fill_text(stat[1], x + 5.0, y + 35.0).unwrap();
+                ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", TEXT_SIZE));
+                ctx.fill_text(stat[0], x, y + 20.0).unwrap();
+                
+                // Draw stat value with larger font
+                ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", TEXT_SIZE * 2.0));
+                ctx.fill_text(stat[1], x, y + 50.0).unwrap();
             }
         }
     }
 
     fn draw_actions(&self, ctx: &CanvasRenderingContext2d, actions: &Vec<Action>) {
-        let actions_start_y = MARGIN + TITLE_SIZE + SUBTITLE_SIZE + MARGIN + STAT_GRID_ROWS as f64 * 40.0 + MARGIN;
-        let action_height = 60.0;
+        let actions_start_y = MARGIN + TITLE_SIZE * LINE_HEIGHT + SUBTITLE_SIZE * LINE_HEIGHT + 20.0 + 
+                              STAT_GRID_ROWS as f64 * 80.0 + MARGIN;
+        let action_height = 120.0; // Increased to accommodate larger fonts
 
         for (i, action) in actions.iter().enumerate() {
             let y = actions_start_y + i as f64 * action_height;
+            
+            // Draw the S1, S2, S3 label for this action
+            ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_COUNTER_SIZE));
+            ctx.set_text_align("left");
+            let label = format!("S{}", i + 1);
+            ctx.fill_text(&label, MARGIN, y + 20.0).unwrap();
+            
             self.draw_action(ctx, action, y);
         }
     }
 
     fn draw_action(&self, ctx: &CanvasRenderingContext2d, action: &Action, y: f64) {
-        // Draw S1, S2, S3 labels
-        ctx.set_font(&format!("{}px Arial", TEXT_SIZE));
-        ctx.fill_text("S1", MARGIN, y + 20.0).unwrap();
-        ctx.fill_text("S2", MARGIN, y + 40.0).unwrap();
-        ctx.fill_text("S3", MARGIN, y + 60.0).unwrap();
-
-        // Draw dice boxes
-        let mut x = MARGIN + 30.0;
+        // Draw dice boxes and costs
+        let mut x = MARGIN + 60.0;
         for cost in &action.cost.goon {
             self.draw_dice_box(ctx, x, y, cost);
-            x += DICE_SIZE + 5.0;
+            x += DICE_BOX_SIZE + 10.0;
         }
 
-        // Draw action name and text
-        ctx.fill_text(&action.name, x, y + 20.0).unwrap();
-        ctx.fill_text(&action.text, x, y + 40.0).unwrap();
+        // Draw action name
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_TITLE_SIZE));
+        ctx.set_text_align("left");
+        let text_x = x + 20.0;
+        ctx.fill_text(&action.name, text_x, y + 20.0).unwrap();
+
+        // Draw action description
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
+        self.draw_wrapped_text(ctx, &action.text, text_x, y + 60.0, CARD_WIDTH - text_x - MARGIN, ACTION_DESCRIPTION_SIZE);
     }
 
     fn draw_dice_box(&self, ctx: &CanvasRenderingContext2d, x: f64, y: f64, range: &(u32, u32)) {
         ctx.set_stroke_style(&"black".into());
-        ctx.set_line_width(1.0);
-        ctx.stroke_rect(x, y, DICE_SIZE, DICE_SIZE);
+        ctx.set_line_width(DICE_BOX_BORDER_WIDTH);
+
+        // Draw rounded rectangle
+        ctx.begin_path();
+        ctx.move_to(x + DICE_BOX_CORNER_RADIUS, y);
+        ctx.line_to(x + DICE_BOX_SIZE - DICE_BOX_CORNER_RADIUS, y);
+        ctx.quadratic_curve_to(x + DICE_BOX_SIZE, y, x + DICE_BOX_SIZE, y + DICE_BOX_CORNER_RADIUS);
+        ctx.line_to(x + DICE_BOX_SIZE, y + DICE_BOX_SIZE - DICE_BOX_CORNER_RADIUS);
+        ctx.quadratic_curve_to(x + DICE_BOX_SIZE, y + DICE_BOX_SIZE, x + DICE_BOX_SIZE - DICE_BOX_CORNER_RADIUS, y + DICE_BOX_SIZE);
+        ctx.line_to(x + DICE_BOX_CORNER_RADIUS, y + DICE_BOX_SIZE);
+        ctx.quadratic_curve_to(x, y + DICE_BOX_SIZE, x, y + DICE_BOX_SIZE - DICE_BOX_CORNER_RADIUS);
+        ctx.line_to(x, y + DICE_BOX_CORNER_RADIUS);
+        ctx.quadratic_curve_to(x, y, x + DICE_BOX_CORNER_RADIUS, y);
+        ctx.close_path();
+        ctx.stroke();
 
         let text = if range.0 == range.1 {
             range.0.to_string()
         } else {
             format!("{}-{}", range.0, range.1)
         };
-        ctx.fill_text(&text, x + DICE_SIZE/2.0 - 5.0, y + DICE_SIZE/2.0 + 5.0).unwrap();
+
+        // Center the cost number in the box
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_COST_SIZE));
+        ctx.set_text_align("center");
+        ctx.set_text_baseline("middle");
+        ctx.fill_text(&text, x + DICE_BOX_SIZE/2.0, y + DICE_BOX_SIZE/2.0).unwrap();
     }
 
     fn draw_special_abilities(&self, ctx: &CanvasRenderingContext2d, abilities: &Vec<String>) {
-        let abilities_start_y = MARGIN + TITLE_SIZE + SUBTITLE_SIZE + MARGIN + STAT_GRID_ROWS as f64 * 40.0 + MARGIN + 3.0 * 60.0 + MARGIN;
+        let abilities_start_y = MARGIN + TITLE_SIZE * LINE_HEIGHT + SUBTITLE_SIZE * LINE_HEIGHT + 20.0 + 
+                              STAT_GRID_ROWS as f64 * 80.0 + MARGIN + 3.0 * 100.0 + MARGIN;
         
-        ctx.set_font(&format!("{}px Arial", TEXT_SIZE));
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", TEXT_SIZE));
+        ctx.set_text_align("left");
         ctx.fill_text("Special Abilities:", MARGIN, abilities_start_y).unwrap();
         
         let abilities_text = abilities.join(", ");
-        ctx.fill_text(&abilities_text, MARGIN, abilities_start_y + 20.0).unwrap();
+        self.draw_wrapped_text(ctx, &abilities_text, MARGIN, abilities_start_y + 30.0, 
+                             CARD_WIDTH - 2.0 * MARGIN, TEXT_SIZE);
     }
 
     fn draw_damage_chart(&self, ctx: &CanvasRenderingContext2d, chart: &DamageChart) {
