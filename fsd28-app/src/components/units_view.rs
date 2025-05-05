@@ -94,6 +94,7 @@ impl Component for UnitsView {
         match msg {
 
             Msg::ProfileSelected(profile) => {
+                // When selecting a profile, we want to start with a fresh copy for editing
                 self.editing_profile = Some(profile.clone());
                 self.selected_profile = Some(profile);
                 true 
@@ -118,32 +119,32 @@ impl Component for UnitsView {
             Msg::UpdateFormName(new_name) => {
                 if let Some(ref mut profile) = self.editing_profile {
                     profile.name = new_name;
-                    
                     ctx.link().send_message(Msg::ProfileEdited);
                 }
-
                 true
             },
 
             Msg::ProfileEdited => {
-
-                if let Some(updated_profile) = self.editing_profile.as_ref(){
-
-                    self.view_profile(updated_profile);
+                if let Some(updated_profile) = self.editing_profile.as_ref() {
+                    // Update the central state
+                    let mut all_profiles = ctx.props().profiles.clone();
+                    if let Some(index) = all_profiles.iter().position(|p| p.name == updated_profile.name) {
+                        all_profiles[index] = updated_profile.clone();
+                        ctx.props().on_profiles_changed.emit(all_profiles);
+                    }
                 }
                 true
             },
 
             Msg::ModifierSelected(modifier) => {
-                // removing or adding the Modifier when clicking this
-                if let Some(updated_profile) = self.editing_profile.as_mut(){
-                    if updated_profile.selected_modifiers.contains(&modifier) {
-                        updated_profile.selected_modifiers.retain(|m| m != &modifier);
+                if let Some(ref mut profile) = self.editing_profile {
+                    if profile.selected_modifiers.contains(&modifier) {
+                        profile.selected_modifiers.retain(|m| m != &modifier);
                     } else {
-                        updated_profile.selected_modifiers.push(modifier);
+                        profile.selected_modifiers.push(modifier);
                     }
+                    ctx.link().send_message(Msg::ProfileEdited);
                 }
-
                 true
             }
 
@@ -181,21 +182,11 @@ impl Component for UnitsView {
             }
 
             Msg::ActionSelected(action) => {
-
-                // TODO implement properly
-                console::log_1(&format!("selected action is {}", action.name.clone()).into());
                 if let Some(ref mut profile) = self.editing_profile {
-
-                    // Check if the action can be added
-                    // TODO other checks that must be done are
-                    // - if the action is taken already
-                    // - if at least one of the "main" actions is selected (if at least one exists)
-                    // - if the AD range makes it impossible to use that action.
                     if profile.actions.len() >= 3 {
                         console::log_1(&"The profile cannot have more than 3 actions.".to_string().into());
                         return true;
                     }
-
                     profile.actions.push(action);
                     ctx.link().send_message(Msg::ProfileEdited);
                 }
@@ -279,7 +270,7 @@ impl Component for UnitsView {
                     </div>
                 </div>
                 <div class="center-bar">
-                    if let Some(profile) = &self.selected_profile {
+                    if let Some(profile) = &self.editing_profile {
                         if self.view_mode == ViewMode::Text {
                             { self.view_profile(profile) }
                         } else {
