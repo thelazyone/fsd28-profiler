@@ -69,6 +69,9 @@ impl CardGenerator {
             // Draw title and subtitle
             self.draw_title(ctx, &final_profile.name, &final_profile.description);
 
+            // Draw points label
+            self.draw_points_label(ctx, &final_profile.cost);
+
             // Draw stats grid
             self.draw_stats_grid(ctx, &final_profile.characteristics);
 
@@ -104,6 +107,18 @@ impl CardGenerator {
         let subtitle_y = title_y + TITLE_SIZE * LINE_HEIGHT - 10.0; // Moved up by 10px
         let small_caps_subtitle = subtitle.to_uppercase();
         self.draw_wrapped_text(ctx, &small_caps_subtitle, title_x, subtitle_y, CARD_WIDTH - 2.0 * MARGIN, SUBTITLE_SIZE);
+    }
+
+    fn draw_points_label(&self, ctx: &CanvasRenderingContext2d, points: &u32) {
+        // Set up the font and style
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", SUBTITLE_SIZE));
+        ctx.set_fill_style(&"black".into());
+        ctx.set_text_align("right");
+        ctx.set_text_baseline("top");
+
+        // Draw the points with small caps styling
+        let points_text = format!("{} PTS", points);
+        ctx.fill_text(&points_text, CARD_WIDTH - MARGIN, MARGIN).unwrap();
     }
 
     fn draw_wrapped_text(&self, ctx: &CanvasRenderingContext2d, text: &str, x: f64, y: f64, max_width: f64, font_size: f64) {
@@ -269,9 +284,26 @@ impl CardGenerator {
         ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_TITLE_SIZE));
         let title_height = ACTION_TITLE_SIZE * LINE_HEIGHT;
         
-        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
-        let description_height = self.calculate_wrapped_text_height(ctx, &action.text, text_width, ACTION_DESCRIPTION_SIZE);
+        // Try to fit the text with dynamic font size reduction
+        let mut current_font_size = ACTION_DESCRIPTION_SIZE;
+        let mut description_height;
         
+        // Try up to 2 font size reductions
+        for _ in 0..2 {
+            ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", current_font_size));
+            description_height = self.calculate_wrapped_text_height(ctx, &action.text, text_width, current_font_size);
+            
+            // If the text fits within the action box height, we're good
+            if description_height <= action_height - title_height {
+                break;
+            }
+            
+            // Otherwise reduce font size and try again
+            current_font_size -= 2.0;
+        }
+        
+        // Final height calculation with the chosen font size
+        description_height = self.calculate_wrapped_text_height(ctx, &action.text, text_width, current_font_size);
         let total_text_height = title_height + description_height;
         let text_start_y = vertical_center - total_text_height/2.0;
 
@@ -281,12 +313,12 @@ impl CardGenerator {
         ctx.set_text_baseline("top");
         ctx.fill_text(&action.name, x_cursor, text_start_y).unwrap();
 
-        // Draw description
-        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
+        // Draw description with potentially reduced font size
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", current_font_size));
         self.draw_wrapped_text(ctx, &action.text, x_cursor, 
             text_start_y + title_height, 
             text_width, 
-            ACTION_DESCRIPTION_SIZE);
+            current_font_size);
 
         // Draw prepared box if needed
         if action.slot {
