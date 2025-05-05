@@ -6,7 +6,7 @@ use fsd28_lib::models::{
     damage_chart::DamageChart,
     damage_chart::Color,
 };
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, console};
 use wasm_bindgen::JsCast;
 
 #[derive(Properties, PartialEq)]
@@ -59,24 +59,27 @@ impl CardGenerator {
             // Clear canvas
             ctx.clear_rect(0.0, 0.0, CARD_WIDTH, CARD_HEIGHT);
 
+            // Get the final profile with modifiers applied
+            let final_profile = profile.get_final_profile();
+
             // Draw card background
             ctx.set_fill_style(&"white".into());
             ctx.fill_rect(0.0, 0.0, CARD_WIDTH, CARD_HEIGHT);
 
             // Draw title and subtitle
-            self.draw_title(ctx, &profile.name, &profile.description);
+            self.draw_title(ctx, &final_profile.name, &final_profile.description);
 
             // Draw stats grid
-            self.draw_stats_grid(ctx, &profile.characteristics);
+            self.draw_stats_grid(ctx, &final_profile.characteristics);
 
             // Draw actions
-            self.draw_actions(ctx, &profile.actions);
+            self.draw_actions(ctx, &final_profile.actions);
 
             // Draw special abilities
-            self.draw_special_abilities(ctx, &profile.special_abilities);
+            self.draw_special_abilities(ctx, &final_profile.special_abilities);
 
             // Draw damage chart
-            self.draw_damage_chart(ctx, &profile.damage_chart);
+            self.draw_damage_chart(ctx, &final_profile.damage_chart);
         }
     }
 
@@ -105,7 +108,7 @@ impl CardGenerator {
 
     fn draw_wrapped_text(&self, ctx: &CanvasRenderingContext2d, text: &str, x: f64, y: f64, max_width: f64, font_size: f64) {
         // Fixed-width wrapping based on character count
-        let chars_per_line = (max_width / (font_size * 0.6)) as usize; // Approximate characters per line
+        let chars_per_line = (max_width / (font_size * 0.6)) as usize;
         let mut current_y = y;
         
         // Split text into words
@@ -241,27 +244,25 @@ impl CardGenerator {
         let vertical_center = y + action_height/2.0;
         
         // Draw cost boxes or FREE
-        let mut x = MARGIN + 30.0;
+        let mut x_cursor = MARGIN + 30.0;
         if action.cost.goon.is_empty() {
             // Draw FREE in a box
-            self.draw_dice_box(ctx, x, vertical_center - DICE_BOX_SIZE/2.0, &(0, 0));
-            x += DICE_BOX_SIZE + 10.0;
+            self.draw_dice_box(ctx, x_cursor, vertical_center - DICE_BOX_SIZE/2.0, &(0, 0));
+            x_cursor += DICE_BOX_SIZE + 10.0;
         } else {
             for cost in &action.cost.goon {
-                self.draw_dice_box(ctx, x, vertical_center - DICE_BOX_SIZE/2.0, cost);
-                x += DICE_BOX_SIZE + 10.0;
+                self.draw_dice_box(ctx, x_cursor, vertical_center - DICE_BOX_SIZE/2.0, cost);
+                x_cursor += DICE_BOX_SIZE + 10.0;
             }
         }
 
         // Calculate total text height for proper vertical centering
-        let text_x = x + 10.0;
         let text_width = if action.slot {
-            // If there's a prepared box, leave space for it
-            let prepared_box_x = CARD_WIDTH - MARGIN - DICE_BOX_SIZE;
-            prepared_box_x - text_x - 20.0
+            // If there's a prepared box, leave space for it. No extra margins needed.
+            CARD_WIDTH - MARGIN - DICE_BOX_SIZE - x_cursor
         } else {
             // If no prepared box, use full width
-            CARD_WIDTH - text_x - MARGIN
+            CARD_WIDTH - MARGIN - x_cursor 
         };
         
         // Calculate text block height
@@ -278,11 +279,11 @@ impl CardGenerator {
         ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_TITLE_SIZE));
         ctx.set_text_align("left");
         ctx.set_text_baseline("top");
-        ctx.fill_text(&action.name, text_x, text_start_y).unwrap();
+        ctx.fill_text(&action.name, x_cursor, text_start_y).unwrap();
 
         // Draw description
         ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
-        self.draw_wrapped_text(ctx, &action.text, text_x, 
+        self.draw_wrapped_text(ctx, &action.text, x_cursor, 
             text_start_y + title_height, 
             text_width, 
             ACTION_DESCRIPTION_SIZE);
@@ -364,48 +365,63 @@ impl CardGenerator {
             return;
         }
 
-        let abilities_start_y = MARGIN + TITLE_SIZE * LINE_HEIGHT + SUBTITLE_SIZE * LINE_HEIGHT + 20.0 + 
-                              STAT_GRID_ROWS as f64 * 80.0 + MARGIN;
+        // Position above the damage profile numbers
+        let abilities_start_y = CARD_HEIGHT - 60.0 - 20.0;
         
-        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_DESCRIPTION_SIZE));
-        ctx.set_text_align("left");
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", ACTION_TITLE_SIZE));
+        ctx.set_text_align("center"); // Center the text
         
         let abilities_text = abilities.join(", ");
-        self.draw_wrapped_text(ctx, &abilities_text, MARGIN, abilities_start_y, 
-                             CARD_WIDTH - 2.0 * MARGIN, ACTION_DESCRIPTION_SIZE);
+        let text_height = self.calculate_wrapped_text_height(ctx, &abilities_text, 
+            CARD_WIDTH - 2.0 * MARGIN, ACTION_TITLE_SIZE);
+        
+        // Draw the text aligned to the bottom and centered
+        self.draw_wrapped_text(ctx, &abilities_text, CARD_WIDTH/2.0, 
+            abilities_start_y - text_height,
+            CARD_WIDTH - 2.0 * MARGIN, 
+            ACTION_TITLE_SIZE);
     }
 
     fn draw_damage_chart(&self, ctx: &CanvasRenderingContext2d, chart: &DamageChart) {
         let chart_start_y = CARD_HEIGHT - 60.0;
         let column_width = (CARD_WIDTH - 2.0 * MARGIN) / 6.0;
+        const SLOT_PADDING: f64 = 5.0; // Padding between slots
+        const BAR_HEIGHT: f64 = 80.0; // Increased from 30.0 to 40.0
 
         // Draw numbers 1-6
-        ctx.set_font(&format!("{}px Arial", TEXT_SIZE));
+        ctx.set_font(&format!("bold {}px Arial", TEXT_SIZE));
         for i in 1..=6 {
             let x = MARGIN + (i - 1) as f64 * column_width + column_width/2.0 - 5.0;
-            ctx.fill_text(&i.to_string(), x, chart_start_y).unwrap();
+            ctx.fill_text(&i.to_string(), x, chart_start_y - 20.0).unwrap(); // Moved numbers up by 20px
         }
 
         // Draw colored intervals
         let mut current_x = MARGIN;
         for (span, color, text) in &chart.intervals {
             let width = *span as f64 * column_width;
-            self.draw_damage_interval(ctx, current_x, chart_start_y + 20.0, width, color, text);
+            self.draw_damage_interval(ctx, current_x, chart_start_y, width, color, text, SLOT_PADDING, BAR_HEIGHT);
             current_x += width;
         }
     }
 
-    fn draw_damage_interval(&self, ctx: &CanvasRenderingContext2d, x: f64, y: f64, width: f64, color: &Color, text: &str) {
+    fn draw_damage_interval(&self, ctx: &CanvasRenderingContext2d, x: f64, y: f64, width: f64, color: &Color, text: &str, padding: f64, height: f64) {
         let color_str = match color {
-            Color::Red => "#FF0000",
-            Color::Yellow => "#FFFF00",
-            Color::Green => "#00FF00",
+            Color::Red => "#951c07",
+            Color::Yellow => "#ab7a1e",
+            Color::Green => "#5a7e26",
         };
+        const EFFECT_SIZE: f64 = 42.0; // Increased from 30.0 to 40.0
+        
+        // Draw the colored rectangle with padding
         ctx.set_fill_style(&color_str.into());
-        ctx.fill_rect(x, y, width, 30.0);
+        ctx.fill_rect(x + padding, y + padding, width - 2.0 * padding, 200.0);
 
-        ctx.set_fill_style(&"black".into());
-        ctx.fill_text(text, x + width/2.0 - 10.0, y + 20.0).unwrap();
+        // Draw the text centered both horizontally and vertically
+        ctx.set_fill_style(&"white".into());
+        ctx.set_font(&format!("bold {}px 'Trebuchet MS', sans-serif", EFFECT_SIZE));
+        ctx.set_text_align("center");
+        ctx.set_text_baseline("middle");
+        ctx.fill_text(&text.to_uppercase(), x + width/2.0, y + height/2.0 - 10.).unwrap();
     }
 }
 
